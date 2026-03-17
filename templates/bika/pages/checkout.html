@@ -1,7 +1,7 @@
 {% extends 'bika/base.html' %}
-{% load static %}
+{% load static i18n %}
 
-{% block title %}Checkout - Bika{% endblock %}
+{% block title %}{% trans "Checkout - Bika" %}{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -140,15 +140,15 @@
             <div class="col-lg-8">
                 <!-- Country Selection -->
                 <div class="country-selector">
-                    <h5 class="mb-3">Select Your Country</h5>
+                    <h5 class="mb-3">{% trans "Select Your Country" %}</h5>
                     <div class="row g-2">
                         <div class="col-md-3">
                             <div class="form-check country-option" onclick="selectCountry('TZ')">
                                 <input class="form-check-input" type="radio" name="country" id="countryTZ" 
                                        {% if user_country == 'TZ' %}checked{% endif %}>
                                 <label class="form-check-label" for="countryTZ">
-                                    <img src="{% static 'flags/tz.svg' %}" alt="Tanzania" class="flag-icon">
-                                    Tanzania
+                                    <img src="{% static 'flags/tz.svg' %}" alt="{% trans 'Tanzania' %}" class="flag-icon">
+                                    {% trans "Tanzania" %}
                                 </label>
                             </div>
                         </div>
@@ -157,8 +157,8 @@
                                 <input class="form-check-input" type="radio" name="country" id="countryRW"
                                        {% if user_country == 'RW' %}checked{% endif %}>
                                 <label class="form-check-label" for="countryRW">
-                                    <img src="{% static 'flags/rw.svg' %}" alt="Rwanda" class="flag-icon">
-                                    Rwanda
+                                    <img src="{% static 'flags/rw.svg' %}" alt="{% trans 'Rwanda' %}" class="flag-icon">
+                                    {% trans "Rwanda" %}
                                 </label>
                             </div>
                         </div>
@@ -167,8 +167,8 @@
                                 <input class="form-check-input" type="radio" name="country" id="countryUG"
                                        {% if user_country == 'UG' %}checked{% endif %}>
                                 <label class="form-check-label" for="countryUG">
-                                    <img src="{% static 'flags/ug.svg' %}" alt="Uganda" class="flag-icon">
-                                    Uganda
+                                    <img src="{% static 'flags/ug.svg' %}" alt="{% trans 'Uganda' %}" class="flag-icon">
+                                    {% trans "Uganda" %}
                                 </label>
                             </div>
                         </div>
@@ -177,8 +177,8 @@
                                 <input class="form-check-input" type="radio" name="country" id="countryKE"
                                        {% if user_country == 'KE' %}checked{% endif %}>
                                 <label class="form-check-label" for="countryKE">
-                                    <img src="{% static 'flags/ke.svg' %}" alt="Kenya" class="flag-icon">
-                                    Kenya
+                                    <img src="{% static 'flags/ke.svg' %}" alt="{% trans 'Kenya' %}" class="flag-icon">
+                                    {% trans "Kenya" %}
                                 </label>
                             </div>
                         </div>
@@ -187,7 +187,7 @@
 
                 <!-- Payment Methods -->
                 <div class="payment-methods">
-                    <h4 class="mb-4">Choose Payment Method</h4>
+                    <h4 class="mb-4">{% trans "Choose Payment Method" %}</h4>
                     
                     <div class="payment-method-grid" id="paymentMethodsGrid">
                         {% for method in available_methods %}
@@ -202,15 +202,15 @@
                                     <h6 class="mb-1">{{ method.name }}</h6>
                                     <small class="text-muted">
                                         {% if 'mpesa' in method.value %}
-                                        Send money to +255 798 780 022
+                                        {% trans "Send money to +255 798 780 022" %}
                                         {% elif 'tigo' in method.value %}
-                                        Send money to +255 789 123 456
+                                        {% trans "Send money to +255 789 123 456" %}
                                         {% elif 'airtel' in method.value %}
-                                        Send money to +255 788 987 654
+                                        {% trans "Send money to +255 788 987 654" %}
                                         {% elif 'mtn' in method.value %}
-                                        Send money to +250 798 780 022
+                                        {% trans "Send money to +250 798 780 022" %}
                                         {% else %}
-                                        Secure online payment
+                                        {% trans "Secure online payment" %}
                                         {% endif %}
                                     </small>
                                 </div>
@@ -221,7 +221,7 @@
                                 {% if 'mpesa' in method.value or 'tigo' in method.value or 'airtel' in method.value or 'mtn' in method.value %}
                                 <!-- Mobile Money Form -->
                                 <div class="mb-3">
-                                    <label class="form-label">Phone Number</label>
+                                    <label class="form-label">{% trans "Phone Number" %}</label>
                                     <div class="phone-input-group">
                                         <span class="country-code" id="phonePrefix{{ method.value|title }}">+255</span>
                                         <input type="tel" class="form-control phone-input" 
@@ -230,25 +230,25 @@
                                                maxlength="9" 
                                                pattern="[0-9]{9}">
                                     </div>
-                                    <div class="form-text">Enter your {{ method.name }} registered number</div>
+                                    <div class="form-text">{% blocktrans with name=method.name %}Enter your {{ name }} registered number{% endblocktrans %}</div>
                                 </div>
                                 <button class="btn btn-{{ method.color }} w-100" 
                                         onclick="initiateMobilePayment('{{ method.value }}')">
-                                    <i class="fas fa-paper-plane me-2"></i>Pay with {{ method.name }}
+                                    <i class="fas fa-paper-plane me-2"></i>{% blocktrans with name=method.name %}Pay with {{ name }}{% endblocktrans %}
                                 </button>
                                 
                                 {% elif 'visa' in method.value or 'mastercard' in method.value or 'amex' in method.value %}
                                 <!-- Card Payment Form -->
                                 <div id="cardForm{{ method.value|title }}">
                                     <div class="mb-3">
-                                        <label class="form-label">Card Information</label>
+                                        <label class="form-label">{% trans "Card Information" %}</label>
                                         <div id="cardElement{{ method.value|title }}" class="card-element">
                                             <!-- Stripe Elements will be inserted here -->
                                         </div>
                                     </div>
                                     <button class="btn btn-{{ method.color }} w-100" 
                                             onclick="initiateCardPayment('{{ method.value }}')">
-                                        <i class="fas fa-lock me-2"></i>Pay Securely
+                                        <i class="fas fa-lock me-2"></i>{% trans "Pay Securely" %}
                                     </button>
                                 </div>
                                 
@@ -256,7 +256,7 @@
                                 <!-- PayPal Form -->
                                 <button class="btn btn-{{ method.color }} w-100" 
                                         onclick="initiatePayPalPayment()">
-                                    <i class="fab fa-paypal me-2"></i>Pay with PayPal
+                                    <i class="fab fa-paypal me-2"></i>{% trans "Pay with PayPal" %}
                                 </button>
                                 {% endif %}
                             </div>
@@ -270,12 +270,12 @@
                 <!-- Order Summary -->
                 <div class="checkout-card">
                     <div class="order-summary">
-                        <h4 class="mb-4">Order Summary</h4>
+                        <h4 class="mb-4">{% trans "Order Summary" %}</h4>
                         
                         {% for item in cart_items %}
                         <div class="order-item">
-                            {% if item.product.images.first %}
-                            <img src="{{ item.product.images.first.image.url }}" alt="{{ item.product.name }}" class="order-item-image">
+                            {% if item.product.product_images.first %}
+                            <img src="{{ item.product.product_images.first.image.url }}" alt="{{ item.product.name }}" class="order-item-image">
                             {% else %}
                             <div class="order-item-image bg-light d-flex align-items-center justify-content-center">
                                 <i class="fas fa-image text-muted"></i>
@@ -283,34 +283,34 @@
                             {% endif %}
                             <div class="flex-grow-1">
                                 <h6 class="mb-1">{{ item.product.name }}</h6>
-                                <small>Qty: {{ item.quantity }} × ${{ item.product.price }}</small>
+                                <small>{% blocktrans with qty=item.quantity price=item.product.price|floatformat:0 %}Qty: {{ qty }} × {{ price }} RWF{% endblocktrans %}</small>
                             </div>
                             <div class="text-end">
-                                <strong>${{ item.total_price }}</strong>
+                                <strong>{{ item.total_price|floatformat:0 }} RWF</strong>
                             </div>
                         </div>
                         {% endfor %}
                         
                         <div class="amount-breakdown">
                             <div class="d-flex justify-content-between mb-2">
-                                <span>Subtotal:</span>
-                                <span>${{ subtotal }}</span>
+                                <span>{% trans "Subtotal:" %}</span>
+                                <span>{{ subtotal|floatformat:0 }} RWF</span>
                             </div>
                             <div class="d-flex justify-content-between mb-2">
-                                <span>Tax (18%):</span>
-                                <span>${{ tax_amount }}</span>
+                                <span>{% trans "Tax (18%):" %}</span>
+                                <span>{{ tax_amount|floatformat:0 }} RWF</span>
                             </div>
                             <div class="d-flex justify-content-between mb-3">
-                                <span>Shipping:</span>
-                                <span>${{ shipping_cost }}</span>
+                                <span>{% trans "Shipping:" %}</span>
+                                <span>{{ shipping_cost|floatformat:0 }} RWF</span>
                             </div>
                             <hr style="border-color: rgba(255,255,255,0.3);">
                             <div class="d-flex justify-content-between mb-0">
-                                <strong>Total Amount:</strong>
-                                <strong class="h5">${{ total_amount }}</strong>
+                                <strong>{% trans "Total Amount:" %}</strong>
+                                <strong class="h5">{{ total_amount|floatformat:0 }} RWF</strong>
                             </div>
                             <small class="text-muted d-block mt-2" id="currencyNote">
-                                Amount will be converted to your local currency
+                                {% trans "Amount will be converted to your local currency" %}
                             </small>
                         </div>
                     </div>
@@ -322,15 +322,15 @@
                         <div class="d-flex align-items-center mb-3">
                             <i class="fas fa-headset text-primary me-3 fa-lg"></i>
                             <div>
-                                <h6 class="mb-1">24/7 Support</h6>
-                                <small class="text-muted">Call: +255 798 780 022</small>
+                                <h6 class="mb-1">{% trans "24/7 Support" %}</h6>
+                                <small class="text-muted">{% trans "Call: +255 798 780 022" %}</small>
                             </div>
                         </div>
                         <div class="d-flex align-items-center">
                             <i class="fas fa-shield-alt text-success me-3 fa-lg"></i>
                             <div>
-                                <h6 class="mb-1">Secure Payment</h6>
-                                <small class="text-muted">256-bit SSL encryption</small>
+                                <h6 class="mb-1">{% trans "Secure Payment" %}</h6>
+                                <small class="text-muted">{% trans "256-bit SSL encryption" %}</small>
                             </div>
                         </div>
                     </div>
@@ -344,8 +344,8 @@
 <div class="loading-overlay d-none" id="loadingOverlay">
     <div class="text-center">
         <div class="spinner-border text-light mb-3" style="width: 3rem; height: 3rem;"></div>
-        <h4>Processing Payment...</h4>
-        <p id="loadingMessage">Please wait while we process your payment</p>
+        <h4>{% trans "Processing Payment..." %}</h4>
+        <p id="loadingMessage">{% trans "Please wait while we process your payment" %}</p>
     </div>
 </div>
 
@@ -357,11 +357,11 @@
                 <div class="success-icon">
                     <i class="fas fa-check-circle"></i>
                 </div>
-                <h3 class="text-success mb-3">Payment Successful!</h3>
-                <p class="mb-4">Thank you for your purchase. Your order has been confirmed.</p>
+                <h3 class="text-success mb-3">{% trans "Payment Successful!" %}</h3>
+                <p class="mb-4">{% trans "Thank you for your purchase. Your order has been confirmed." %}</p>
                 <div class="d-grid gap-2">
-                    <a href="{% url 'bika:user_orders' %}" class="btn btn-primary">View Orders</a>
-                    <a href="{% url 'bika:home' %}" class="btn btn-outline-secondary">Continue Shopping</a>
+                    <a href="{% url 'bika:user_orders' %}" class="btn btn-primary">{% trans "View Orders" %}</a>
+                    <a href="{% url 'bika:home' %}" class="btn btn-outline-secondary">{% trans "Continue Shopping" %}</a>
                 </div>
             </div>
         </div>
@@ -399,7 +399,7 @@ function selectCountry(countryCode) {
     
     // Update currency note
     document.getElementById('currencyNote').textContent = 
-        `Amount will be converted to ${config.currency}`;
+        `{% trans "Amount will be converted to" %} ${config.currency}`;
     
     // Reload payment methods (you would fetch this from server in real implementation)
     loadPaymentMethodsForCountry(countryCode);
@@ -461,8 +461,8 @@ async function createOrder() {
     try {
         const formData = new FormData();
         formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
-        formData.append('shipping_address', 'Default address');
-        formData.append('billing_address', 'Default address');
+        formData.append('shipping_address', '{% trans "Default address" %}');
+        formData.append('billing_address', '{% trans "Default address" %}');
         
         const response = await fetch('{% url "bika:create_order" %}', {
             method: 'POST',
@@ -487,14 +487,14 @@ async function initiateMobilePayment(method) {
     const prefix = document.getElementById('phonePrefix' + method.charAt(0).toUpperCase() + method.slice(1)).textContent;
     
     if (!phoneNumber || !/^\d{9}$/.test(phoneNumber)) {
-        alert('Please enter a valid 9-digit phone number');
+        alert('{% trans "Please enter a valid 9-digit phone number" %}');
         return;
     }
     
     const fullPhoneNumber = prefix + phoneNumber;
     
     try {
-        showLoading('Initiating ' + method + ' payment...');
+        showLoading('{% trans "Initiating" %} ' + method + ' {% trans "payment..." %}');
         
         const orderData = await createOrder();
         currentOrderId = orderData.order_id;
@@ -513,21 +513,21 @@ async function initiateMobilePayment(method) {
         const data = await response.json();
         
         if (data.success) {
-            showLoading('Waiting for payment confirmation...');
+            showLoading('{% trans "Waiting for payment confirmation..." %}');
             pollPaymentStatus(data.payment_id);
         } else {
             hideLoading();
-            alert('Payment failed: ' + data.message);
+            alert('{% trans "Payment failed:" %} ' + data.message);
         }
     } catch (error) {
         hideLoading();
-        alert('Error: ' + error.message);
+        alert('{% trans "Error:" %} ' + error.message);
     }
 }
 
 async function initiateCardPayment(method) {
     try {
-        showLoading('Processing card payment...');
+        showLoading('{% trans "Processing card payment..." %}');
         
         const orderData = await createOrder();
         currentOrderId = orderData.order_id;
@@ -551,20 +551,20 @@ async function initiateCardPayment(method) {
             showSuccess();
         } else {
             hideLoading();
-            alert('Payment failed: ' + data.message);
+            alert('{% trans "Payment failed:" %} ' + data.message);
         }
     } catch (error) {
         hideLoading();
-        alert('Error: ' + error.message);
+        alert('{% trans "Error:" %} ' + error.message);
     }
 }
 
 function initiatePayPalPayment() {
-    alert('PayPal integration coming soon!');
+    alert('{% trans "PayPal integration coming soon!" %}');
 }
 
 // Utility functions
-function showLoading(message = 'Processing...') {
+function showLoading(message = '{% trans "Processing..." %}') {
     document.getElementById('loadingMessage').textContent = message;
     document.getElementById('loadingOverlay').classList.remove('d-none');
 }
@@ -597,7 +597,7 @@ async function pollPaymentStatus(paymentId) {
             
             if (attempts >= maxAttempts) {
                 hideLoading();
-                alert('Payment timeout. Please check your phone and refresh the page.');
+                alert('{% trans "Payment timeout. Please check your phone and refresh the page." %}');
                 return;
             }
             
@@ -608,7 +608,7 @@ async function pollPaymentStatus(paymentId) {
                 setTimeout(checkStatus, 5000);
             } else {
                 hideLoading();
-                alert('Error checking payment status.');
+                alert('{% trans "Error checking payment status." %}');
             }
         }
     };

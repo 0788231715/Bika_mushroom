@@ -23,6 +23,9 @@ urlpatterns = [
     # ==================== APP URLS (includes api/v1 inside bika.urls) ====================
     path("", include("bika.urls")),
 
+    # ==================== I18N ====================
+    path("i18n/", include("django.conf.urls.i18n")),
+
     # Optional auth routes
     path("accounts/", include("django.contrib.auth.urls")),
 ]

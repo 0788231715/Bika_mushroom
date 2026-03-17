@@ -1,7 +1,8 @@
 {% extends 'bika/base.html' %}
 {% load static %}
+{% load i18n %}
 
-{% block title %}Order #{{ order.order_number }} - Bika{% endblock %}
+{% block title %}{% trans "Order" %} #{{ order.order_number }} - Bika{% endblock %}
 
 {% block content %}
 <div class="container py-5">
@@ -16,7 +17,7 @@
             <div class="card shadow-sm">
                 <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                     <h4 class="mb-0">
-                        <i class="fas fa-receipt me-2"></i>Order #{{ order.order_number }}
+                        <i class="fas fa-receipt me-2"></i>{% trans "Order" %} #{{ order.order_number }}
                     </h4>
                     <span class="badge bg-light text-primary">
                         {{ order.created_at|date:"M d, Y" }}
@@ -31,25 +32,25 @@
                                     <div class="timeline-icon">
                                         <i class="fas fa-shopping-cart"></i>
                                     </div>
-                                    <div class="timeline-label">Order Placed</div>
+                                    <div class="timeline-label">{% trans "Order Placed" %}</div>
                                 </div>
                                 <div class="timeline-step {% if order.status == 'confirmed' %}active{% endif %}">
                                     <div class="timeline-icon">
                                         <i class="fas fa-check-circle"></i>
                                     </div>
-                                    <div class="timeline-label">Confirmed</div>
+                                    <div class="timeline-label">{% trans "Confirmed" %}</div>
                                 </div>
                                 <div class="timeline-step {% if order.status == 'shipped' %}active{% endif %}">
                                     <div class="timeline-icon">
                                         <i class="fas fa-shipping-fast"></i>
                                     </div>
-                                    <div class="timeline-label">Shipped</div>
+                                    <div class="timeline-label">{% trans "Shipped" %}</div>
                                 </div>
                                 <div class="timeline-step {% if order.status == 'delivered' %}active{% endif %}">
                                     <div class="timeline-icon">
                                         <i class="fas fa-home"></i>
                                     </div>
-                                    <div class="timeline-label">Delivered</div>
+                                    <div class="timeline-label">{% trans "Delivered" %}</div>
                                 </div>
                             </div>
                         </div>
@@ -60,13 +61,13 @@
                         <div class="col-md-8">
                             <div class="card mb-4">
                                 <div class="card-header">
-                                    <h6 class="mb-0"><i class="fas fa-box me-2"></i>Order Items</h6>
+                                    <h6 class="mb-0"><i class="fas fa-box me-2"></i>{% trans "Order Items" %}</h6>
                                 </div>
                                 <div class="card-body">
                                     {% for item in order.items.all %}
                                     <div class="order-item d-flex align-items-center mb-3 pb-3 border-bottom">
-                                        {% if item.product.images.first %}
-                                        <img src="{{ item.product.images.first.image.url }}" 
+                                        {% if item.product.product_images.first %}
+                                        <img src="{{ item.product.product_images.first.image.url }}" 
                                              alt="{{ item.product.name }}"
                                              class="rounded me-3"
                                              style="width: 80px; height: 80px; object-fit: cover;">
@@ -78,14 +79,14 @@
                                         {% endif %}
                                         <div class="flex-grow-1">
                                             <h6 class="mb-1">{{ item.product.name }}</h6>
-                                            <p class="text-muted small mb-1">Quantity: {{ item.quantity }}</p>
+                                            <p class="text-muted small mb-1">{% trans "Quantity:" %} {{ item.quantity }}</p>
                                             <p class="text-muted small mb-0">
-                                                Vendor: {{ item.product.vendor.business_name|default:item.product.vendor.username }}
+                                                {% trans "Vendor:" %} {{ item.product.vendor.business_name|default:item.product.vendor.username }}
                                             </p>
                                         </div>
                                         <div class="text-end">
-                                            <div class="h6 text-primary">${{ item.total_price }}</div>
-                                            <small class="text-muted">${{ item.price }} each</small>
+                                            <div class="h6 text-primary">{{ item.total_price|floatformat:0 }} RWF</div>
+                                            <small class="text-muted">{{ item.price|floatformat:0 }} RWF {% trans "each" %}</small>
                                         </div>
                                     </div>
                                     {% endfor %}
@@ -97,24 +98,24 @@
                         <div class="col-md-4">
                             <div class="card mb-4">
                                 <div class="card-header">
-                                    <h6 class="mb-0"><i class="fas fa-receipt me-2"></i>Order Summary</h6>
+                                    <h6 class="mb-0"><i class="fas fa-receipt me-2"></i>{% trans "Order Summary" %}</h6>
                                 </div>
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between mb-2">
-                                        <span>Subtotal:</span>
-                                        <span>${{ order.total_amount }}</span>
+                                        <span>{% trans "Subtotal:" %}</span>
+                                        <span>{{ order.total_amount|floatformat:0 }} RWF</span>
                                     </div>
                                     <div class="d-flex justify-content-between mb-2">
-                                        <span>Shipping:</span>
-                                        <span>$5.00</span>
+                                        <span>{% trans "Shipping:" %}</span>
+                                        <span>0 RWF</span>
                                     </div>
                                     <div class="d-flex justify-content-between mb-2">
-                                        <span>Tax:</span>
-                                        <span>${{ order.total_amount|floatformat:2 }}</span>
+                                        <span>{% trans "Tax:" %}</span>
+                                        <span>{% trans "Included" %}</span>
                                     </div>
                                     <div class="d-flex justify-content-between mb-3 fw-bold border-top pt-2">
-                                        <span>Total:</span>
-                                        <span class="text-primary">${{ order.total_amount|add:5|add:order.total_amount }}</span>
+                                        <span>{% trans "Total:" %}</span>
+                                        <span class="text-primary">{{ order.total_amount|floatformat:0 }} RWF</span>
                                     </div>
                                 </div>
                             </div>
@@ -122,7 +123,7 @@
                             <!-- Shipping Address -->
                             <div class="card">
                                 <div class="card-header">
-                                    <h6 class="mb-0"><i class="fas fa-truck me-2"></i>Shipping Address</h6>
+                                    <h6 class="mb-0"><i class="fas fa-truck me-2"></i>{% trans "Shipping Address" %}</h6>
                                 </div>
                                 <div class="card-body">
                                     <p class="mb-0">{{ order.shipping_address|linebreaks }}</p>
@@ -136,15 +137,15 @@
                         <div class="col-12">
                             <div class="d-flex gap-2 justify-content-end">
                                 <button class="btn btn-outline-primary">
-                                    <i class="fas fa-print me-2"></i>Print Invoice
+                                    <i class="fas fa-print me-2"></i>{% trans "Print Invoice" %}
                                 </button>
                                 {% if order.status == 'pending' %}
                                 <button class="btn btn-outline-danger cancel-order" data-order-id="{{ order.id }}">
-                                    <i class="fas fa-times me-2"></i>Cancel Order
+                                    <i class="fas fa-times me-2"></i>{% trans "Cancel Order" %}
                                 </button>
                                 {% endif %}
                                 <a href="{% url 'bika:user_orders' %}" class="btn btn-secondary">
-                                    <i class="fas fa-arrow-left me-2"></i>Back to Orders
+                                    <i class="fas fa-arrow-left me-2"></i>{% trans "Back to Orders" %}
                                 </a>
                             </div>
                         </div>
@@ -228,9 +229,9 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.cancel-order').forEach(button => {
         button.addEventListener('click', function() {
             const orderId = this.dataset.orderId;
-            if (confirm('Are you sure you want to cancel this order?')) {
+            if (confirm('{% trans "Are you sure you want to cancel this order?" %}')) {
                 // Add cancel order logic here
-                showToast('Order cancellation request sent!', 'info');
+                showToast('{% trans "Order cancellation request sent!" %}', 'info');
             }
         });
     });

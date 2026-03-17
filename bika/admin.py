@@ -121,7 +121,7 @@ def admin_dashboard(request):
     # Recent Data
     recent_products = Product.objects.select_related(
         'vendor', 'category'
-    ).prefetch_related('images').order_by('-created_at')[:6]
+    ).prefetch_related('product_images').order_by('-created_at')[:6]
     
     recent_orders = Order.objects.select_related(
         'user'
@@ -156,8 +156,8 @@ def admin_dashboard(request):
         'alert_stats': alert_stats,
         
         # Revenue
-        'total_revenue': "{:,.2f}".format(total_revenue) if total_revenue else "0.00",
-        'today_revenue': "{:,.2f}".format(today_revenue) if today_revenue else "0.00",
+        'total_revenue': "{:,.0f} RWF".format(total_revenue) if total_revenue else "0 RWF",
+        'today_revenue': "{:,.0f} RWF".format(today_revenue) if today_revenue else "0 RWF",
         
         # Recent Data
         'recent_products': recent_products,
@@ -236,13 +236,13 @@ class CustomAdminActions:
 
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
-    list_display = ['username', 'email', 'user_type', 'is_active', 'is_staff', 'date_joined', 'action_buttons']
+    list_display = ['profile_preview', 'username', 'email', 'user_type', 'is_active', 'is_staff', 'date_joined', 'action_buttons']
     list_filter = ['user_type', 'is_active', 'is_staff', 'date_joined']
     search_fields = ['username', 'email', 'first_name', 'last_name', 'business_name']
-    readonly_fields = ['date_joined', 'last_login']
+    readonly_fields = ['profile_preview', 'date_joined', 'last_login']
     fieldsets = (
         ('Personal Info', {
-            'fields': ('username', 'email', 'first_name', 'last_name', 'phone', 'profile_picture')
+            'fields': ('username', 'email', 'first_name', 'last_name', 'phone', 'profile_picture', 'profile_preview')
         }),
         ('User Type & Permissions', {
             'fields': ('user_type', 'is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')
@@ -266,6 +266,12 @@ class CustomUserAdmin(admin.ModelAdmin):
     )
     actions = ['activate_users', 'deactivate_users', 'make_vendors', 'make_customers']
     
+    def profile_preview(self, obj):
+        if obj.profile_picture:
+            return format_html('<img src="{}" width="50" height="50" style="object-fit: cover; border-radius: 50%;" />', obj.profile_picture.url)
+        return format_html('<div style="width: 50px; height: 50px; background: #eee; border-radius: 50%; display: flex; align-items: center; justify-content: center;"><i class="fas fa-user text-muted"></i></div>')
+    profile_preview.short_description = 'Profile Preview'
+
     def action_buttons(self, obj):
         return format_html(
             '<a href="{}" class="button">View</a>',
@@ -293,83 +299,59 @@ class CustomUserAdmin(admin.ModelAdmin):
         self.message_user(request, f"{queryset.count()} users converted to customers.")
     make_customers.short_description = "Convert to customers"
 
+class ProductImageInline(admin.TabularInline):
+    model = ProductImage
+    extra = 1
+    fields = ['image', 'image_preview', 'alt_text', 'display_order', 'is_primary']
+    readonly_fields = ['image_preview']
+
+    def image_preview(self, obj):
+        if obj.image:
+            return format_html('<img src="{}" width="50" height="50" style="object-fit: cover;" />', obj.image.url)
+        return "-"
+    image_preview.short_description = 'Preview'
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['name', 'sku', 'category', 'vendor', 'price', 'stock_status', 
-                   'status', 'is_featured', 'created_at', 'action_buttons']
-    list_filter = ['status', 'category', 'vendor', 'is_featured', 'is_digital', 'created_at']
-    search_fields = ['name', 'sku', 'description', 'short_description', 'tags']
-    readonly_fields = ['created_at', 'updated_at', 'published_at', 'views_count']
-    list_editable = ['status', 'is_featured']  # These are in list_display
+    list_display = ['image_preview', 'mushroom_name', 'category', 'vendor', 'price_rwf', 'stock_quantity', 
+                   'status', 'is_featured', 'created_at']
+    list_filter = ['status', 'category', 'vendor', 'is_featured', 'created_at']
+    search_fields = ['mushroom_name', 'description']
+    readonly_fields = ['image_preview', 'created_at', 'updated_at', 'published_at', 'views_count']
+    list_editable = ['status', 'is_featured']
     list_per_page = 20
-    actions = ['activate_products', 'draft_products', 'mark_featured', 'unmark_featured']
+    inlines = [ProductImageInline]
     
     fieldsets = (
         ('Basic Information', {
-            'fields': ('name', 'slug', 'sku', 'barcode', 'category', 'vendor')
+            'fields': ('mushroom_name', 'slug', 'category', 'vendor')
         }),
-        ('Descriptions', {
-            'fields': ('description', 'short_description', 'tags')
-        }),
-        ('Pricing', {
-            'fields': ('price', 'compare_price', 'cost_price', 'tax_rate')
-        }),
-        ('Inventory', {
-            'fields': ('stock_quantity', 'low_stock_threshold', 'track_inventory', 'allow_backorders')
-        }),
-        ('Product Details', {
-            'fields': ('brand', 'model', 'weight', 'dimensions', 'color', 'size', 'material')
+        ('Mushroom Details', {
+            'fields': ('description', 'price', 'stock_quantity', 'weight', 'images', 'image_preview')
         }),
         ('Status & Visibility', {
-            'fields': ('status', 'condition', 'is_featured', 'is_digital')
+            'fields': ('status', 'is_featured', 'visibility')
         }),
-        ('SEO', {
-            'fields': ('meta_title', 'meta_description'),
-            'classes': ('collapse',),
-        }),
-        ('Timestamps', {
+        ('Metadata (Auto)', {
             'fields': ('created_at', 'updated_at', 'published_at', 'views_count'),
             'classes': ('collapse',),
         }),
     )
-    
-    def stock_status(self, obj):
-        if not obj.track_inventory:
-            return format_html('<span class="badge badge-info">Not Tracked</span>')
-        if obj.stock_quantity <= 0:
-            return format_html('<span class="badge badge-danger">Out of Stock</span>')
-        elif obj.stock_quantity <= obj.low_stock_threshold:
-            return format_html('<span class="badge badge-warning">Low Stock</span>')
-        else:
-            return format_html('<span class="badge badge-success">In Stock</span>')
-    stock_status.short_description = 'Stock'
-    
-    def action_buttons(self, obj):
-        return format_html(
-            '<a href="{}" class="button">View</a>',
-            reverse('admin:bika_product_change', args=[obj.id])
-        )
-    action_buttons.short_description = 'Actions'
-    
-    def activate_products(self, request, queryset):
-        updated = queryset.update(status='active')
-        self.message_user(request, f"{updated} products activated.")
-    activate_products.short_description = "Activate selected products"
-    
-    def draft_products(self, request, queryset):
-        updated = queryset.update(status='draft')
-        self.message_user(request, f"{updated} products moved to draft.")
-    draft_products.short_description = "Move to draft"
-    
-    def mark_featured(self, request, queryset):
-        updated = queryset.update(is_featured=True)
-        self.message_user(request, f"{updated} products marked as featured.")
-    mark_featured.short_description = "Mark as featured"
-    
-    def unmark_featured(self, request, queryset):
-        updated = queryset.update(is_featured=False)
-        self.message_user(request, f"{updated} products unmarked as featured.")
-    unmark_featured.short_description = "Remove featured status"
+
+    def image_preview(self, obj):
+        if obj.images:
+            return format_html('<img src="{}" width="100" height="100" style="object-fit: cover; border-radius: 8px;" />', obj.images.url)
+        return "No Image"
+    image_preview.short_description = 'Main Image Preview'
+
+    def price_rwf(self, obj):
+        if obj.price is not None:
+            try:
+                return format_html('<b>{:,.0f} RWF</b>', float(obj.price))
+            except (ValueError, TypeError):
+                return format_html('<b>{} RWF</b>', obj.price)
+        return "-"
+    price_rwf.short_description = 'Price'
 
 # Safely unregister ProductCategory if it was already registered somewhere above
 try:
@@ -380,11 +362,18 @@ except NotRegistered:
 
 @admin.register(ProductCategory)
 class ProductCategoryAdmin(admin.ModelAdmin):
-    list_display = ['name', 'slug', 'product_count', 'is_active', 'display_order']
+    list_display = ['image_preview', 'name', 'slug', 'product_count', 'is_active', 'display_order']
     list_filter = ['is_active', 'parent']
     search_fields = ['name', 'description']
     list_editable = ['display_order', 'is_active']
     prepopulated_fields = {'slug': ('name',)}
+    readonly_fields = ['image_preview']
+
+    def image_preview(self, obj):
+        if obj.image:
+            return format_html('<img src="{}" width="50" height="50" style="object-fit: cover; border-radius: 4px;" />', obj.image.url)
+        return "-"
+    image_preview.short_description = 'Preview'
 
     def product_count(self, obj):
         return obj.products.count()
@@ -445,7 +434,7 @@ class CartAdmin(admin.ModelAdmin):
     readonly_fields = ['added_at', 'updated_at']
     
     def total_price(self, obj):
-        return f"${obj.total_price:.2f}" if obj.total_price else "$0.00"
+        return f"{obj.total_price:,.0f} RWF" if obj.total_price else "0 RWF"
     total_price.short_description = 'Total'
 
 @admin.register(Order)
@@ -490,7 +479,7 @@ class OrderItemAdmin(admin.ModelAdmin):
     search_fields = ['order__order_number', 'product__name']
     
     def total_price(self, obj):
-        return f"${obj.total_price:.2f}" if obj.total_price else "$0.00"
+        return f"{obj.total_price:,.0f} RWF" if obj.total_price else "0 RWF"
     total_price.short_description = 'Total'
 
 # ==================== PAYMENT MODELS ====================
@@ -528,11 +517,18 @@ class CurrencyExchangeRateAdmin(admin.ModelAdmin):
 
 @admin.register(FruitType)
 class FruitTypeAdmin(admin.ModelAdmin):
-    list_display = ['name', 'scientific_name', 'optimal_temp_range', 'optimal_humidity_range', 
+    list_display = ['image_preview', 'name', 'scientific_name', 'optimal_temp_range', 'optimal_humidity_range', 
                    'shelf_life_days', 'batch_count']
     list_filter = ['ethylene_sensitive', 'chilling_sensitive']
     search_fields = ['name', 'scientific_name']
     list_editable = ['shelf_life_days']  # This is in list_display
+    readonly_fields = ['image_preview']
+    
+    def image_preview(self, obj):
+        if obj.image:
+            return format_html('<img src="{}" width="50" height="50" style="object-fit: cover; border-radius: 4px;" />', obj.image.url)
+        return "-"
+    image_preview.short_description = 'Preview'
     
     def optimal_temp_range(self, obj):
         return f"{obj.optimal_temp_min} - {obj.optimal_temp_max}°C"
@@ -765,11 +761,18 @@ class SiteInfoAdmin(admin.ModelAdmin):
 
 @admin.register(Service)
 class ServiceAdmin(admin.ModelAdmin):
-    list_display = ['name', 'slug', 'display_order', 'is_active', 'created_at']
+    list_display = ['image_preview', 'name', 'slug', 'display_order', 'is_active', 'created_at']
     list_filter = ['is_active', 'created_at']
     search_fields = ['name', 'description']
     prepopulated_fields = {'slug': ('name',)}
     list_editable = ['display_order', 'is_active']  # These are in list_display
+    readonly_fields = ['image_preview']
+    
+    def image_preview(self, obj):
+        if obj.image:
+            return format_html('<img src="{}" width="50" height="50" style="object-fit: cover; border-radius: 4px;" />', obj.image.url)
+        return "-"
+    image_preview.short_description = 'Preview'
 
 @admin.register(Testimonial)
 class TestimonialAdmin(admin.ModelAdmin):

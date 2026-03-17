@@ -1,35 +1,35 @@
 {% extends 'bika/pages/admin/base_admin.html' %}
-{% load static %}
+{% load static i18n %}
 
-{% block title %}Fruit Quality Dashboard - Bika Admin{% endblock %}
+{% block title %}{% trans "Fruit Quality Dashboard" %} - Bika Admin{% endblock %}
 
-{% block page_title %}Fruit Quality Monitoring Dashboard{% endblock %}
-{% block page_subtitle %}Real-time fruit quality tracking and AI predictions{% endblock %}
+{% block page_title %}{% trans "Fruit Quality Monitoring Dashboard" %}{% endblock %}
+{% block page_subtitle %}{% trans "Real-time fruit quality tracking and AI predictions" %}{% endblock %}
 
 {% block page_actions %}
 <div class="btn-group">
     <a href="{% url 'bika:create_fruit_batch' %}" class="btn btn-admin">
-        <i class="fas fa-plus-circle me-2"></i>New Batch
+        <i class="fas fa-plus-circle me-2"></i>{% trans "New Batch" %}
     </a>
     <button class="btn btn-admin-outline" onclick="refreshSensorData()">
-        <i class="fas fa-sync-alt me-2"></i>Refresh Data
+        <i class="fas fa-sync-alt me-2"></i>{% trans "Refresh Data" %}
     </button>
     <div class="btn-group">
         <button type="button" class="btn btn-admin-outline dropdown-toggle" data-bs-toggle="dropdown">
-            <i class="fas fa-download me-2"></i>Export
+            <i class="fas fa-download me-2"></i>{% trans "Export" %}
         </button>
         <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#" onclick="exportData('csv')">Export as CSV</a></li>
-            <li><a class="dropdown-item" href="#" onclick="exportData('excel')">Export as Excel</a></li>
-            <li><a class="dropdown-item" href="#" onclick="exportData('pdf')">Export as PDF</a></li>
+            <li><a class="dropdown-item" href="#" onclick="exportData('csv')">{% trans "Export as CSV" %}</a></li>
+            <li><a class="dropdown-item" href="#" onclick="exportData('excel')">{% trans "Export as Excel" %}</a></li>
+            <li><a class="dropdown-item" href="#" onclick="exportData('pdf')">{% trans "Export as PDF" %}</a></li>
         </ul>
     </div>
 </div>
 {% endblock %}
 
 {% block breadcrumb_items %}
-<li class="breadcrumb-item"><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
-<li class="breadcrumb-item active">Fruit Quality Dashboard</li>
+<li class="breadcrumb-item"><a href="{% url 'admin_dashboard' %}">{% trans "Dashboard" %}</a></li>
+<li class="breadcrumb-item active">{% trans "Fruit Quality Dashboard" %}</li>
 {% endblock %}
 
 {% block content %}
@@ -39,42 +39,42 @@
         <div class="stats-card" style="background: linear-gradient(135deg, #28a745, #20c997);">
             <i class="fas fa-layer-group"></i>
             <h3>{{ stats.total_batches }}</h3>
-            <p>Total Batches</p>
+            <p>{% trans "Total Batches" %}</p>
         </div>
     </div>
     <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
         <div class="stats-card" style="background: linear-gradient(135deg, #17a2b8, #0dcaf0);">
             <i class="fas fa-play-circle"></i>
             <h3>{{ stats.active_batches }}</h3>
-            <p>Active Batches</p>
+            <p>{% trans "Active Batches" %}</p>
         </div>
     </div>
     <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
         <div class="stats-card" style="background: linear-gradient(135deg, #ffc107, #fd7e14);">
             <i class="fas fa-exclamation-triangle"></i>
             <h3>{{ stats.at_risk_batches }}</h3>
-            <p>At Risk</p>
+            <p>{% trans "At Risk" %}</p>
         </div>
     </div>
     <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
         <div class="stats-card" style="background: linear-gradient(135deg, #dc3545, #dc3545);">
             <i class="fas fa-times-circle"></i>
             <h3>{{ stats.expired_batches }}</h3>
-            <p>Expired</p>
+            <p>{% trans "Expired" %}</p>
         </div>
     </div>
     <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
         <div class="stats-card" style="background: linear-gradient(135deg, #6f42c1, #6610f2);">
             <i class="fas fa-database"></i>
             <h3>{{ stats.total_readings }}</h3>
-            <p>Total Readings</p>
+            <p>{% trans "Total Readings" %}</p>
         </div>
     </div>
     <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
         <div class="stats-card" style="background: linear-gradient(135deg, #20c997, #198754);">
             <i class="fas fa-robot"></i>
             <h3>{{ stats.ai_predictions }}</h3>
-            <p>AI Predictions</p>
+            <p>{% trans "AI Predictions" %}</p>
         </div>
     </div>
 </div>
@@ -85,7 +85,7 @@
         <!-- Quality Distribution Chart -->
         <div class="admin-card mb-4">
             <div class="card-header">
-                <h5><i class="fas fa-chart-pie me-2"></i>Fruit Quality Distribution</h5>
+                <h5><i class="fas fa-chart-pie me-2"></i>{% trans "Fruit Quality Distribution" %}</h5>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -99,35 +99,35 @@
                             <div class="list-group-item d-flex justify-content-between align-items-center">
                                 <span class="d-flex align-items-center">
                                     <span class="quality-dot bg-success me-2"></span>
-                                    Fresh
+                                    {% trans "Fresh" %}
                                 </span>
                                 <span class="badge bg-success">{{ quality_stats.fresh }}</span>
                             </div>
                             <div class="list-group-item d-flex justify-content-between align-items-center">
                                 <span class="d-flex align-items-center">
                                     <span class="quality-dot bg-info me-2"></span>
-                                    Good
+                                    {% trans "Good" %}
                                 </span>
                                 <span class="badge bg-info">{{ quality_stats.good }}</span>
                             </div>
                             <div class="list-group-item d-flex justify-content-between align-items-center">
                                 <span class="d-flex align-items-center">
                                     <span class="quality-dot bg-warning me-2"></span>
-                                    Fair
+                                    {% trans "Fair" %}
                                 </span>
                                 <span class="badge bg-warning">{{ quality_stats.fair }}</span>
                             </div>
                             <div class="list-group-item d-flex justify-content-between align-items-center">
                                 <span class="d-flex align-items-center">
                                     <span class="quality-dot bg-danger me-2"></span>
-                                    Poor
+                                    {% trans "Poor" %}
                                 </span>
                                 <span class="badge bg-danger">{{ quality_stats.poor }}</span>
                             </div>
                             <div class="list-group-item d-flex justify-content-between align-items-center">
                                 <span class="d-flex align-items-center">
                                     <span class="quality-dot bg-secondary me-2"></span>
-                                    Rotten
+                                    {% trans "Rotten" %}
                                 </span>
                                 <span class="badge bg-secondary">{{ quality_stats.rotten }}</span>
                             </div>
@@ -140,9 +140,9 @@
         <!-- Active Batches Table -->
         <div class="admin-card">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h5><i class="fas fa-list me-2"></i>Active Fruit Batches</h5>
+                <h5><i class="fas fa-list me-2"></i>{% trans "Active Fruit Batches" %}</h5>
                 <div class="input-group" style="width: 300px;">
-                    <input type="text" class="form-control" placeholder="Search batches..." id="batch-search">
+                    <input type="text" class="form-control" placeholder="{% trans 'Search batches...' %}" id="batch-search">
                     <button class="btn btn-outline-primary" type="button">
                         <i class="fas fa-search"></i>
                     </button>
@@ -153,15 +153,15 @@
                     <table class="table admin-table data-table">
                         <thead>
                             <tr>
-                                <th>Batch Number</th>
-                                <th>Fruit Type</th>
-                                <th>Quantity</th>
-                                <th>Storage Location</th>
-                                <th>Days Remaining</th>
-                                <th>Current Quality</th>
-                                <th>Temperature</th>
-                                <th>Humidity</th>
-                                <th>Actions</th>
+                                <th>{% trans "Batch Number" %}</th>
+                                <th>{% trans "Fruit Type" %}</th>
+                                <th>{% trans "Quantity" %}</th>
+                                <th>{% trans "Storage Location" %}</th>
+                                <th>{% trans "Days Remaining" %}</th>
+                                <th>{% trans "Current Quality" %}</th>
+                                <th>{% trans "Temperature" %}</th>
+                                <th>{% trans "Humidity" %}</th>
+                                <th>{% trans "Actions" %}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -170,7 +170,7 @@
                                 <td>
                                     <strong>{{ batch.batch_number }}</strong>
                                     <div class="small text-muted">
-                                        Arrived: {{ batch.arrival_date|date:"M d" }}
+                                        {% trans "Arrived:" %} {{ batch.arrival_date|date:"M d" }}
                                     </div>
                                 </td>
                                 <td>
@@ -192,37 +192,37 @@
                                     {% if batch.storage_location %}
                                     {{ batch.storage_location.name|truncatechars:15 }}
                                     {% else %}
-                                    <span class="text-muted">Not assigned</span>
+                                    <span class="text-muted">{% trans "Not assigned" %}</span>
                                     {% endif %}
                                 </td>
                                 <td>
                                     {% if batch.days_remaining > 7 %}
-                                    <span class="badge bg-success">{{ batch.days_remaining }} days</span>
+                                    <span class="badge bg-success">{{ batch.days_remaining }} {% trans "days" %}</span>
                                     {% elif batch.days_remaining > 3 %}
-                                    <span class="badge bg-warning">{{ batch.days_remaining }} days</span>
+                                    <span class="badge bg-warning">{{ batch.days_remaining }} {% trans "days" %}</span>
                                     {% else %}
-                                    <span class="badge bg-danger">{{ batch.days_remaining }} days</span>
+                                    <span class="badge bg-danger">{{ batch.days_remaining }} {% trans "days" %}</span>
                                     {% endif %}
                                 </td>
                                 <td>
                                     {% with latest=batch.quality_readings.first %}
                                     {% if latest %}
                                     {% if latest.predicted_class == 'Fresh' %}
-                                    <span class="badge bg-success">Fresh</span>
+                                    <span class="badge bg-success">{% trans "Fresh" %}</span>
                                     {% elif latest.predicted_class == 'Good' %}
-                                    <span class="badge bg-info">Good</span>
+                                    <span class="badge bg-info">{% trans "Good" %}</span>
                                     {% elif latest.predicted_class == 'Fair' %}
-                                    <span class="badge bg-warning">Fair</span>
+                                    <span class="badge bg-warning">{% trans "Fair" %}</span>
                                     {% elif latest.predicted_class == 'Poor' %}
-                                    <span class="badge bg-danger">Poor</span>
+                                    <span class="badge bg-danger">{% trans "Poor" %}</span>
                                     {% elif latest.predicted_class == 'Rotten' %}
-                                    <span class="badge bg-secondary">Rotten</span>
+                                    <span class="badge bg-secondary">{% trans "Rotten" %}</span>
                                     {% endif %}
                                     <div class="small text-muted">
-                                        {{ latest.confidence_score }}% confidence
+                                        {{ latest.confidence_score }}% {% trans "confidence" %}
                                     </div>
                                     {% else %}
-                                    <span class="badge bg-light text-dark">No data</span>
+                                    <span class="badge bg-light text-dark">{% trans "No data" %}</span>
                                     {% endif %}
                                     {% endwith %}
                                 </td>
@@ -254,17 +254,17 @@
                                     <div class="btn-group btn-group-sm">
                                         <a href="{% url 'bika:batch_detail' batch_id=batch.id %}" 
                                            class="btn btn-outline-primary" 
-                                           title="View Details">
+                                           title="{% trans 'View Details' %}">
                                             <i class="fas fa-eye"></i>
                                         </a>
                                         <a href="{% url 'bika:add_quality_reading' batch_id=batch.id %}" 
                                            class="btn btn-outline-success" 
-                                           title="Add Reading">
+                                           title="{% trans 'Add Reading' %}">
                                             <i class="fas fa-plus"></i>
                                         </a>
                                         <a href="{% url 'bika:batch_analytics' batch_id=batch.id %}" 
                                            class="btn btn-outline-info" 
-                                           title="Analytics">
+                                           title="{% trans 'Analytics' %}">
                                             <i class="fas fa-chart-line"></i>
                                         </a>
                                     </div>
@@ -274,10 +274,10 @@
                             <tr>
                                 <td colspan="9" class="text-center py-4">
                                     <i class="fas fa-apple-alt fa-3x text-muted mb-3"></i>
-                                    <h5>No active batches</h5>
-                                    <p class="text-muted">Create a new fruit batch to start monitoring</p>
+                                    <h5>{% trans "No active batches" %}</h5>
+                                    <p class="text-muted">{% trans "Create a new fruit batch to start monitoring" %}</p>
                                     <a href="{% url 'bika:create_fruit_batch' %}" class="btn btn-admin">
-                                        <i class="fas fa-plus me-2"></i>Create First Batch
+                                        <i class="fas fa-plus me-2"></i>{% trans "Create First Batch" %}
                                     </a>
                                 </td>
                             </tr>
@@ -294,9 +294,9 @@
         <!-- Real-time Sensor Data -->
         <div class="admin-card mb-4">
             <div class="card-header">
-                <h5><i class="fas fa-microchip me-2"></i>Real-time Sensor Data</h5>
+                <h5><i class="fas fa-microchip me-2"></i>{% trans "Real-time Sensor Data" %}</h5>
                 <span class="badge bg-success" id="realtime-status">
-                    <i class="fas fa-circle"></i> Live
+                    <i class="fas fa-circle"></i> {% trans "Live" %}
                 </span>
             </div>
             <div class="card-body">
@@ -309,7 +309,7 @@
                                 <div>
                                     <strong>{{ sensor.get_sensor_type_display }}</strong>
                                     <div class="small text-muted">
-                                        Batch: {{ sensor.fruit_batch.batch_number|default:"N/A" }}
+                                        {% trans "Batch:" %} {{ sensor.fruit_batch.batch_number|default:"N/A" }}
                                     </div>
                                 </div>
                                 <div class="text-end">
@@ -319,11 +319,11 @@
                             </div>
                             {% if sensor.predicted_class %}
                             <div class="small mt-1">
-                                Prediction: 
+                                {% trans "Prediction:" %} 
                                 <span class="badge bg-{{ sensor.predicted_class|lower }}">
                                     {{ sensor.predicted_class }}
                                 </span>
-                                ({{ sensor.condition_confidence }}% confidence)
+                                ({{ sensor.condition_confidence }}% {% trans "confidence" %})
                             </div>
                             {% endif %}
                         </div>
@@ -332,9 +332,9 @@
                     {% else %}
                     <div class="text-center py-3">
                         <i class="fas fa-wifi-slash fa-2x text-muted mb-2"></i>
-                        <p class="text-muted mb-0">No sensor data available</p>
+                        <p class="text-muted mb-0">{% trans "No sensor data available" %}</p>
                         <button class="btn btn-sm btn-outline-primary mt-2" onclick="refreshSensorData()">
-                            <i class="fas fa-sync-alt me-1"></i>Refresh
+                            <i class="fas fa-sync-alt me-1"></i>{% trans "Refresh" %}
                         </button>
                     </div>
                     {% endif %}
@@ -342,7 +342,7 @@
                 <div class="mt-3">
                     <small class="text-muted">
                         <i class="fas fa-clock me-1"></i>
-                        Last updated: <span id="last-updated">{{ last_updated|default:"Never" }}</span>
+                        {% trans "Last updated:" %} <span id="last-updated">{{ last_updated|default:"Never" }}</span>
                     </small>
                 </div>
             </div>
@@ -351,38 +351,38 @@
         <!-- Quick Quality Check -->
         <div class="admin-card mb-4">
             <div class="card-header">
-                <h5><i class="fas fa-search me-2"></i>Quick Quality Check</h5>
+                <h5><i class="fas fa-search me-2"></i>{% trans "Quick Quality Check" %}</h5>
             </div>
             <div class="card-body">
                 <form id="quick-check-form" onsubmit="return runQuickCheck()">
                     <div class="mb-3">
-                        <label class="form-label">Select Batch</label>
+                        <label class="form-label">{% trans "Select Batch" %}</label>
                         <select class="form-select" id="quick-batch-select" required>
-                            <option value="">Choose a batch...</option>
+                            <option value="">{% trans "Choose a batch..." %}</option>
                             {% for batch in active_batches %}
                             <option value="{{ batch.id }}">{{ batch.batch_number }} - {{ batch.fruit_type.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Temperature (°C)</label>
+                        <label class="form-label">{% trans "Temperature" %} (°C)</label>
                         <input type="number" class="form-control" id="quick-temp" step="0.1" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Humidity (%)</label>
+                        <label class="form-label">{% trans "Humidity" %} (%)</label>
                         <input type="number" class="form-control" id="quick-humidity" step="0.1" required>
                     </div>
                     <button type="submit" class="btn btn-admin w-100">
-                        <i class="fas fa-play me-2"></i>Run Quality Check
+                        <i class="fas fa-play me-2"></i>{% trans "Run Quality Check" %}
                     </button>
                 </form>
                 <div id="quick-check-result" class="mt-3" style="display: none;">
                     <div class="alert alert-success" role="alert">
-                        <h5 class="alert-heading" id="result-quality">Good</h5>
-                        <p id="result-confidence">Confidence: 95%</p>
+                        <h5 class="alert-heading" id="result-quality">{% trans "Good" %}</h5>
+                        <p id="result-confidence">{% trans "Confidence: 95%" %}</p>
                         <hr>
                         <p class="mb-0 small" id="result-recommendation">
-                            Recommended action: Continue monitoring
+                            {% trans "Recommended action: Continue monitoring" %}
                         </p>
                     </div>
                 </div>
@@ -392,7 +392,7 @@
         <!-- Fruit Type Distribution -->
         <div class="admin-card">
             <div class="card-header">
-                <h5><i class="fas fa-chart-bar me-2"></i>Fruit Type Distribution</h5>
+                <h5><i class="fas fa-chart-bar me-2"></i>{% trans "Fruit Type Distribution" %}</h5>
             </div>
             <div class="card-body">
                 <div class="chart-container" style="height: 200px;">

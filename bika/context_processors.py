@@ -13,11 +13,11 @@ def site_info(request):
             # Create default site info if it doesn't exist
             site_info_obj = SiteInfo.objects.create(
                 name="Bika",
-                tagline="AI-Powered Fruit Quality Monitoring & E-commerce Platform",
+                tagline="Your inventory Our Innovation",
                 description="Your Success Is Our Business - Bika provides exceptional services to help your business grow.",
-                email="contact@bika.com",
-                phone="+255 123 456 789",
-                address="Dar es Salaam, Tanzania",
+                email="abeliniyigena@gmail.com",
+                phone="+250798780022",
+                address="Kigali, Rwanda",
                 facebook_url="https://facebook.com/bika",
                 twitter_url="https://twitter.com/bika",
                 instagram_url="https://instagram.com/bika",
@@ -32,14 +32,14 @@ def site_info(request):
         # Database not ready (tables not created yet)
         context['site_info'] = None
         context['site_name'] = 'Bika'
-        context['site_email'] = 'contact@bika.com'
-        context['site_phone'] = '+255 123 456 789'
-        context['site_address'] = 'Dar es Salaam, Tanzania'
+        context['site_email'] = 'abeliniyigena@gmail.com'
+        context['site_phone'] = '+250798780022'
+        context['site_address'] = 'Kigali, Rwanda'
     except Exception as e:
         print(f"SiteInfo error: {e}")
         context['site_info'] = None
         context['site_name'] = 'Bika'
-        context['site_email'] = 'contact@bika.com'
+        context['site_email'] = 'abeliniyigena@gmail.com'
     
     # 2. Featured Services (for navigation dropdown)
     try:
@@ -177,7 +177,7 @@ def site_info(request):
         "We help businesses optimize storage, predict quality, and increase sales.")
     
     context['meta_title'] = getattr(site_info_obj, 'meta_title', 
-        "Bika - AI-Powered Fruit Quality Monitoring & E-commerce Platform")
+        "Bika - Your inventory Our Innovation")
     
     # 17. Social Media URLs
     context['social_facebook'] = getattr(site_info_obj, 'facebook_url', '')

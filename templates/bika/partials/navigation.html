@@ -170,9 +170,26 @@
                         <a href="tel:{% if site_info and site_info.phone %}{{ site_info.phone }}{% else %}+1234567890{% endif %}" class="quick-link me-3">
                             <i class="fas fa-phone me-1"></i>Call Support
                         </a>
-                        <a href="{% url 'bika:faq' %}" class="quick-link">
+                        <a href="{% url 'bika:faq' %}" class="quick-link me-3">
                             <i class="fas fa-life-ring me-1"></i>Help Center
                         </a>
+                        <!-- Language Switcher -->
+                        <div class="d-inline-block language-switcher ms-2">
+                            <form action="{% url 'set_language' %}" method="post" class="d-inline" id="lang-form">
+                                {% csrf_token %}
+                                <input name="next" type="hidden" value="{{ request.get_full_path }}">
+                                <select name="language" class="form-select form-select-sm border-0 bg-transparent py-0" onchange="this.form.submit()" style="width: auto; cursor: pointer; color: #6c757d; font-weight: 500;">
+                                    {% get_current_language as LANGUAGE_CODE %}
+                                    {% get_available_languages as LANGUAGES %}
+                                    {% get_language_info_list for LANGUAGES as languages %}
+                                    {% for language in languages %}
+                                        <option value="{{ language.code }}" {% if language.code == LANGUAGE_CODE %}selected{% endif %}>
+                                            {{ language.name_local }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </form>
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-4 text-end">

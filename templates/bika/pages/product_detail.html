@@ -1,7 +1,7 @@
 {% extends 'bika/base.html' %}
-{% load static %}
+{% load static i18n %}
 
-{% block title %}{{ product.name }} - Bika{% endblock %}
+{% block title %}{{ product.name }} - {% trans "Bika" %}{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -228,12 +228,12 @@
             <!-- Product Images -->
             <div class="col-lg-6 mb-4">
                 <div class="product-images">
-                    {% if product.images.all %}
+                    {% if product.product_images.all %}
                         <div class="main-image mb-3">
-                            <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}" class="img-fluid" id="mainImage">
+                            <img src="{{ product.product_images.first.image.url }}" alt="{{ product.name }}" class="img-fluid" id="mainImage">
                         </div>
                         <div class="thumbnail-images d-flex gap-2 flex-wrap">
-                            {% for image in product.images.all %}
+                            {% for image in product.product_images.all %}
                             <img src="{{ image.image.url }}" alt="{{ product.name }}" 
                                  class="img-thumbnail {% if forloop.first %}active{% endif %}" 
                                  style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;"
@@ -253,8 +253,8 @@
                 <div class="product-info-card">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{% url 'bika:home' %}">Home</a></li>
-                            <li class="breadcrumb-item"><a href="{% url 'bika:product_list' %}">Products</a></li>
+                            <li class="breadcrumb-item"><a href="{% url 'bika:home' %}">{% trans "Home" %}</a></li>
+                            <li class="breadcrumb-item"><a href="{% url 'bika:product_list' %}">{% trans "Products" %}</a></li>
                             <li class="breadcrumb-item"><a href="{% url 'bika:products_by_category' product.category.slug %}">{{ product.category.name }}</a></li>
                             <li class="breadcrumb-item active">{{ product.name }}</li>
                         </ol>
@@ -264,21 +264,21 @@
                     
                     <!-- Vendor Info -->
                     <div class="vendor-info mb-3">
-                        <small class="text-muted">Sold by:</small>
+                        <small class="text-muted">{% trans "Sold by:" %}</small>
                         <strong>{{ product.vendor.business_name|default:product.vendor.username }}</strong>
                         {% if product.vendor.business_verified %}
-                        <span class="badge bg-success ms-2"><i class="fas fa-check-circle"></i> Verified</span>
+                        <span class="badge bg-success ms-2"><i class="fas fa-check-circle"></i> {% trans "Verified" %}</span>
                         {% endif %}
                     </div>
                     
                     <!-- Price -->
                     <div class="price-section">
                         <div class="d-flex align-items-center flex-wrap">
-                            <span class="current-price">${{ product.price }}</span>
+                            <span class="current-price">{{ product.price|floatformat:0 }} RWF</span>
                             {% if product.compare_price and product.compare_price > product.price %}
-                            <span class="original-price ms-3">${{ product.compare_price }}</span>
+                            <span class="original-price ms-3">{{ product.compare_price|floatformat:0 }} RWF</span>
                             <span class="discount-badge ms-3">
-                                Save {{ product.discount_percentage }}%
+                                {% blocktrans with percentage=product.discount_percentage %}Save {{ percentage }}%{% endblocktrans %}
                             </span>
                             {% endif %}
                         </div>
@@ -289,22 +289,22 @@
                         {% if product.is_in_stock %}
                             {% if product.is_low_stock %}
                             <span class="badge bg-warning stock-badge">
-                                <i class="fas fa-exclamation-triangle me-1"></i>Low Stock ({{ product.stock_quantity }} left)
+                                <i class="fas fa-exclamation-triangle me-1"></i>{% blocktrans with quantity=product.stock_quantity %}Low Stock ({{ quantity }} left){% endblocktrans %}
                             </span>
                             {% else %}
                             <span class="badge bg-success stock-badge">
-                                <i class="fas fa-check me-1"></i>In Stock
+                                <i class="fas fa-check me-1"></i>{% trans "In Stock" %}
                             </span>
                             {% endif %}
                         {% else %}
                         <span class="badge bg-danger stock-badge">
-                            <i class="fas fa-times me-1"></i>Out of Stock
+                            <i class="fas fa-times me-1"></i>{% trans "Out of Stock" %}
                         </span>
                         {% endif %}
                         
                         <!-- Views Count -->
                         <small class="text-muted ms-3">
-                            <i class="fas fa-eye me-1"></i>{{ product.views_count }} views
+                            <i class="fas fa-eye me-1"></i>{% blocktrans with count=product.views_count %}{{ count }} views{% endblocktrans %}
                         </small>
                     </div>
                     
@@ -319,7 +319,7 @@
                         <form method="post" action="{% url 'bika:quick_add_to_cart' product.id %}" class="d-inline-block me-3 mb-3">
                             {% csrf_token %}
                             <div class="d-flex align-items-center mb-3">
-                                <label class="form-label me-3 mb-0 fw-bold">Quantity:</label>
+                                <label class="form-label me-3 mb-0 fw-bold">{% trans "Quantity:" %}</label>
                                 <div class="quantity-controls">
                                     <button class="quantity-btn" type="button" onclick="decreaseQuantity()">-</button>
                                     <input type="number" name="quantity" class="quantity-input" value="1" min="1" max="{{ product.stock_quantity }}" id="quantityInput">
@@ -327,7 +327,7 @@
                                 </div>
                             </div>
                             <button type="submit" class="btn btn-add-to-cart text-white w-100">
-                                <i class="fas fa-shopping-cart me-2"></i>Add to Cart
+                                <i class="fas fa-shopping-cart me-2"></i>{% trans "Add to Cart" %}
                             </button>
                         </form>
                         {% endif %}
@@ -336,7 +336,7 @@
                             {% csrf_token %}
                             <button type="submit" class="btn btn-wishlist w-100">
                                 <i class="{% if in_wishlist %}fas{% else %}far{% endif %} fa-heart me-2"></i>
-                                {% if in_wishlist %}Remove from Wishlist{% else %}Add to Wishlist{% endif %}
+                                {% if in_wishlist %}{% trans "Remove from Wishlist" %}{% else %}{% trans "Add to Wishlist" %}{% endif %}
                             </button>
                         </form>
                     </div>
@@ -345,19 +345,19 @@
                     <div class="product-meta">
                         <div class="row g-2">
                             <div class="col-md-6">
-                                <small class="text-muted"><strong>SKU:</strong> {{ product.sku|default:"N/A" }}</small>
+                                <small class="text-muted"><strong>{% trans "SKU:" %}</strong> {{ product.sku|default:"N/A" }}</small>
                             </div>
                             <div class="col-md-6">
-                                <small class="text-muted"><strong>Category:</strong> {{ product.category.name }}</small>
+                                <small class="text-muted"><strong>{% trans "Category:" %}</strong> {{ product.category.name }}</small>
                             </div>
                             {% if product.brand %}
                             <div class="col-md-6">
-                                <small class="text-muted"><strong>Brand:</strong> {{ product.brand }}</small>
+                                <small class="text-muted"><strong>{% trans "Brand:" %}</strong> {{ product.brand }}</small>
                             </div>
                             {% endif %}
                             {% if product.weight %}
                             <div class="col-md-6">
-                                <small class="text-muted"><strong>Weight:</strong> {{ product.weight }} kg</small>
+                                <small class="text-muted"><strong>{% trans "Weight:" %}</strong> {{ product.weight }} kg</small>
                             </div>
                             {% endif %}
                         </div>
@@ -371,17 +371,17 @@
             <ul class="nav nav-tabs" id="productTabs" role="tablist">
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active" id="description-tab" data-bs-toggle="tab" data-bs-target="#description" type="button" role="tab">
-                        <i class="fas fa-file-alt me-2"></i>Description
+                        <i class="fas fa-file-alt me-2"></i>{% trans "Description" %}
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="specifications-tab" data-bs-toggle="tab" data-bs-target="#specifications" type="button" role="tab">
-                        <i class="fas fa-list me-2"></i>Specifications
+                        <i class="fas fa-list me-2"></i>{% trans "Specifications" %}
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews" type="button" role="tab">
-                        <i class="fas fa-star me-2"></i>Reviews ({{ reviews.count }})
+                        <i class="fas fa-star me-2"></i>{% trans "Reviews" %} ({{ reviews.count }})
                     </button>
                 </li>
             </ul>
@@ -399,40 +399,16 @@
                     <table class="table table-borderless">
                         <tbody>
                             <tr>
-                                <td style="width: 30%;"><strong>SKU</strong></td>
-                                <td>{{ product.sku|default:"Not specified" }}</td>
+                                <td style="width: 30%;"><strong>{% trans "Category" %}</strong></td>
+                                <td>{{ product.category.name }}</td>
                             </tr>
                             <tr>
-                                <td><strong>Brand</strong></td>
-                                <td>{{ product.brand|default:"Not specified" }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Model</strong></td>
-                                <td>{{ product.model|default:"Not specified" }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Weight</strong></td>
+                                <td><strong>{% trans "Weight" %}</strong></td>
                                 <td>{{ product.weight|default:"Not specified" }} kg</td>
                             </tr>
                             <tr>
-                                <td><strong>Dimensions</strong></td>
-                                <td>{{ product.dimensions|default:"Not specified" }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Color</strong></td>
-                                <td>{{ product.color|default:"Not specified" }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Size</strong></td>
-                                <td>{{ product.size|default:"Not specified" }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Material</strong></td>
-                                <td>{{ product.material|default:"Not specified" }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Condition</strong></td>
-                                <td>{{ product.get_condition_display }}</td>
+                                <td><strong>{% trans "Status" %}</strong></td>
+                                <td>{{ product.get_status_display }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -458,7 +434,7 @@
                                     </div>
                                 </div>
                                 {% if review.is_verified_purchase %}
-                                <span class="badge bg-success"><i class="fas fa-check"></i> Verified Purchase</span>
+                                <span class="badge bg-success"><i class="fas fa-check"></i> {% trans "Verified Purchase" %}</span>
                                 {% endif %}
                             </div>
                             {% if review.title %}
@@ -470,38 +446,38 @@
                     {% else %}
                     <div class="text-center py-4">
                         <i class="fas fa-comments fa-3x text-muted mb-3"></i>
-                        <h4>No Reviews Yet</h4>
-                        <p class="text-muted">Be the first to review this product!</p>
+                        <h4>{% trans "No Reviews Yet" %}</h4>
+                        <p class="text-muted">{% trans "Be the first to review this product!" %}</p>
                     </div>
                     {% endif %}
                     
                     {% if user.is_authenticated %}
                     <div class="add-review mt-5 pt-4 border-top">
-                        <h5 class="mb-4">Add Your Review</h5>
+                        <h5 class="mb-4">{% trans "Add Your Review" %}</h5>
                         <form method="post" action="{% url 'bika:add_review' product.id %}">
                             {% csrf_token %}
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Rating</label>
+                                    <label class="form-label">{% trans "Rating" %}</label>
                                     <select name="rating" class="form-select" required>
-                                        <option value="">Select Rating</option>
-                                        <option value="5">5 Stars - Excellent</option>
-                                        <option value="4">4 Stars - Very Good</option>
-                                        <option value="3">3 Stars - Good</option>
-                                        <option value="2">2 Stars - Fair</option>
-                                        <option value="1">1 Star - Poor</option>
+                                        <option value="">{% trans "Select Rating" %}</option>
+                                        <option value="5">{% trans "5 Stars - Excellent" %}</option>
+                                        <option value="4">{% trans "4 Stars - Very Good" %}</option>
+                                        <option value="3">{% trans "3 Stars - Good" %}</option>
+                                        <option value="2">{% trans "2 Stars - Fair" %}</option>
+                                        <option value="1">{% trans "1 Star - Poor" %}</option>
                                     </select>
                                 </div>
                                 <div class="col-md-12 mb-3">
-                                    <label class="form-label">Review Title (Optional)</label>
-                                    <input type="text" name="title" class="form-control" placeholder="Brief summary of your review">
+                                    <label class="form-label">{% trans "Review Title (Optional)" %}</label>
+                                    <input type="text" name="title" class="form-control" placeholder="{% trans 'Brief summary of your review' %}">
                                 </div>
                                 <div class="col-md-12 mb-3">
-                                    <label class="form-label">Your Review</label>
-                                    <textarea name="comment" class="form-control" rows="4" placeholder="Share your experience with this product..." required></textarea>
+                                    <label class="form-label">{% trans "Your Review" %}</label>
+                                    <textarea name="comment" class="form-control" rows="4" placeholder="{% trans 'Share your experience with this product...' %}" required></textarea>
                                 </div>
                                 <div class="col-md-12">
-                                    <button type="submit" class="btn btn-primary">Submit Review</button>
+                                    <button type="submit" class="btn btn-primary">{% trans "Submit Review" %}</button>
                                 </div>
                             </div>
                         </form>
@@ -509,7 +485,7 @@
                     {% else %}
                     <div class="alert alert-info mt-4">
                         <i class="fas fa-info-circle me-2"></i>
-                        Please <a href="{% url 'bika:login' %}" class="alert-link">login</a> to add a review.
+                        {% blocktrans %}Please <a href="{% url 'bika:login' %}" class="alert-link">login</a> to add a review.{% endblocktrans %}
                     </div>
                     {% endif %}
                 </div>
@@ -519,13 +495,13 @@
         <!-- Related Products -->
         {% if related_products %}
         <div class="related-products mt-5">
-            <h3 class="mb-4">Related Products</h3>
+            <h3 class="mb-4">{% trans "Related Products" %}</h3>
             <div class="row">
                 {% for related_product in related_products %}
                 <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
                     <div class="card related-product-card">
-                        {% if related_product.images.first %}
-                        <img src="{{ related_product.images.first.image.url }}" class="card-img-top related-product-image" alt="{{ related_product.name }}">
+                        {% if related_product.product_images.first %}
+                        <img src="{{ related_product.product_images.first.image.url }}" class="card-img-top related-product-image" alt="{{ related_product.name }}">
                         {% else %}
                         <div class="card-img-top related-product-image bg-light d-flex align-items-center justify-content-center">
                             <i class="fas fa-image fa-2x text-muted"></i>
@@ -533,9 +509,9 @@
                         {% endif %}
                         <div class="card-body">
                             <h6 class="card-title">{{ related_product.name|truncatewords:5 }}</h6>
-                            <p class="card-text text-primary fw-bold mb-2">${{ related_product.price }}</p>
+                            <p class="card-text text-primary fw-bold mb-2">{{ related_product.price|floatformat:0 }} RWF</p>
                             <div class="d-flex justify-content-between align-items-center">
-                                <a href="{% url 'bika:product_detail' related_product.slug %}" class="btn btn-outline-primary btn-sm">View Details</a>
+                                <a href="{% url 'bika:product_detail' related_product.slug %}" class="btn btn-outline-primary btn-sm">{% trans "View Details" %}</a>
                                 {% if related_product.is_in_stock %}
                                 <form method="post" action="{% url 'bika:add_to_cart' related_product.id %}" class="d-inline">
                                     {% csrf_token %}

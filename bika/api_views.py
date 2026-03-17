@@ -37,7 +37,7 @@ def _product_visibility_queryset_for_user(user):
     base = (
         Product.objects.filter(status="active")
         .select_related("category", "vendor", "created_by", "created_by__unit", "vendor__unit")
-        .prefetch_related("images")
+        .prefetch_related("product_images")
     )
 
     if (
@@ -162,7 +162,7 @@ class ProductListView(generics.ListAPIView):
             return (
                 Product.objects.filter(status="active", created_by=self.request.user)
                 .select_related("category", "vendor", "created_by", "created_by__unit", "vendor__unit")
-                .prefetch_related("images")
+                .prefetch_related("product_images")
                 .order_by("-created_at")
             )
         return _product_visibility_queryset_for_user(self.request.user)
@@ -317,7 +317,7 @@ class CartListView(generics.ListAPIView):
         return (
             Cart.objects.filter(user=self.request.user)
             .select_related("product", "product__created_by", "product__vendor")
-            .prefetch_related("product__images")
+            .prefetch_related("product__product_images")
             .order_by("-added_at")
         )
 

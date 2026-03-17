@@ -1,19 +1,20 @@
 {% extends 'bika/base.html' %}
 {% load static %}
+{% load i18n %}
 
-{% block title %}Notifications - Bika{% endblock %}
+{% block title %}{% trans "Notifications" %} - Bika{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
     <div class="row">
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h1><i class="fas fa-bell me-2"></i>Notifications</h1>
+                <h1><i class="fas fa-bell me-2"></i>{% trans "Notifications" %}</h1>
                 <div>
-                    <span class="badge bg-primary">{{ unread_count }} unread</span>
+                    <span class="badge bg-primary">{{ unread_count }} {% trans "unread" %}</span>
                     {% if unread_count > 0 %}
                     <button class="btn btn-sm btn-outline-success ms-2" onclick="markAllAsRead()">
-                        <i class="fas fa-check-double me-1"></i>Mark All as Read
+                        <i class="fas fa-check-double me-1"></i>{% trans "Mark All as Read" %}
                     </button>
                     {% endif %}
                 </div>
@@ -25,23 +26,23 @@
                     <div class="row g-2">
                         <div class="col-md-4">
                             <select class="form-select" onchange="filterNotifications(this.value)">
-                                <option value="">All Types</option>
-                                <option value="product_alert">Product Alerts</option>
-                                <option value="order_update">Order Updates</option>
-                                <option value="system_alert">System Alerts</option>
-                                <option value="urgent_alert">Urgent Alerts</option>
+                                <option value="">{% trans "All Types" %}</option>
+                                <option value="product_alert">{% trans "Product Alerts" %}</option>
+                                <option value="order_update">{% trans "Order Updates" %}</option>
+                                <option value="system_alert">{% trans "System Alerts" %}</option>
+                                <option value="urgent_alert">{% trans "Urgent Alerts" %}</option>
                             </select>
                         </div>
                         <div class="col-md-4">
                             <select class="form-select" onchange="filterByStatus(this.value)">
-                                <option value="">All Status</option>
-                                <option value="unread">Unread Only</option>
-                                <option value="read">Read Only</option>
+                                <option value="">{% trans "All Status" %}</option>
+                                <option value="unread">{% trans "Unread Only" %}</option>
+                                <option value="read">{% trans "Read Only" %}</option>
                             </select>
                         </div>
                         <div class="col-md-4">
                             <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Search notifications..." id="notificationSearch">
+                                <input type="text" class="form-control" placeholder="{% trans 'Search notifications...' %}" id="notificationSearch">
                                 <button class="btn btn-outline-secondary" type="button" onclick="searchNotifications()">
                                     <i class="fas fa-search"></i>
                                 </button>
@@ -61,7 +62,7 @@
                         <div class="flex-grow-1 me-3">
                             <div class="d-flex align-items-center mb-2">
                                 {% if not notification.is_read %}
-                                <span class="badge bg-danger me-2">NEW</span>
+                                <span class="badge bg-danger me-2">{% trans "NEW" %}</span>
                                 {% endif %}
                                 <h5 class="mb-0">{{ notification.title }}</h5>
                             </div>
@@ -73,7 +74,7 @@
                                 </span>
                                 <small class="text-muted">
                                     <i class="fas fa-clock me-1"></i>
-                                    {{ notification.created_at|timesince }} ago
+                                    {% blocktranslate with time=notification.created_at|timesince %}{{ time }} ago{% endblocktranslate %}
                                 </small>
                             </div>
                         </div>
@@ -81,14 +82,14 @@
                             {% if not notification.is_read %}
                             <button onclick="markAsRead({{ notification.id }})" 
                                     class="btn btn-sm btn-outline-success mb-2">
-                                <i class="fas fa-check me-1"></i>Mark Read
+                                <i class="fas fa-check me-1"></i>{% trans "Mark Read" %}
                             </button>
                             {% else %}
-                            <span class="badge bg-secondary mb-2">Read</span>
+                            <span class="badge bg-secondary mb-2">{% trans "Read" %}</span>
                             {% endif %}
                             <button onclick="deleteNotification({{ notification.id }})" 
                                     class="btn btn-sm btn-outline-danger">
-                                <i class="fas fa-trash me-1"></i>Delete
+                                <i class="fas fa-trash me-1"></i>{% trans "Delete" %}
                             </button>
                         </div>
                     </div>
@@ -99,7 +100,7 @@
                         <small>
                             <a href="#" class="text-decoration-none">
                                 <i class="fas fa-external-link-alt me-1"></i>
-                                View related {{ notification.related_object_type }}
+                                {% blocktranslate with type=notification.related_object_type %}View related {{ type }}{% endblocktranslate %}
                             </a>
                         </small>
                     </div>
@@ -113,10 +114,10 @@
                 <div class="mb-4">
                     <i class="fas fa-search fa-3x text-muted"></i>
                 </div>
-                <h4>No notifications found</h4>
-                <p class="text-muted">Try adjusting your filters or search terms.</p>
+                <h4>{% trans "No notifications found" %}</h4>
+                <p class="text-muted">{% trans "Try adjusting your filters or search terms." %}</p>
                 <button class="btn btn-outline-primary" onclick="clearFilters()">
-                    Clear Filters
+                    {% trans "Clear Filters" %}
                 </button>
             </div>
 
@@ -126,14 +127,14 @@
                 <div class="mb-4">
                     <i class="fas fa-bell-slash fa-4x text-muted"></i>
                 </div>
-                <h3>No notifications yet</h3>
-                <p class="text-muted mb-4">You're all caught up! New notifications will appear here.</p>
+                <h3>{% trans "No notifications yet" %}</h3>
+                <p class="text-muted mb-4">{% trans "You're all caught up! New notifications will appear here." %}</p>
                 <div class="d-flex justify-content-center gap-2">
                     <a href="{% url 'bika:product_list' %}" class="btn btn-primary">
-                        <i class="fas fa-shopping-bag me-2"></i>Browse Products
+                        <i class="fas fa-shopping-bag me-2"></i>{% trans "Browse Products" %}
                     </a>
                     <a href="{% url 'bika:user_orders' %}" class="btn btn-outline-secondary">
-                        <i class="fas fa-receipt me-2"></i>View Orders
+                        <i class="fas fa-receipt me-2"></i>{% trans "View Orders" %}
                     </a>
                 </div>
             </div>
@@ -240,7 +241,7 @@
                     // Update the button
                     const button = notificationItem.querySelector('button');
                     if (button) {
-                        button.outerHTML = '<span class="badge bg-secondary mb-2">Read</span>';
+                        button.outerHTML = '<span class="badge bg-secondary mb-2">{% trans "Read" %}</span>';
                     }
                     
                     // Update unread count
@@ -250,13 +251,13 @@
         })
         .catch(error => {
             console.error('Error marking notification as read:', error);
-            alert('Error updating notification. Please try again.');
+            alert('{% trans "Error updating notification. Please try again." %}');
         });
     }
 
     // Mark all as read
     function markAllAsRead() {
-        if (!confirm('Mark all notifications as read?')) {
+        if (!confirm('{% trans "Mark all notifications as read?" %}')) {
             return;
         }
 
@@ -275,13 +276,13 @@
         })
         .catch(error => {
             console.error('Error marking all as read:', error);
-            alert('Error updating notifications. Please try again.');
+            alert('{% trans "Error updating notifications. Please try again." %}');
         });
     }
 
     // Delete notification
     function deleteNotification(notificationId) {
-        if (!confirm('Delete this notification?')) {
+        if (!confirm('{% trans "Delete this notification?" %}')) {
             return;
         }
 
@@ -305,7 +306,7 @@
         })
         .catch(error => {
             console.error('Error deleting notification:', error);
-            alert('Error deleting notification. Please try again.');
+            alert('{% trans "Error deleting notification. Please try again." %}');
         });
     }
 
@@ -318,7 +319,10 @@
     // Initialize filters
     document.addEventListener('DOMContentLoaded', function() {
         // Add search on input for real-time filtering
-        document.getElementById('notificationSearch').addEventListener('input', searchNotifications);
+        const searchInput = document.getElementById('notificationSearch');
+        if (searchInput) {
+            searchInput.addEventListener('input', searchNotifications);
+        }
     });
 </script>
 {% endblock %}

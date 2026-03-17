@@ -99,9 +99,9 @@ class HomeView(TemplateView):
             
             # Add primary images
             for product in featured_products:
-                product.primary_image = product.images.filter(is_primary=True).first()
+                product.primary_image = product.product_images.filter(is_primary=True).first()
                 if not product.primary_image:
-                    product.primary_image = product.images.first()
+                    product.primary_image = product.product_images.first()
             
             context['featured_products'] = featured_products
         except Exception as e:
@@ -441,7 +441,7 @@ def admin_dashboard(request):
     # ===== RECENT DATA =====
     recent_products = Product.objects.select_related(
         'vendor', 'category'
-    ).prefetch_related('images').order_by('-created_at')[:6]
+    ).prefetch_related('product_images').order_by('-created_at')[:6]
     
     recent_orders = Order.objects.select_related('user').order_by('-created_at')[:5]
     
@@ -1156,7 +1156,7 @@ def product_detail_view(request, slug):
     """Display single product details"""
     product = get_object_or_404(Product.objects.select_related(
         'category', 'vendor'
-    ).prefetch_related('images'), slug=slug, status='active')
+    ).prefetch_related('product_images'), slug=slug, status='active')
     
     # Increment view count
     product.views_count += 1
@@ -1168,7 +1168,7 @@ def product_detail_view(request, slug):
         status='active'
     ).exclude(id=product.id).select_related(
         'category', 'vendor'
-    ).prefetch_related('images')[:4]
+    ).prefetch_related('product_images')[:4]
     
     # Get product reviews
     reviews = ProductReview.objects.filter(
@@ -1346,8 +1346,8 @@ def vendor_dashboard(request):
     # Vendor stats
     stats = {
         'total_products': vendor_products.count(),
-        'active_products': vendor_products.filter(status='active').count(),
-        'draft_products': vendor_products.filter(status='draft').count(),
+        'active_products': vendor_products.filter(status='Published').count(),
+        'draft_products': vendor_products.filter(status='Draft').count(),
         'low_stock': vendor_products.filter(
             stock_quantity__gt=0,
             stock_quantity__lte=F('low_stock_threshold'),
@@ -1379,6 +1379,9 @@ def vendor_dashboard(request):
     
     context = {
         'stats': stats,
+        'total_products': stats['total_products'],
+        'active_products': stats['active_products'],
+        'draft_products': stats['draft_products'],
         'recent_products': recent_products,
         'recent_orders': recent_orders,
         'total_sales': total_sales,
@@ -1440,8 +1443,8 @@ def vendor_product_list(request):
     
     # Calculate statistics
     stats = {
-        'active': products.filter(status='active').count(),
-        'draft': products.filter(status='draft').count(),
+        'active': products.filter(status='Published').count(),
+        'draft': products.filter(status='Draft').count(),
         'low_stock': products.filter(
             stock_quantity__gt=0, 
             stock_quantity__lte=F('low_stock_threshold')
@@ -1465,6 +1468,10 @@ def vendor_product_list(request):
     context = {
         'products': page_obj,
         'stats': stats,
+        'active_products_count': stats['active'],
+        'draft_products_count': stats['draft'],
+        'low_stock_count': stats['low_stock'],
+        'out_of_stock_count': stats['out_of_stock'],
         'categories': categories,
         'query': query,
         'status_filter': status_filter,
@@ -1508,7 +1515,7 @@ def vendor_add_product(request):
                     ProductImage.objects.create(
                         product=product,
                         image=image,
-                        alt_text=product.name,
+                        alt_text=product.mushroom_name,
                         display_order=i,
                         is_primary=(i == 0)
                     )
@@ -1519,6 +1526,8 @@ def vendor_add_product(request):
             except Exception as e:
                 messages.error(request, f'Error saving product: {str(e)}')
         else:
+            # Log form errors for debugging
+            print(f"Form errors: {form.errors}")
             messages.error(request, 'Please correct the errors below.')
     else:
         form = ProductForm()
@@ -1555,7 +1564,7 @@ def vendor_edit_product(request, product_id):
         form = ProductForm(instance=product)
     
     # Get existing images
-    images = product.images.all()
+    images = product.product_images.all()
     
     context = {
         'form': form,
@@ -2675,7 +2684,7 @@ def api_product_detail(request, barcode):
                     'alt_text': img.alt_text,
                     'is_primary': img.is_primary,
                 }
-                for img in product.images.all()[:3]
+                for img in product.product_images.all()[:3]
             ],
         }
         
@@ -2758,6 +2767,10 @@ def track_my_products(request):
         'products': products[:20],  # Limit for performance
         'alerts': alerts[:10],
         'stats': stats,
+        'total_products': stats['total'],
+        'low_stock_count': stats['low_stock'],
+        'out_of_stock_count': stats['out_of_stock'],
+        'active_alerts_count': stats['alerts'],
         'query': query,
         'stock_filter': stock_filter,
         'site_info': SiteInfo.objects.first(),

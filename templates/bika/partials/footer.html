@@ -1,4 +1,4 @@
-{% load static %}
+{% load static i18n %}
 
 <!-- Footer -->
 <footer class="footer bg-dark text-light pt-5">
@@ -19,8 +19,7 @@
                         {% if site_info and site_info.description %}
                             {{ site_info.description }}
                         {% else %}
-                            Bika provides exceptional business solutions to help your company grow, 
-                            increase efficiency, and achieve remarkable success in today's competitive market.
+                            {% trans "Bika provides exceptional business solutions to help your company grow, increase efficiency, and achieve remarkable success in today's competitive market." %}
                         {% endif %}
                     </p>
                     <div class="footer-contact">
@@ -48,31 +47,31 @@
 
             <!-- Quick Links -->
             <div class="col-lg-2 col-md-6 mb-4">
-                <h5 class="footer-heading mb-4">Quick Links</h5>
+                <h5 class="footer-heading mb-4">{% trans "Quick Links" %}</h5>
                 <ul class="footer-links list-unstyled">
                     <li class="mb-2">
                         <a href="{% url 'bika:home' %}" class="footer-link">
-                            <i class="fas fa-chevron-right me-2 small"></i>Home
+                            <i class="fas fa-chevron-right me-2 small"></i>{% trans "Home" %}
                         </a>
                     </li>
                     <li class="mb-2">
                         <a href="{% url 'bika:about' %}" class="footer-link">
-                            <i class="fas fa-chevron-right me-2 small"></i>About Us
+                            <i class="fas fa-chevron-right me-2 small"></i>{% trans "About Us" %}
                         </a>
                     </li>
                     <li class="mb-2">
                         <a href="{% url 'bika:services' %}" class="footer-link">
-                            <i class="fas fa-chevron-right me-2 small"></i>Services
+                            <i class="fas fa-chevron-right me-2 small"></i>{% trans "Services" %}
                         </a>
                     </li>
                     <li class="mb-2">
                         <a href="{% url 'bika:contact' %}" class="footer-link">
-                            <i class="fas fa-chevron-right me-2 small"></i>Contact
+                            <i class="fas fa-chevron-right me-2 small"></i>{% trans "Contact" %}
                         </a>
                     </li>
                     <li class="mb-2">
                         <a href="{% url 'bika:faq' %}" class="footer-link">
-                            <i class="fas fa-chevron-right me-2 small"></i>FAQ
+                            <i class="fas fa-chevron-right me-2 small"></i>{% trans "FAQ" %}
                         </a>
                     </li>
                 </ul>
@@ -80,7 +79,7 @@
 
             <!-- Services -->
             <div class="col-lg-3 col-md-6 mb-4">
-                <h5 class="footer-heading mb-4">Our Services</h5>
+                <h5 class="footer-heading mb-4">{% trans "Our Services" %}</h5>
                 <ul class="footer-links list-unstyled">
                     {% for service in featured_services|slice:":5" %}
                     <li class="mb-2">
@@ -91,17 +90,17 @@
                     {% empty %}
                     <li class="mb-2">
                         <a href="{% url 'bika:services' %}" class="footer-link">
-                            <i class="fas fa-chevron-right me-2 small"></i>Business Solutions
+                            <i class="fas fa-chevron-right me-2 small"></i>{% trans "Business Solutions" %}
                         </a>
                     </li>
                     <li class="mb-2">
                         <a href="{% url 'bika:services' %}" class="footer-link">
-                            <i class="fas fa-chevron-right me-2 small"></i>Consulting
+                            <i class="fas fa-chevron-right me-2 small"></i>{% trans "Consulting" %}
                         </a>
                     </li>
                     <li class="mb-2">
                         <a href="{% url 'bika:services' %}" class="footer-link">
-                            <i class="fas fa-chevron-right me-2 small"></i>Support
+                            <i class="fas fa-chevron-right me-2 small"></i>{% trans "Support" %}
                         </a>
                     </li>
                     {% endfor %}
@@ -110,16 +109,16 @@
 
             <!-- Newsletter & Social -->
             <div class="col-lg-3 col-md-6 mb-4">
-                <h5 class="footer-heading mb-4">Stay Connected</h5>
+                <h5 class="footer-heading mb-4">{% trans "Stay Connected" %}</h5>
                 
                 <!-- Newsletter Signup -->
                 <div class="newsletter-section mb-4">
-                    <p class="small mb-3">Subscribe to our newsletter for updates</p>
+                    <p class="small mb-3">{% trans "Subscribe to our newsletter for updates" %}</p>
                     <form id="footer-newsletter-form" class="newsletter-form">
                         <div class="input-group">
                             <input type="email" 
                                    class="form-control newsletter-input" 
-                                   placeholder="Your email address" 
+                                   placeholder="{% trans 'Your email address' %}" 
                                    required
                                    aria-label="Email for newsletter">
                             <button class="btn btn-primary newsletter-btn" type="submit">
@@ -132,7 +131,7 @@
 
                 <!-- Social Media -->
                 <div class="social-links">
-                    <p class="small mb-3">Follow us on social media</p>
+                    <p class="small mb-3">{% trans "Follow us on social media" %}</p>
                     <div class="social-icons">
                         {% if site_info and site_info.facebook_url %}
                             <a href="{{ site_info.facebook_url }}" class="social-icon" target="_blank" title="Facebook">
@@ -183,20 +182,20 @@
             <div class="row align-items-center">
                 <div class="col-md-6">
                     <p class="mb-0 text-center text-md-start">
-                        &copy; {% now "Y" %} 
+                        &copy; 2026 
                         {% if site_info %}
                             {{ site_info.name }}. 
                         {% else %}
                             Bika.
                         {% endif %}
-                        All rights reserved.
+                        {% trans "All rights reserved." %}
                     </p>
                 </div>
                 <div class="col-md-6">
                     <div class="footer-bottom-links text-center text-md-end">
-                        <a href="#" class="footer-bottom-link me-3">Privacy Policy</a>
-                        <a href="#" class="footer-bottom-link me-3">Terms of Service</a>
-                        <a href="#" class="footer-bottom-link">Cookie Policy</a>
+                        <a href="#" class="footer-bottom-link me-3">{% trans "Privacy Policy" %}</a>
+                        <a href="#" class="footer-bottom-link me-3">{% trans "Terms of Service" %}</a>
+                        <a href="#" class="footer-bottom-link">{% trans "Cookie Policy" %}</a>
                     </div>
                 </div>
             </div>
@@ -392,79 +391,3 @@
     animation: slideIn 0.3s ease;
 }
 </style>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Newsletter form submission
-    const newsletterForm = document.getElementById('footer-newsletter-form');
-    const newsletterMessage = document.getElementById('newsletter-message');
-    
-    if (newsletterForm) {
-        newsletterForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const emailInput = this.querySelector('input[type="email"]');
-            const submitBtn = this.querySelector('button[type="submit"]');
-            const email = emailInput.value;
-            
-            // Basic email validation
-            if (!isValidEmail(email)) {
-                showNewsletterMessage('Please enter a valid email address.', 'error');
-                return;
-            }
-            
-            // Show loading state
-            const originalHtml = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-            submitBtn.disabled = true;
-            
-            // Simulate API call (replace with actual API call)
-            setTimeout(() => {
-                // Show success message
-                showNewsletterMessage('Thank you for subscribing to our newsletter!', 'success');
-                
-                // Reset form
-                emailInput.value = '';
-                
-                // Restore button
-                submitBtn.innerHTML = originalHtml;
-                submitBtn.disabled = false;
-                
-                // Hide message after 5 seconds
-                setTimeout(() => {
-                    newsletterMessage.innerHTML = '';
-                    newsletterMessage.className = 'mt-2 small';
-                }, 5000);
-                
-            }, 1500);
-        });
-    }
-    
-    function isValidEmail(email) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-    }
-    
-    function showNewsletterMessage(message, type) {
-        newsletterMessage.innerHTML = message;
-        newsletterMessage.className = `mt-2 small newsletter-message text-${type === 'error' ? 'danger' : 'success'}`;
-    }
-    
-    // Smooth scroll for footer links
-    document.querySelectorAll('.footer-link[href^="#"]').forEach(link => {
-        link.addEventListener('click', function(e) {
-            const href = this.getAttribute('href');
-            if (href.startsWith('#')) {
-                e.preventDefault();
-                const target = document.querySelector(href);
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            }
-        });
-    });
-});
-</script>

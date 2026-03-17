@@ -1,0 +1,1112 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Bika\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-03-17 12:00+0000\n"
+"PO-Revision-Date: 2024-03-17 12:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: Kinyarwanda\n"
+"Language: rw\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# Menu & Navigation
+msgid "Home"
+msgstr "Ahabanza"
+
+msgid "About"
+msgstr "Ibitwerekeye"
+
+msgid "About Us"
+msgstr "Ibitwerekeye"
+
+msgid "Contact"
+msgstr "Twandikire"
+
+msgid "Services"
+msgstr "Serivisi"
+
+msgid "FAQ"
+msgstr "Ibibazo bikunze kubazwa"
+
+msgid "Products"
+msgstr "Ibicuruzwa"
+
+msgid "Search Products"
+msgstr "Shaka Ibicuruzwa"
+
+msgid "Shopping Cart"
+msgstr "Ikarita y'ibyo uze kugura"
+
+msgid "Login"
+msgstr "Injira"
+
+msgid "Sign Up"
+msgstr "Iyandikishe"
+
+msgid "Logout"
+msgstr "Sohoka"
+
+msgid "Welcome to Bika - Your Business Solution"
+msgstr "Ikaze muri Bika - Igisubizo cy'ubucuruzi bwawe"
+
+msgid "All Services"
+msgstr "Serivisi zose"
+
+msgid "Business Solutions"
+msgstr "Ibisubizo by'ubucuruzi"
+
+msgid "Consulting"
+msgstr "Inama z'ubucuruzi"
+
+msgid "Support"
+msgstr "Ubufasha"
+
+msgid "Search"
+msgstr "Shaka"
+
+msgid "Search Products & Services"
+msgstr "Shaka Ibicuruzwa na Serivisi"
+
+msgid "What are you looking for? Search products, categories, vendors..."
+msgstr "Ni iki urimo ushaka? Shaka ibicuruzwa, ibyiciro, abacuruzi..."
+
+msgid "Popular Categories:"
+msgstr "Ibyiciro bikunze gushakwa:"
+
+msgid "Electronics"
+msgstr "Erekitoroniki"
+
+msgid "Fashion"
+msgstr "Imideri"
+
+msgid "Home & Garden"
+msgstr "Inzu n'Ubusitani"
+
+msgid "Sports"
+msgstr "Imikino"
+
+msgid "Books"
+msgstr "Ibitabo"
+
+# Dashboards General
+msgid "Dashboard"
+msgstr "Incamake"
+
+msgid "Admin Dashboard"
+msgstr "Incamake y'ubuyobozi"
+
+msgid "Vendor Dashboard"
+msgstr "Incamake y'umucuruzi"
+
+msgid "Vendor Account"
+msgstr "Konti y'umucuruzi"
+
+msgid "My Profile"
+msgstr "Umwirondoro wanjye"
+
+msgid "Settings"
+msgstr "Igenamiterere"
+
+msgid "Analytics"
+msgstr "Isesengura"
+
+msgid "Total Products"
+msgstr "Ibicuruzwa byose"
+
+msgid "Active Products"
+msgstr "Ibicuruzwa bikora"
+
+msgid "Draft Products"
+msgstr "Ibisigaye"
+
+msgid "Out of Stock"
+msgstr "Byashize"
+
+msgid "Recent Products"
+msgstr "Ibicuruzwa biheruka"
+
+msgid "Product Name"
+msgstr "Izina ry'igicuruzwa"
+
+msgid "Price"
+msgstr "Igiciro"
+
+msgid "Status"
+msgstr "Imiterere"
+
+msgid "Date Added"
+msgstr "Itariki cyongereweho"
+
+msgid "Actions"
+msgstr "Ibikorwa"
+
+msgid "Edit"
+msgstr "Hura"
+
+msgid "Add New Product"
+msgstr "Ongeraho igicuruzwa gishya"
+
+msgid "Add Product"
+msgstr "Ongeraho igicuruzwa"
+
+msgid "My Products"
+msgstr "Ibicuruzwa byanjye"
+
+msgid "Track Products"
+msgstr "Kurikirana ibicuruzwa"
+
+msgid "Scan Product"
+msgstr "Sikana igicuruzwa"
+
+msgid "Wishlist"
+msgstr "Ibyo nifuza"
+
+msgid "My Cart"
+msgstr "Ikarita yanjye"
+
+msgid "Notifications"
+msgstr "Integuza"
+
+msgid "Storage Sites"
+msgstr "Ahantu ho kubika"
+
+msgid "Manage Datasets"
+msgstr "Gucunga amakuru"
+
+msgid "Admin Panel"
+msgstr "Ibiro by'ubuyobozi"
+
+msgid "Vendor"
+msgstr "Umucuruzi"
+
+msgid "Customer"
+msgstr "Umuguzi"
+
+msgid "System Alert:"
+msgstr "Integuza ya sisitemu:"
+
+msgid "Monitoring active"
+msgstr "Ubugenzuzi burakora"
+
+msgid "View Alerts"
+msgstr "Reba integuza"
+
+# Orders
+msgid "My Orders"
+msgstr "Ibyo nategetse"
+
+msgid "Order #"
+msgstr "Inomero y'itegeko"
+
+msgid "Date"
+msgstr "Itariki"
+
+msgid "Items"
+msgstr "Ibicuruzwa"
+
+msgid "Total"
+msgstr "Igiteranyo"
+
+msgid "Delivered"
+msgstr "Byatanzwe"
+
+msgid "Shipped"
+msgstr "Byoherejwe"
+
+msgid "Confirmed"
+msgstr "Byemejwe"
+
+msgid "Pending"
+msgstr "Birategereje"
+
+msgid "Cancelled"
+msgstr "Byahagaritswe"
+
+msgid "View"
+msgstr "Reba"
+
+msgid "Cancel"
+msgstr "Hagarika"
+
+msgid "Total Orders"
+msgstr "Amategeko yose"
+
+msgid "Completed"
+msgstr "Byarangiye"
+
+msgid "In Progress"
+msgstr "Biracyakorwa"
+
+msgid "No orders yet"
+msgstr "Nta mategeko urakora"
+
+msgid "Start Shopping"
+msgstr "Tangira kugura"
+
+# Checkout
+msgid "Checkout - Bika"
+msgstr "Kwishura - Bika"
+
+msgid "Select Your Country"
+msgstr "Hitamo igihugu cyawe"
+
+msgid "Rwanda"
+msgstr "u Rwanda"
+
+msgid "Tanzania"
+msgstr "Tanzania"
+
+msgid "Uganda"
+msgstr "Uganda"
+
+msgid "Kenya"
+msgstr "Kenya"
+
+msgid "Choose Payment Method"
+msgstr "Hitamo uburyo bwo kwishura"
+
+msgid "Phone Number"
+msgstr "Terefone"
+
+msgid "Order Summary"
+msgstr "Incamake y'itegeko"
+
+msgid "Subtotal:"
+msgstr "Igiteranyo gito:"
+
+msgid "Tax (18%):"
+msgstr "Imisoro (18%):"
+
+msgid "Shipping:"
+msgstr "Iyo byoherejwe:"
+
+msgid "Total Amount:"
+msgstr "Igiteranyo cyose:"
+
+msgid "Secure Payment"
+msgstr "Kwishura gufite umutekano"
+
+msgid "Payment Successful!"
+msgstr "Kwishura byagenze neza!"
+
+msgid "Processing Payment..."
+msgstr "Kwishura biracyakorwa..."
+
+# Home Page & Others
+msgid "Transform Your Business with Bika"
+msgstr "Hindura ubucuruzi bwawe na Bika"
+
+msgid "Powerful solutions to grow your business, increase efficiency, and drive success."
+msgstr "Ibisubizo bikomeye byo kwagura ubucuruzi bwawe, kongera ubushobozi, no gutuma utsinda."
+
+msgid "Get Started"
+msgstr "Tangira ubu"
+
+msgid "Our Services"
+msgstr "Serivisi Zacu"
+
+msgid "Contact Us Now"
+msgstr "Twandikire ubu"
+
+msgid "Quick Links"
+msgstr "Ihuza ryihuse"
+
+msgid "All rights reserved."
+msgstr "Uburenganzira bwose buraguzwe."
+
+msgid "Why Choose Bika?"
+msgstr "Kuki wahitamo Bika?"
+
+msgid "We provide comprehensive solutions for your business needs"
+msgstr "Dutanga ibisubizo byuzuye ku byo ubucuruzi bwawe bukeneye"
+
+msgid "Fast & Efficient"
+msgstr "Kwihuta no gukora neza"
+
+msgid "Streamline your operations with our optimized solutions."
+msgstr "Simbura uburyo ukora ukoresheje ibisubizo byacu byanozwa."
+
+msgid "Secure & Reliable"
+msgstr "Umutekano no kwizerwa"
+
+msgid "Enterprise-grade security to protect your business data."
+msgstr "Umutekano wo ku rwego rwo hejuru wo kurinda amakuru y'ubucuruzi bwawe."
+
+msgid "24/7 Support"
+msgstr "Ubufasha amasaha 24/7"
+
+msgid "Round-the-clock customer support for your business."
+msgstr "Ubufasha ku bakiriya amasaha yose ku bucuruzi bwawe."
+
+msgid "Learn More"
+msgstr "Soma ibindi"
+
+msgid "View All Services"
+msgstr "Reba serivisi zose"
+
+msgid "Featured Products"
+msgstr "Ibicuruzwa byatoranyijwe"
+
+msgid "Discover our amazing product collection"
+msgstr "Vumbura icyiciro cyacu cy'ibicuruzwa bitangaje"
+
+msgid "View Details"
+msgstr "Reba birambuye"
+
+msgid "No Products Yet"
+msgstr "Nta bicuruzwa biraboneka"
+
+msgid "Be the first to add products to our marketplace!"
+msgstr "Ba uwa mbere mu kongera ibicuruzwa ku isoko ryacu!"
+
+msgid "Add Your First Product"
+msgstr "Ongeraho igicuruzwa cyawe cya mbere"
+
+msgid "Become a Vendor"
+msgstr "Ba umucuruzi"
+
+msgid "Browse Products"
+msgstr "Shaka ibicuruzwa"
+
+msgid "View All Products"
+msgstr "Reba ibicuruzwa byose"
+
+msgid "Ready to Grow Your Business?"
+msgstr "Witeguye kwagura ubucuruzi bwawe?"
+
+msgid "Add new products and reach thousands of customers on Bika Marketplace."
+msgstr "Ongeraho ibicuruzwa bishya kandi ugere ku bakiriya ibihumbi ku isoko rya Bika."
+
+msgid "Go to Dashboard"
+msgstr "Jya kuri dashboard"
+
+msgid "Want to Sell on Bika?"
+msgstr "Urashaka gucururiza kuri Bika?"
+
+msgid "Join our marketplace and start selling your products to thousands of customers."
+msgstr "Injira mu isoko ryacu kandi utangire kugurisha ibicuruzwa byawe ku bakiriya ibihumbi."
+
+msgid "Easy product setup"
+msgstr "Kwinjiza ibicuruzwa bworoshye"
+
+msgid "Secure payment processing"
+msgstr "Kwishura gufite umutekano"
+
+msgid "Marketing support"
+msgstr "Ubufasha mu kwamamaza"
+
+msgid "24/7 customer support"
+msgstr "Ubufasha ku bakiriya amasaha yose 24/7"
+
+msgid "What Our Clients Say"
+msgstr "Icyo abakiriya bacu bavuga"
+
+msgid "Don't just take our word for it"
+msgstr "Ntukishingikirize gusa ku magambo yacu"
+
+msgid "No testimonials available yet."
+msgstr "Nta buhamya buraboneka."
+
+msgid "Ready to Transform Your Business?"
+msgstr "Witeguye guhindura ubucuruzi bwawe?"
+
+msgid "Get started with Bika today and see the difference."
+msgstr "Tangira na Bika uyu munsi maze urebe itandukaniro."
+
+msgid "Stay Connected"
+msgstr "Guma kuri murandasi"
+
+msgid "Subscribe to our newsletter for updates"
+msgstr "Iyandikishe ku makuru yacu kugira ngo ubone amakuru mashya"
+
+msgid "Your email address"
+msgstr "Imeri yawe"
+
+msgid "Follow us on social media"
+msgstr "Tukurikirane ku mbuga nkoranyambaga"
+
+msgid "Privacy Policy"
+msgstr "Amategeko agenga umutekano w'amakuru"
+
+msgid "Terms of Service"
+msgstr "Amategeko n'amabwiriza"
+
+msgid "Cookie Policy"
+msgstr "Amategeko agenga kuki"
+
+msgid "Mon - Fri: 9:00 - 18:00"
+msgstr "Kuva kuwa Mbere kugeza kuwa Gatanu: 9:00 - 18:00"
+
+# Product Pages
+msgid "Products - Bika"
+msgstr "Ibicuruzwa - Bika"
+
+msgid "Our Products"
+msgstr "Ibicuruzwa Byacu"
+
+msgid "Discover amazing products from trusted vendors. Quality guaranteed with every purchase."
+msgstr "Vumbura ibicuruzwa bitangaje bituruka ku bacuruzi bizerwa. Ubuziranenge buremewe kuri buri gucuruza."
+
+msgid "Add Product as Admin"
+msgstr "Ongeraho igicuruzwa nk'umuyobozi"
+
+msgid "Search products..."
+msgstr "Shaka ibicuruzwa..."
+
+msgid "Categories"
+msgstr "Ibyiciro"
+
+msgid "All Categories"
+msgstr "Ibyiciro byose"
+
+msgid "Marketplace"
+msgstr "Isoko"
+
+msgid "Total Products:"
+msgstr "Ibicuruzwa byose:"
+
+msgid "Active Vendors:"
+msgstr "Abacuruzi bakora:"
+
+msgid "Categories:"
+msgstr "Ibyiciro:"
+
+msgid "Quick Actions"
+msgstr "Ibikorwa byihuse"
+
+msgid "Manage Products"
+msgstr "Gucunga ibicuruzwa"
+
+msgid "in"
+msgstr "muri"
+
+msgid "for"
+msgstr "ku"
+
+msgid "Sort By"
+msgstr "Kuronga hifashishijwe"
+
+msgid "Newest First"
+msgstr "Ibishya mbere"
+
+msgid "Price: Low to High"
+msgstr "Igiciro: Uhereye ku gito"
+
+msgid "Price: High to Low"
+msgstr "Igiciro: Uhereye ku kinini"
+
+msgid "Name: A to Z"
+msgstr "Izina: A kugeza kuri Z"
+
+msgid "Featured"
+msgstr "Ibyatoranyijwe"
+
+msgid "OFF"
+msgstr "Kugabanyirizwa"
+
+msgid "Add to Wishlist"
+msgstr "Ongeraho ku byo nifuza"
+
+msgid "Edit Product"
+msgstr "Hura igicuruzwa"
+
+msgid "Low Stock"
+msgstr "Ibisigaye ni bike"
+
+msgid "In Stock"
+msgstr "Birahari"
+
+msgid "No Products Found"
+msgstr "Nta bicuruzwa byabonetse"
+
+msgid "Products pagination"
+msgstr "Ipajinasiyo y'ibicuruzwa"
+
+msgid "Previous"
+msgstr "Ibibanza"
+
+msgid "Next"
+msgstr "Ibikurikira"
+
+msgid "Bika"
+msgstr "Bika"
+
+msgid "Sold by:"
+msgstr "Byagurishijwe na:"
+
+msgid "Verified"
+msgstr "Byemejwe"
+
+msgid "Quantity:"
+msgstr "Ingano:"
+
+msgid "Add to Cart"
+msgstr "Ongeraho mu kareba"
+
+msgid "Remove from Wishlist"
+msgstr "Kura mu byo nifuza"
+
+msgid "SKU:"
+msgstr "SKU:"
+
+msgid "Category:"
+msgstr "Icyiciro:"
+
+msgid "Brand:"
+msgstr "Ikirango:"
+
+msgid "Weight:"
+msgstr "Uburemere:"
+
+msgid "Description"
+msgstr "Ibisobanuro"
+
+msgid "Specifications"
+msgstr "Ibisobanuro birambuye"
+
+msgid "Reviews"
+msgstr "Isubiramo"
+
+msgid "Category"
+msgstr "Icyiciro"
+
+msgid "Weight"
+msgstr "Uburemere"
+
+msgid "Verified Purchase"
+msgstr "Iguza ryemejwe"
+
+msgid "Rating"
+msgstr "Imanota"
+
+msgid "Select Rating"
+msgstr "Hitamo imanota"
+
+msgid "5 Stars - Excellent"
+msgstr "Inyenyeri 5 - Bihebuje"
+
+msgid "4 Stars - Very Good"
+msgstr "Inyenyeri 4 - Ni byiza cyane"
+
+msgid "3 Stars - Good"
+msgstr "Inyenyeri 3 - Ni byiza"
+
+msgid "2 Stars - Fair"
+msgstr "Inyenyeri 2 - Biragereranyije"
+
+msgid "1 Star - Poor"
+msgstr "Inyenyeri 1 - Ni bike"
+
+msgid "Review Title (Optional)"
+msgstr "Umutwe w'isubiramo (Ushaka)"
+
+msgid "Brief summary of your review"
+msgstr "Incamake y'ubutumwa bwawe"
+
+msgid "Your Review"
+msgstr "Isubiramo ryawe"
+
+msgid "Share your experience with this product..."
+msgstr "SANGIZA abandi ibyo wabonye kuri iki gicuruzwa..."
+
+msgid "Submit Review"
+msgstr "Ohereza isubiramo"
+
+msgid "Related Products"
+msgstr "Ibicuruzwa bifitanye isano"
+
+msgid "Product image not available"
+msgstr "Ifoto y'igicuruzwa ntiboneka"
+
+msgid "Product added to wishlist!"
+msgstr "Igicuruzwa cyongerewe mu byo wifuza!"
+
+msgid "Product removed from wishlist!"
+msgstr "Igicuruzwa cyakuwe mu byo wifuza!"
+
+# About Page
+msgid "About Bika - Our Story & Team"
+msgstr "Ibyerekeye Bika - Amateka yacu n'Ikipe yacu"
+
+msgid "About Bika"
+msgstr "Ibyerekeye Bika"
+
+msgid "Learn more about our mission, values, and the team behind our success"
+msgstr "Soma byinshi ku ntego zacu, indangagaciro zacu n'ikipe ituma dutsinda"
+
+msgid "Our Story"
+msgstr "Amateka yacu"
+
+msgid "Founded in 2015, Bika began with a simple mission: to provide businesses with powerful, accessible solutions that drive growth and efficiency. What started as a small team of passionate developers has grown into a comprehensive business solutions provider serving clients across multiple industries."
+msgstr "Yashinzwe mu 2015, Bika yatangiye ifite intego yoroshye: guha ubucuruzi ibisubizo bikomeye kandi bigezweho bituma bwaguka kandi bukorana neza. Icyatangiye ari ikipe nto y'abashakashatsi bafite ishyaka cyakuze kiba ikigo gitanga ibisubizo byuzuye by'ubucuruzi gikorera abakiriya mu nzego zitandukanye."
+
+msgid "In 2026, we are proud to be leading the digital transformation in Rwanda and beyond. Our commitment to innovation and customer success has been the driving force behind everything we do."
+msgstr "Mu 2026, twishimiye kuba tuyoboye impinduka mu by'ikoranabuhanga mu Rwanda no hanze yarwo. Kwiyemeza kwacu guhanga udushya no gutsinda kw'abakiriya nibyo bituyobora muri byose dukora."
+
+msgid "Our Offices in Rwanda"
+msgstr "Ibiro byacu mu Rwanda"
+
+msgid "Rwamagana"
+msgstr "Rwamagana"
+
+msgid "Ngororero"
+msgstr "Ngororero"
+
+msgid "Masaka"
+msgstr "Masaka"
+
+msgid "Happy Clients"
+msgstr "Abakiriya bishimye"
+
+msgid "Projects Completed"
+msgstr "Imishinga yarangiye"
+
+msgid "Client Retention"
+msgstr "Abakiriya bagaruka"
+
+msgid "Our Mission"
+msgstr "Intego yacu"
+
+msgid "To empower businesses of all sizes with innovative, accessible technology solutions that drive efficiency, growth, and competitive advantage in an ever-evolving digital landscape."
+msgstr "Guha ubushobozi ubucuruzi bw'ingeri zose hifashishijwe ibisubizo by'ikoranabuhanga bishya kandi bigezweho bituma bukorana neza, bwaguka, kandi bukagira inyungu mu muvuduko w'ikoranabuhanga."
+
+msgid "Our Vision"
+msgstr "Icyerekezo cyacu"
+
+msgid "To become the leading provider of business transformation solutions, recognized for our commitment to excellence, innovation, and creating lasting value for our clients and communities."
+msgstr "Kuba ikigo kiyoboye mu gutanga ibisubizo by'impinduka mu bucuruzi, kizwiho gukora neza, guhanga udushya, no guha agaciro karambye abakiriya bacu n'abaturage."
+
+msgid "Meet Our Team"
+msgstr "Menya Ikipe yacu"
+
+msgid "The talented professionals behind Bika's success"
+msgstr "Abanyamwuga bafite impano bagejeje Bika ku ntsinzi"
+
+msgid "Abel Iniyigena"
+msgstr "Abel Iniyigena"
+
+msgid "Founder & CEO"
+msgstr "Umuyobozi Mukuru"
+
+msgid "Leading Bika with vision and passion for technological innovation in Rwanda."
+msgstr "Ayoboye Bika afite icyerekezo n'ishyaka ryo guhanga udushya mu by'ikoranabuhanga mu Rwanda."
+
+msgid "Want to Join Our Team?"
+msgstr "Urashaka kwinjira mu ikipe yacu?"
+
+msgid "We're always looking for talented individuals to help us grow."
+msgstr "Buri gihe dushaka abantu bafite impano badufasha kwaguka."
+
+# Contact Page
+msgid "Contact Bika - Get in Touch"
+msgstr "Twandikire Bika - Twandikire"
+
+msgid "Get in Touch"
+msgstr "Twandikire"
+
+msgid "Ready to transform your inventory management in 2026? Our team in Rwanda is here to help you get started and answer any questions."
+msgstr "Witeguye guhindura uburyo ucunga ibicuruzwa byawe mu 2026? Ikipe yacu mu Rwanda iri hano kugira ngo igufashe gutangira kandi isubize ibibazo byose."
+
+msgid "Send Message"
+msgstr "Ohereza Ubutumwa"
+
+msgid "Call Now"
+msgstr "Hamagara ubu"
+
+msgid "How Can We Help You?"
+msgstr "Ni gute twagufasha?"
+
+msgid "Choose the best way to reach out to our team"
+msgstr "Hitamo uburyo bwiza bwo kuvugana n'ikipe yacu"
+
+msgid "Phone Support"
+msgstr "Ubufasha kuri terefone"
+
+msgid "Speak directly with our inventory specialists"
+msgstr "Vugana mu buryo butaziguye n'inzobere zacu mu micungire y'ibicuruzwa"
+
+msgid "Mon-Fri, 9AM-6PM"
+msgstr "Kuva kuwa Mbere kugeza kuwa Gatanu, 9:00 - 18:00"
+
+msgid "Email Us"
+msgstr "Twandikire kuri imeri"
+
+msgid "Send us your questions and we'll respond quickly"
+msgstr "Tohereze ibibazo byawe maze tugusubize vuba"
+
+msgid "Typically reply within 2 hours"
+msgstr "Gusubizwa ubusanzwe bifata amasaha 2"
+
+msgid "Live Chat"
+msgstr "Kuvugana mu buryo bw'ako kanya"
+
+msgid "Instant messaging with our support team"
+msgstr "Ubutumwa bw'ako kanya n'ikipe yacu ishinzwe ubufasha"
+
+msgid "Start Chat"
+msgstr "Tangira kuvugana"
+
+msgid "Available 24/7"
+msgstr "Bihari amasaha 24/7"
+
+msgid "Send Us a Message"
+msgstr "Tohereze Ubutumwa"
+
+msgid "First Name *"
+msgstr "Izina ry'iribanza *"
+
+msgid "Your first name"
+msgstr "Izina ryawe ry'iribanza"
+
+msgid "Last Name *"
+msgstr "Izina ry'umuryango *"
+
+msgid "Your last name"
+msgstr "Izina ryawe ry'umuryango"
+
+msgid "Email Address *"
+msgstr "Aderesi ya imeri *"
+
+msgid "Subject *"
+msgstr "Icyo ubutumwa bwerekeye *"
+
+msgid "Select a topic"
+msgstr "Hitamo ingingo"
+
+msgid "Sales Inquiry"
+msgstr "Ibibazo bijyanye n'igurisha"
+
+msgid "Technical Support"
+msgstr "Ubufasha mu by'ikoranabuhanga"
+
+msgid "Billing Question"
+msgstr "Ibibazo bijyanye no kwishura"
+
+msgid "Partnership"
+msgstr "Ubufatanye"
+
+msgid "Message *"
+msgstr "Ubutumwa *"
+
+msgid "How can we help you?"
+msgstr "Ni gute twagufasha?"
+
+msgid "Visit us at one of our locations across Rwanda."
+msgstr "Sura kimwe mu biro byacu biri hirya no hino mu Rwanda."
+
+msgid "Rwamagana Office"
+msgstr "Ibiro bya Rwamagana"
+
+msgid "Main Business Center"
+msgstr "Ikigo gikuru cy'ubucuruzi"
+
+msgid "Rwamagana, Rwanda"
+msgstr "Rwamagana, u Rwanda"
+
+msgid "Open: 8:00 AM - 6:00 PM"
+msgstr "Iminsi yo gufungura: 8:00 AM - 6:00 PM"
+
+msgid "Ngororero Hub"
+msgstr "Ibiro bya Ngororero"
+
+msgid "Western Province Support Center"
+msgstr "Ikigo cy'ubufasha mu Ntara y'Uburengerazuba"
+
+msgid "Ngororero, Rwanda"
+msgstr "Ngororero, u Rwanda"
+
+msgid "Masaka Branch"
+msgstr "Ibiro bya Masaka"
+
+msgid "Kigali Logistics Center"
+msgstr "Ikigo cy'ubwikorezi cya Kigali"
+
+msgid "Masaka, Rwanda"
+msgstr "Masaka, u Rwanda"
+
+msgid "Emergency Support"
+msgstr "Ubufasha bwihuse"
+
+msgid "Need urgent assistance? Our technical team is available 24/7 for critical system issues."
+msgstr "Ukeneye ubufasha bwihuse? Ikipe yacu ishinzwe ikoranabuhanga ihari amasaha 24/7 ku bibazo bikomeye bya sisitemu."
+
+# FAQ Page
+msgid "FAQ - Bika Inventory Solutions"
+msgstr "FAQ - Ibisubizo by'imicungire y'ibicuruzwa bya Bika"
+
+msgid "Frequently Asked Questions"
+msgstr "Ibibazo bikunze kubazwa"
+
+msgid "Find answers to common questions about Bika's inventory management solutions in Rwanda for 2026."
+msgstr "Shaka ibisubizo by'ibibazo bikunze kubazwa ku bijyanye n'imicungire y'ibicuruzwa bya Bika mu Rwanda mu 2026."
+
+msgid "Search for answers..."
+msgstr "Shaka ibisubizo..."
+
+msgid "Browse by Category"
+msgstr "Shakira mu byiciro"
+
+msgid "Quickly find answers organized by topic"
+msgstr "Shaka ibisubizo vuba bishyizwe mu byiciro"
+
+msgid "Inventory Management"
+msgstr "Imicungire y'Ibicuruzwa"
+
+msgid "Questions about stock tracking, reordering, and warehouse management"
+msgstr "Ibibazo bijyanye no gukurikirana ibicuruzwa, kongera kubitegeka, no gucunga ububiko"
+
+msgid "View Questions"
+msgstr "Reba Ibibazo"
+
+msgid "Implementation & Setup"
+msgstr "Gushyira mu bikorwa & Kwakira sisitemu"
+
+msgid "Getting started, migration, and system configuration"
+msgstr "Gutangira, kwimura amakuru, no gutunganya sisitemu"
+
+msgid "Pricing & Plans"
+msgstr "Ibiciro & Porogaramu"
+
+msgid "Billing, subscription plans, and payment options"
+msgstr "Kwishura, porogaramu zo kwiyandikisha, n'uburyo bwo kwishura"
+
+msgid "Integrations"
+msgstr "Guhuza na sisitemu zindi"
+
+msgid "Connecting with other software and platforms"
+msgstr "Guhuza n'andi masofutiweri n'imbuga"
+
+msgid "Security & Data"
+msgstr "Umutekano & Amakuru"
+
+msgid "Data protection, privacy, and security measures"
+msgstr "Kurinda amakuru, ibanga, n'ingamba z'umutekano"
+
+msgid "Support & Training"
+msgstr "Ubufasha & Amahugurwa"
+
+msgid "Customer support, training resources, and documentation"
+msgstr "Ubufasha ku bakiriya, ibikoresho by'amahugurwa, n'inyandiko"
+
+msgid "How does real-time inventory tracking work?"
+msgstr "Ni gute gukurikirana ibicuruzwa mu buryo bw'ako kanya bikora?"
+
+msgid "Our real-time inventory tracking uses barcode scanning, RFID technology, and API integrations to provide instant updates on stock levels. Every movement - from receiving to sales - is tracked automatically, giving you up-to-the-minute accuracy across all locations."
+msgstr "Gukurikirana ibicuruzwa byacu mu buryo bw'ako kanya bikoresha gusikana barcode, ikoranabuhanga rya RFID, no guhuza na API kugira ngo bitange amakuru y'ako kanya ku ngano y'ibicuruzwa bihari. Buri kintu cyose - kuva kwakira kugeza kugurisha - gukurikiranwa mu buryo bwikora, bikaguha ukuri kw'ako kanya mu bice byose."
+
+msgid "Can Bika handle multiple warehouse locations?"
+msgstr "Ese Bika ishobora gucunga ububiko bwinshi mu bice bitandukanye?"
+
+msgid "Yes! Bika supports unlimited warehouse locations with centralized management. You can track inventory across multiple sites, transfer stock between locations, and set location-specific reorder points and pricing."
+msgstr "Yego! Bika ishobora gucunga ububiko butagira imipaka bufite imicungire ihuriye hamwe. Ushobora gukurikirana ibicuruzwa mu bice bitandukanye, kwimurira ibicuruzwa hagati y'ububiko, no gushyiraho igihe cyo kongera gutumiza n'ibiciro byihariye kuri buri hantu."
+
+msgid "How accurate is the demand forecasting?"
+msgstr "Ese isesengura ry'ibikenewe mu gihe kizaza ryizerwa ku rugero ruri he?"
+
+msgid "Our AI-powered demand forecasting achieves 85-95% accuracy by analyzing historical sales data, seasonal trends, market conditions, and promotional activities. The system continuously learns and improves its predictions over time."
+msgstr "Isesengura ryacu rikoresha ikoranabuhanga rya AI rigera ku rugero rwa 85-95% ruriho ukuri hifashishijwe isesengura ry'ibarurishamibare ry'ibyagurishijwe, ibihe, imiterere y'isoko, n'ibikorwa byo kwamamaza. Sisitemu igenda yiga kandi ikanoza ibyo ibona uko igihe gihita."
+
+msgid "How long does implementation typically take?"
+msgstr "Ubusanzwe gushyira sisitemu mu bikorwa bifata igihe kingana iki?"
+
+msgid "Implementation time varies based on business size and complexity. Most businesses are up and running within 2-4 weeks. We provide a dedicated implementation specialist to ensure a smooth transition."
+msgstr "Igihe cyo gushyira mu bikorwa giterwa n'ingano y'ubucuruzi n'imiterere yabwo. Ubucuruzi bwinshi butangira gukoresha sisitemu mu byumweru 2 kugeza kuri 4. Dutanga inzobere igufasha kugira ngo impinduka zigende neza."
+
+msgid "Do you offer data migration services?"
+msgstr "Ese mutanga serivisi zo kwimura amakuru?"
+
+msgid "Yes, we provide comprehensive data migration services. Our team can help migrate your existing inventory data, customer information, and historical records from most common systems including Excel, QuickBooks, and other inventory management software."
+msgstr "Yego, dutanga serivisi zishitse zo kwimura amakuru. Ikipe yacu ishobora kugufasha kwimura amakuru y'ibicuruzwa ufite ubu, amakuru y'abakiriya, n'ibarurishamibare rya kera bituruka muri sisitemu zikoreshwa cyane nk'Excel, QuickBooks, n'izindi sofutiweri zicunga ibicuruzwa."
+
+msgid "What's included in the free trial?"
+msgstr "Ni iki kiba kiri muri porogaramu y'igerageza y'ubuntu?"
+
+msgid "Our 14-day free trial includes access to all core features: inventory tracking, basic reporting, up to 1000 SKUs, and standard integrations. You'll have full functionality to test the system with your business data."
+msgstr "Igerageza ryacu ry'iminsi 14 ry'ubuntu ririmo kwinjira muri serivisi z'ingenzi zose: gukurikirana ibicuruzwa, raporo z'ibanze, kugeza ku bicuruzwa 1000, no guhuza na sisitemu zisanzwe. Uzaba ufite ubushobozi bwose bwo kugerageza sisitemu ukoresheje amakuru y'ubucuruzi bwawe."
+
+msgid "Are there any hidden fees?"
+msgstr "Ese hari amafaranga yaba yihishe umuntu atazi?"
+
+msgid "No hidden fees. Our pricing is transparent and includes all standard features. Additional costs may apply for premium integrations, custom development, or dedicated support services, which are always discussed upfront."
+msgstr "Nta madorari yihishe ahari. Ibiciro byacu birasobanutse kandi bikubiyemo serivisi zose zisanzwe. Hashobora kwiyongeraho ikiguzi ku bintu byihariye, gukora sisitemu yihariye, cyangwa ubufasha bwihariye, ariko ibyo bibanza kuganirwaho."
+
+msgid "Which e-commerce platforms do you integrate with?"
+msgstr "Ni izihe mbuga zicuruza kuri murandasi muhuza na zo?"
+
+msgid "We integrate with all major e-commerce platforms including Shopify, WooCommerce, Magento, BigCommerce, and Amazon. Custom integrations are also available for proprietary systems."
+msgstr "Duhuza n'imbuga zose zikomeye zicuruza kuri murandasi zirimo Shopify, WooCommerce, Magento, BigCommerce, na Amazon. Ushobora no guhuzwa n'izindi sisitemu zihariye."
+
+msgid "Still Have Questions?"
+msgstr "Ese uracyfite ibibazo?"
+
+msgid "Our support team is here to help you get the answers you need."
+msgstr "Ikipe yacu ishinzwe ubufasha iri hano kugira ngo iguhe ibisubizo ukeneye."
+
+msgid "Contact Support"
+msgstr "Vugana n'abashinzwe ubufasha"
+
+msgid "Support available Monday-Friday, 9AM-6PM EST"
+msgstr "Ubufasha buboneka kuva kuwa Mbere kugeza kuwa Gatanu, 9:00 - 18:00"
+
+# Services Page
+msgid "Bika Services - Inventory & Business Solutions"
+msgstr "Serivisi za Bika - Ibisubizo by'imicungire y'ibicuruzwa n'ubucuruzi"
+
+msgid "Inventory & Business Solutions"
+msgstr "Ibisubizo by'imicungire y'ibicuruzwa n'ubucuruzi"
+
+msgid "Comprehensive inventory management and business optimization tools designed to streamline your operations and boost profitability."
+msgstr "Ibikoresho byuzuye by'imicungire y'ibicuruzwa no kunoza ubucuruzi byagenewe koroshya imikorere yawe no kongera inyungu."
+
+msgid "Comprehensive inventory management and business optimization tools designed to streamline your operations and boost profitability in Rwanda."
+msgstr "Ibikoresho byuzuye by'imicungire y'ibicuruzwa no kunoza ubucuruzi byagenewe koroshya imikorere yawe no kongera inyungu mu Rwanda."
+
+msgid "Explore Inventory Solutions"
+msgstr "Vumbura ibisubizo by'imicungire y'ibicuruzwa"
+
+msgid "Get Custom Quote"
+msgstr "Habwa igiciro cyihariye"
+
+msgid "Inventory Management Solutions"
+msgstr "Ibisubizo by'imicungire y'ibicuruzwa"
+
+msgid "Powerful tools to take control of your inventory and supply chain"
+msgstr "Ibikoresho bikomeye byo kugenzura ibicuruzwa byawe n'ubwikorezi bwabyo"
+
+msgid "Most Popular"
+msgstr "Ibizwi cyane"
+
+msgid "Real-time Inventory Tracking"
+msgstr "Gukurikirana ibicuruzwa mu buryo bw'ako kanya"
+
+msgid "Monitor stock levels, track item movements, and get instant updates across all your locations. Never face stockouts or overstocking again."
+msgstr "Genzi n'ingano y'ibicuruzwa, kurikirana uko bimurwa, kandi ubone amakuru y'ako kanya mu bice byose uherereyemo. Ntukigere uhura n'ikibazo cy'ibicuruzwa byashize cyangwa ibyabaye byinshi cyane."
+
+msgid "Live stock level monitoring"
+msgstr "Gukurikirana ingano y'ibicuruzwa mu buryo bw'ako kanya"
+
+msgid "Multi-location inventory sync"
+msgstr "Guhuza amakuru y'ububiko mu bice bitandukanye"
+
+msgid "Automated low stock alerts"
+msgstr "Integuza zikora iyo ibicuruzwa bishize"
+
+msgid "Barcode and QR code support"
+msgstr "Ubufasha bwa Barcode na QR code"
+
+msgid "Smart Reordering System"
+msgstr "Sisitemu y'ubwenge yo kongera gutumiza"
+
+msgid "AI-powered reordering that analyzes sales patterns, seasonality, and lead times to optimize your purchase orders automatically."
+msgstr "Sisitemu ikoresha AI mu kongera gutumiza, isesengura imiterere y'igurisha, ibihe, n'igihe bitwara kugira ngo itunganye itumiza ryawe mu buryo bwikora."
+
+msgid "Predictive demand forecasting"
+msgstr "Isesengura ry'ibizakenerwa mu gihe kizaza"
+
+msgid "Automated purchase order generation"
+msgstr "Gukora inyandiko zo gutumiza mu buryo bwikora"
+
+msgid "Vendor performance analytics"
+msgstr "Isesengura ry'imikorere y'abacuruzi"
+
+msgid "Seasonal trend analysis"
+msgstr "Isesengura ry'imiterere y'ibihe"
+
+msgid "Warehouse Management"
+msgstr "Imicungire y'Ububiko"
+
+msgid "Optimize your warehouse operations with intelligent slotting, picking routes, and storage capacity planning."
+msgstr "Noza imikorere y'ububiko bwawe hifashishijwe uburyo bw'ubwenge bwo gushyira ibintu mu mwanya, imihanda yo kubitoragura, no guteganya ingano y'ahabikwa."
+
+msgid "Optimized picking routes"
+msgstr "Imihanda inozwa yo gutoragura ibikoresho"
+
+msgid "Storage capacity planning"
+msgstr "Iteganyabikorwa ry'ingano y'ahabikwa"
+
+msgid "Inventory location mapping"
+msgstr "Gushyira ahagaragara amakarita y'ububiko"
+
+msgid "Cycle counting automation"
+msgstr "Gukora ibarura mu buryo bwikora"
+
+msgid "Advanced Inventory Analytics"
+msgstr "Isesengura rigezweho ry'ibicuruzwa"
+
+msgid "Comprehensive reporting and analytics to identify slow-moving items, calculate turnover rates, and optimize inventory investment."
+msgstr "Raporo zishitse n'isesengura ryo kumenya ibicuruzwa bitinda kugurwa, kubara umuvuduko w'igurisha, no kunoza ishoramari mu bicuruzwa."
+
+msgid "Inventory turnover analysis"
+msgstr "Isesengura ry'umuvuduko w'igurisha ry'ibicuruzwa"
+
+msgid "ABC analysis reporting"
+msgstr "Raporo z'isesengura rya ABC"
+
+msgid "Profit margin by SKU"
+msgstr "Inyungu kuri buri gicuruzwa (SKU)"
+
+msgid "Custom reporting dashboard"
+msgstr "Imbonerahamwe ya raporo zihariye"
+
+msgid "Seamless Integrations"
+msgstr "Guhuza mu buryo bworoshye"
+
+msgid "Connect Bika with your existing business systems"
+msgstr "Huza Bika na sisitemu z'ubucuruzi usanganywe"
+
+msgid "E-commerce Platforms"
+msgstr "Imbuga zicuruza kuri murandasi"
+
+msgid "Shopify, WooCommerce, Magento"
+msgstr "Shopify, WooCommerce, Magento"
+
+msgid "Accounting Software"
+msgstr "Sogutiweri z'ibaruramari"
+
+msgid "QuickBooks, Xero, Sage"
+msgstr "QuickBooks, Xero, Sage"
+
+msgid "Shipping Carriers"
+msgstr "Ibigo bitwara ibikoresho"
+
+msgid "UPS, FedEx, DHL"
+msgstr "UPS, FedEx, DHL"
+
+msgid "POS Systems"
+msgstr "Sisitemu zo ku muryango (POS)"
+
+msgid "Square, Clover, Lightspeed"
+msgstr "Square, Clover, Lightspeed"
+
+msgid "Additional Business Solutions"
+msgstr "Ibisubizo by'ubucuruzi byiyongera"
+
+msgid "Complete suite of tools to power your entire business"
+msgstr "Icyiciro cyuzuye cy'ibikoresho bigufasha mu bucuruzi bwawe bwose"
+
+msgid "Additional services information coming soon."
+msgstr "Amakuru kuri serivisi zishya azaboneka vuba."
+
+msgid "Reduction in Stockouts"
+msgstr "Kugabanya igihe ibicuruzwa bishirira"
+
+msgid "Lower Carrying Costs"
+msgstr "Kugabanya ikiguzi cyo kubika"
+
+msgid "Faster Order Processing"
+msgstr "Kwihutisha itunganywa ry'amategeko"
+
+msgid "Inventory Accuracy"
+msgstr "Ubusobanuro nyabwo bw'ibicuruzwa"
+
+msgid "Ready to Transform Your Inventory Management?"
+msgstr "Witeguye guhindura imicungire y'ibicuruzwa byawe?"
+
+msgid "Schedule a personalized demo and see how Bika can revolutionize your operations."
+msgstr "Teganya igihe cyo kwerekwa uko bikora maze urebe uko Bika ishobora guhindura imikorere yawe."
+
+msgid "Request Demo"
+msgstr "Saba kwerekwa uko bikora"

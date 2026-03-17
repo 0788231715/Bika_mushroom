@@ -1,10 +1,10 @@
-{% load static %}
+{% load static i18n %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Bika Administration{% endblock %}</title>
+    <title>{% block title %}{% trans "Bika Administration" %}{% endblock %}</title>
     
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -427,7 +427,7 @@
     <!-- Loading Spinner -->
     <div class="loading-spinner" id="global-spinner">
         <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
-            <span class="visually-hidden">Loading...</span>
+            <span class="visually-hidden">{% trans "Loading..." %}</span>
         </div>
     </div>
     
@@ -443,7 +443,7 @@
                 <!-- Brand -->
                 <a class="navbar-brand" href="{% url 'admin_dashboard' %}">
                     <i class="fas fa-seedling"></i>
-                    <span>Bika Admin</span>
+                    <span>{% trans "Bika Admin" %}</span>
                 </a>
                 
                 <!-- User Menu -->
@@ -459,29 +459,29 @@
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li>
                             <a class="dropdown-item" href="{% url 'admin:index' %}">
-                                <i class="fas fa-cog me-2"></i>Django Admin
+                                <i class="fas fa-cog me-2"></i>{% trans "Django Admin" %}
                             </a>
                         </li>
                         <li>
                             <a class="dropdown-item" href="{% url 'admin_dashboard' %}">
-                                <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                                <i class="fas fa-tachometer-alt me-2"></i>{% trans "Dashboard" %}
                             </a>
                         </li>
                         <li><hr class="dropdown-divider"></li>
                         <li>
                            <a class="dropdown-item" href="{% url 'bika:user_profile' %}">
-                                <i class="fas fa-user me-2"></i>My Profile
+                                <i class="fas fa-user me-2"></i>{% trans "My Profile" %}
                             </a>
                         </li>
                         <li>
                             <a class="dropdown-item" href="{% url 'bika:user_settings' %}">
-                                <i class="fas fa-sliders-h me-2"></i>Settings
+                                <i class="fas fa-sliders-h me-2"></i>{% trans "Settings" %}
                             </a>
                         </li>
                         <li><hr class="dropdown-divider"></li>
                         <li>
-                            <a class="dropdown-item text-danger" href="{% url 'bika:logout' %}"></a>
-                                <i class="fas fa-sign-out-alt me-2"></i>Logout
+                            <a class="dropdown-item text-danger" href="{% url 'bika:logout' %}">
+                                <i class="fas fa-sign-out-alt me-2"></i>{% trans "Logout" %}
                             </a>
                         </li>
                     </ul>
@@ -500,18 +500,18 @@
         <li>
             <a href="{% url 'admin_dashboard' %}" class="{% if request.path == '/admin/dashboard/' %}active{% endif %}">
                 <i class="fas fa-tachometer-alt"></i>
-                <span>Dashboard</span>
+                <span>{% trans "Dashboard" %}</span>
             </a>
         </li>
         
         <!-- AI & Analytics -->
         <li class="mt-3">
-            <small class="px-3 text-uppercase text-muted">AI & Analytics</small>
+            <small class="px-3 text-uppercase text-muted">{% trans "AI & Analytics" %}</small>
         </li>
         <li>
             <a href="{% url 'ai_alert_dashboard' %}" class="{% if 'ai-alerts' in request.path %}active{% endif %}">
                 <i class="fas fa-robot"></i>
-                <span>AI Alerts Dashboard</span>
+                <span>{% trans "AI Alerts Dashboard" %}</span>
                 {% if alert_stats.unresolved_alerts %}
                 <span class="badge bg-danger ms-auto">{{ alert_stats.unresolved_alerts }}</span>
                 {% endif %}
@@ -520,139 +520,139 @@
         <li>
             <a href="{% url 'model_management' %}" class="{% if 'model-management' in request.path %}active{% endif %}">
                 <i class="fas fa-brain"></i>
-                <span>Model Management</span>
+                <span>{% trans "Model Management" %}</span>
             </a>
         </li>
 <li>
     <a href="{% url 'bika:product_ai_insights_overview' %}" class="{% if 'product-ai-insights-overview' in request.path %}active{% endif %}">
         <i class="fas fa-chart-line"></i>
-        <span>Product AI Insights</span>
+        <span>{% trans "Product AI Insights" %}</span>
     </a>
 </li>
         
         <!-- Products -->
         <li class="mt-3">
-            <small class="px-3 text-uppercase text-muted">Products</small>
+            <small class="px-3 text-uppercase text-muted">{% trans "Products" %}</small>
         </li>
         <li>
             <a href="{% url 'admin:bika_product_changelist' %}">
                 <i class="fas fa-box"></i>
-                <span>All Products</span>
+                <span>{% trans "All Products" %}</span>
             </a>
         </li>
         <li>
             <a href="{% url 'admin:bika_product_add' %}">
                 <i class="fas fa-plus-circle"></i>
-                <span>Add Product</span>
+                <span>{% trans "Add Product" %}</span>
             </a>
         </li>
         <li>
             <a href="{% url 'bika:vendor_product_list' %}">
                 <i class="fas fa-store"></i>
-                <span>Vendor Products</span>
+                <span>{% trans "Vendor Products" %}</span>
             </a>
         </li>
         <li>
             <a href="{% url 'admin:bika_productcategory_changelist' %}">
                 <i class="fas fa-tags"></i>
-                <span>Categories</span>
+                <span>{% trans "Categories" %}</span>
             </a>
         </li>
         
         <!-- Orders -->
         <li class="mt-3">
-            <small class="px-3 text-uppercase text-muted">Orders</small>
+            <small class="px-3 text-uppercase text-muted">{% trans "Orders" %}</small>
         </li>
         <li>
             <a href="{% url 'admin:bika_order_changelist' %}">
                 <i class="fas fa-shopping-cart"></i>
-                <span>All Orders</span>
+                <span>{% trans "All Orders" %}</span>
             </a>
         </li>
         <li>
             <a href="{% url 'admin:bika_payment_changelist' %}">
                 <i class="fas fa-credit-card"></i>
-                <span>Payments</span>
+                <span>{% trans "Payments" %}</span>
             </a>
         </li>
         
         <!-- Users -->
         <li class="mt-3">
-            <small class="px-3 text-uppercase text-muted">Users</small>
+            <small class="px-3 text-uppercase text-muted">{% trans "Users" %}</small>
         </li>
         <li>
             <a href="{% url 'admin:bika_customuser_changelist' %}">
                 <i class="fas fa-users"></i>
-                <span>All Users</span>
+                <span>{% trans "All Users" %}</span>
             </a>
         </li>
         <li>
             <a href="{% url 'admin:bika_customuser_add' %}">
                 <i class="fas fa-user-plus"></i>
-                <span>Add User</span>
+                <span>{% trans "Add User" %}</span>
             </a>
         </li>
         
         <!-- Fruit Monitoring -->
         <li class="mt-3">
-            <small class="px-3 text-uppercase text-muted">Fruit Monitoring</small>
+            <small class="px-3 text-uppercase text-muted">{% trans "Fruit Monitoring" %}</small>
         </li>
         <li>
             <a href="{% url 'bika:fruit_quality_dashboard' %}">
                 <i class="fas fa-apple-alt"></i>
-                <span>Quality Dashboard</span>
+                <span>{% trans "Quality Dashboard" %}</span>
             </a>
         </li>
         <li>
             <a href="{% url 'admin:bika_fruitbatch_changelist' %}">
                 <i class="fas fa-layer-group"></i>
-                <span>Fruit Batches</span>
+                <span>{% trans "Fruit Batches" %}</span>
             </a>
         </li>
         <li>
             <a href="{% url 'admin:bika_fruitqualityreading_changelist' %}">
                 <i class="fas fa-chart-bar"></i>
-                <span>Quality Readings</span>
+                <span>{% trans "Quality Readings" %}</span>
             </a>
         </li>
         
         <!-- Storage & Sensors -->
         <li class="mt-3">
-            <small class="px-3 text-uppercase text-muted">Storage & Sensors</small>
+            <small class="px-3 text-uppercase text-muted">{% trans "Storage & Sensors" %}</small>
         </li>
         <li>
             <a href="{% url 'bika:storage_sites' %}">
                 <i class="fas fa-warehouse"></i>
-                <span>Storage Sites</span>
+                <span>{% trans "Storage Sites" %}</span>
             </a>
         </li>
         <li>
             <a href="{% url 'admin:bika_realtimesensordata_changelist' %}">
                 <i class="fas fa-microchip"></i>
-                <span>Sensor Data</span>
+                <span>{% trans "Sensor Data" %}</span>
             </a>
         </li>
         
         <!-- Content Management -->
         <li class="mt-3">
-            <small class="px-3 text-uppercase text-muted">Content</small>
+            <small class="px-3 text-uppercase text-muted">{% trans "Content" %}</small>
         </li>
         <li>
             <a href="{% url 'admin:bika_service_changelist' %}">
                 <i class="fas fa-concierge-bell"></i>
-                <span>Services</span>
+                <span>{% trans "Services" %}</span>
             </a>
         </li>
         <li>
             <a href="{% url 'admin:bika_testimonial_changelist' %}">
                 <i class="fas fa-comment"></i>
-                <span>Testimonials</span>
+                <span>{% trans "Testimonials" %}</span>
             </a>
         </li>
         <li>
             <a href="{% url 'admin:bika_contactmessage_changelist' %}">
                 <i class="fas fa-envelope"></i>
-                <span>Contact Messages</span>
+                <span>{% trans "Contact Messages" %}</span>
                 {% if recent_messages %}
                 <span class="badge bg-warning ms-auto">{{ recent_messages.count }}</span>
                 {% endif %}
@@ -661,24 +661,24 @@
         <li>
             <a href="{% url 'admin:bika_faq_changelist' %}">
                 <i class="fas fa-question-circle"></i>
-                <span>FAQs</span>
+                <span>{% trans "FAQs" %}</span>
             </a>
         </li>
         
         <!-- System -->
         <li class="mt-3">
-            <small class="px-3 text-uppercase text-muted">System</small>
+            <small class="px-3 text-uppercase text-muted">{% trans "System" %}</small>
         </li>
         <li>
             <a href="{% url 'admin:bika_siteinfo_changelist' %}">
                 <i class="fas fa-cog"></i>
-                <span>Site Settings</span>
+                <span>{% trans "Site Settings" %}</span>
             </a>
         </li>
         <li>
             <a href="{% url 'admin:bika_productalert_changelist' %}">
                 <i class="fas fa-bell"></i>
-                <span>Alerts</span>
+                <span>{% trans "Alerts" %}</span>
                 {% if alert_stats.unresolved_alerts %}
                 <span class="badge bg-danger ms-auto">{{ alert_stats.unresolved_alerts }}</span>
                 {% endif %}
@@ -687,24 +687,24 @@
         <li>
             <a href="{% url 'admin:bika_notification_changelist' %}">
                 <i class="fas fa-inbox"></i>
-                <span>Notifications</span>
+                <span>{% trans "Notifications" %}</span>
             </a>
         </li>
         
         <!-- Tools -->
         <li class="mt-3">
-            <small class="px-3 text-uppercase text-muted">Tools</small>
+            <small class="px-3 text-uppercase text-muted">{% trans "Tools" %}</small>
         </li>
         <li>
             <a href="{% url 'generate_sample_data' %}">
                 <i class="fas fa-database"></i>
-                <span>Generate Sample Data</span>
+                <span>{% trans "Generate Sample Data" %}</span>
             </a>
         </li>
         <li>
             <a href="{% url 'scan_products' %}">
                 <i class="fas fa-search"></i>
-                <span>Scan Products</span>
+                <span>{% trans "Scan Products" %}</span>
             </a>
         </li>
     </ul>
@@ -715,8 +715,8 @@
         <!-- Page Header -->
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
-                <h1 class="h3 mb-1">{% block page_title %}Dashboard{% endblock %}</h1>
-                <p class="text-muted mb-0">{% block page_subtitle %}Welcome to Bika Admin Dashboard{% endblock %}</p>
+                <h1 class="h3 mb-1">{% block page_title %}{% trans "Dashboard" %}{% endblock %}</h1>
+                <p class="text-muted mb-0">{% block page_subtitle %}{% trans "Welcome to Bika Admin Dashboard" %}{% endblock %}</p>
             </div>
             <div>
                 {% block page_actions %}
@@ -729,7 +729,7 @@
         {% block breadcrumb %}
         <nav aria-label="breadcrumb" class="mb-4">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'admin_dashboard' %}">{% trans "Dashboard" %}</a></li>
                 {% block breadcrumb_items %}{% endblock %}
             </ol>
         </nav>
@@ -760,12 +760,12 @@
                 <div class="col-md-6 text-start">
                     <p class="mb-0">
                         <i class="fas fa-seedling text-primary me-1"></i>
-                        Bika Admin v1.0 &copy; {% now "Y" %}
+                        Bika Admin v1.0 &copy; 2026
                     </p>
                 </div>
                 <div class="col-md-6 text-end">
                     <p class="mb-0">
-                        <span class="text-muted">Server Time:</span>
+                        <span class="text-muted">{% trans "Server Time:" %}</span>
                         <strong id="server-time">{% now "F j, Y, g:i a" %}</strong>
                     </p>
                 </div>

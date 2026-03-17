@@ -1,7 +1,7 @@
 {% extends 'bika/base.html' %}
-{% load static %}
+{% load static i18n %}
 
-{% block title %}Add Product - Bika{% endblock %}
+{% block title %}{% trans "Add Product" %} - Bika{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -178,11 +178,11 @@
                     <div class="form-card-header">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <h2 class="mb-2"><i class="fas fa-plus-circle me-2"></i>Add New Product</h2>
-                                <p class="mb-0">Fill in the details below to list your product on Bika Marketplace</p>
+                                <h2 class="mb-2"><i class="fas fa-plus-circle me-2"></i>{% trans "Add New Product" %}</h2>
+                                <p class="mb-0">{% trans "Fill in the details below to list your product on Bika Marketplace" %}</p>
                             </div>
                             <div class="featured-badge">
-                                <i class="fas fa-store me-1"></i>Vendor Panel
+                                <i class="fas fa-store me-1"></i>{% trans "Vendor Panel" %}
                             </div>
                         </div>
                     </div>
@@ -197,7 +197,7 @@
                             {% if form.errors %}
                             <div class="alert alert-danger">
                                 <h6 class="alert-heading">
-                                    <i class="fas fa-exclamation-triangle me-2"></i>Please correct the errors below:
+                                    <i class="fas fa-exclamation-triangle me-2"></i>{% trans "Please correct the errors below:" %}
                                 </h6>
                                 <ul class="mb-0 mt-2">
                                     {% for field in form %}
@@ -215,22 +215,22 @@
                             <!-- Basic Information Section -->
                             <div class="form-section">
                                 <h4 class="section-title">
-                                    <i class="fas fa-info-circle"></i>Basic Information
+                                    <i class="fas fa-info-circle"></i>{% trans "Basic Information" %}
                                 </h4>
                                 
                                 <div class="row">
                                     <div class="col-md-8">
                                         <div class="form-group mb-3">
-                                            <label for="{{ form.name.id_for_label }}" class="form-label required-field">Product Name</label>
-                                            {{ form.name }}
-                                            <div class="help-text">Enter a clear and descriptive product name</div>
+                                            <label for="{{ form.mushroom_name.id_for_label }}" class="form-label required-field">{% trans "Product Name" %}</label>
+                                            {{ form.mushroom_name }}
+                                            <div class="help-text">{% trans "Enter a clear and descriptive product name" %}</div>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group mb-3">
-                                            <label for="{{ form.sku.id_for_label }}" class="form-label required-field">SKU</label>
+                                            <label for="{{ form.sku.id_for_label }}" class="form-label required-field">{% trans "SKU" %}</label>
                                             {{ form.sku }}
-                                            <div class="help-text">Unique stock keeping unit</div>
+                                            <div class="help-text">{% trans "Unique stock keeping unit" %}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -238,48 +238,48 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group mb-3">
-                                            <label for="{{ form.slug.id_for_label }}" class="form-label required-field">URL Slug</label>
+                                            <label for="{{ form.slug.id_for_label }}" class="form-label required-field">{% trans "URL Slug" %}</label>
                                             {{ form.slug }}
-                                            <div class="help-text">URL-friendly version of the name (e.g., "my-awesome-product")</div>
+                                            <div class="help-text">{% trans 'URL-friendly version of the name (e.g., "my-awesome-product")' %}</div>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group mb-3">
-                                            <label for="{{ form.category.id_for_label }}" class="form-label required-field">Category</label>
+                                            <label for="{{ form.category.id_for_label }}" class="form-label required-field">{% trans "Category" %}</label>
                                             {{ form.category }}
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="form-group mb-3">
-                                    <label for="{{ form.short_description.id_for_label }}" class="form-label">Short Description</label>
+                                    <label for="{{ form.short_description.id_for_label }}" class="form-label">{% trans "Short Description" %}</label>
                                     {{ form.short_description }}
-                                    <div class="help-text">Brief description shown in product listings (max 300 characters)</div>
+                                    <div class="help-text">{% trans "Brief description shown in product listings (max 300 characters)" %}</div>
                                 </div>
 
                                 <div class="form-group mb-3">
-                                    <label for="{{ form.description.id_for_label }}" class="form-label required-field">Full Description</label>
+                                    <label for="{{ form.description.id_for_label }}" class="form-label required-field">{% trans "Full Description" %}</label>
                                     {{ form.description }}
-                                    <div class="help-text">Detailed product description with features and benefits</div>
+                                    <div class="help-text">{% trans "Detailed product description with features and benefits" %}</div>
                                 </div>
 
                                 <div class="form-group mb-3">
-                                    <label for="{{ form.tags.id_for_label }}" class="form-label">Tags</label>
+                                    <label for="{{ form.tags.id_for_label }}" class="form-label">{% trans "Tags" %}</label>
                                     {{ form.tags }}
-                                    <div class="help-text">Comma-separated keywords for better searchability</div>
+                                    <div class="help-text">{% trans "Comma-separated keywords for better searchability" %}</div>
                                 </div>
                             </div>
 
                             <!-- Pricing Section -->
                             <div class="form-section">
                                 <h4 class="section-title">
-                                    <i class="fas fa-tag"></i>Pricing & Inventory
+                                    <i class="fas fa-tag"></i>{% trans "Pricing & Inventory" %}
                                 </h4>
                                 
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="form-group mb-3">
-                                            <label for="{{ form.price.id_for_label }}" class="form-label required-field">Price ($)</label>
+                                            <label for="{{ form.price.id_for_label }}" class="form-label required-field">{% trans "Price" %} ($)</label>
                                             <div class="input-group price-input-group">
                                                 <span class="input-group-text">$</span>
                                                 {{ form.price }}
@@ -288,22 +288,22 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group mb-3">
-                                            <label for="{{ form.compare_price.id_for_label }}" class="form-label">Compare Price ($)</label>
+                                            <label for="{{ form.compare_price.id_for_label }}" class="form-label">{% trans "Compare Price" %} ($)</label>
                                             <div class="input-group price-input-group">
                                                 <span class="input-group-text">$</span>
                                                 {{ form.compare_price }}
                                             </div>
-                                            <div class="help-text">Original price for showing discounts</div>
+                                            <div class="help-text">{% trans "Original price for showing discounts" %}</div>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group mb-3">
-                                            <label for="{{ form.cost_price.id_for_label }}" class="form-label">Cost Price ($)</label>
+                                            <label for="{{ form.cost_price.id_for_label }}" class="form-label">{% trans "Cost Price" %} ($)</label>
                                             <div class="input-group price-input-group">
                                                 <span class="input-group-text">$</span>
                                                 {{ form.cost_price }}
                                             </div>
-                                            <div class="help-text">Your cost for this product</div>
+                                            <div class="help-text">{% trans "Your cost for this product" %}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -311,15 +311,15 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group mb-3">
-                                            <label for="{{ form.stock_quantity.id_for_label }}" class="form-label">Stock Quantity</label>
+                                            <label for="{{ form.stock_quantity.id_for_label }}" class="form-label">{% trans "Stock Quantity" %}</label>
                                             {{ form.stock_quantity }}
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group mb-3">
-                                            <label for="{{ form.low_stock_threshold.id_for_label }}" class="form-label">Low Stock Alert</label>
+                                            <label for="{{ form.low_stock_threshold.id_for_label }}" class="form-label">{% trans "Low Stock Alert" %}</label>
                                             {{ form.low_stock_threshold }}
-                                            <div class="help-text">Get notified when stock reaches this level</div>
+                                            <div class="help-text">{% trans "Get notified when stock reaches this level" %}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -328,18 +328,18 @@
                                     <div class="col-md-4">
                                         <div class="form-check form-switch mb-3">
                                             {{ form.track_inventory }}
-                                            <label class="form-check-label" for="{{ form.track_inventory.id_for_label }}">Track Inventory</label>
+                                            <label class="form-check-label" for="{{ form.track_inventory.id_for_label }}">{% trans "Track Inventory" %}</label>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-check form-switch mb-3">
                                             {{ form.allow_backorders }}
-                                            <label class="form-check-label" for="{{ form.allow_backorders.id_for_label }}">Allow Backorders</label>
+                                            <label class="form-check-label" for="{{ form.allow_backorders.id_for_label }}">{% trans "Allow Backorders" %}</label>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group mb-3">
-                                            <label for="{{ form.tax_rate.id_for_label }}" class="form-label">Tax Rate (%)</label>
+                                            <label for="{{ form.tax_rate.id_for_label }}" class="form-label">{% trans "Tax Rate" %} (%)</label>
                                             {{ form.tax_rate }}
                                         </div>
                                     </div>
@@ -349,19 +349,19 @@
                             <!-- Product Details Section -->
                             <div class="form-section">
                                 <h4 class="section-title">
-                                    <i class="fas fa-cube"></i>Product Details
+                                    <i class="fas fa-cube"></i>{% trans "Product Details" %}
                                 </h4>
                                 
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group mb-3">
-                                            <label for="{{ form.brand.id_for_label }}" class="form-label">Brand</label>
+                                            <label for="{{ form.brand.id_for_label }}" class="form-label">{% trans "Brand" %}</label>
                                             {{ form.brand }}
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group mb-3">
-                                            <label for="{{ form.model.id_for_label }}" class="form-label">Model</label>
+                                            <label for="{{ form.model.id_for_label }}" class="form-label">{% trans "Model" %}</label>
                                             {{ form.model }}
                                         </div>
                                     </div>
@@ -370,20 +370,20 @@
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="form-group mb-3">
-                                            <label for="{{ form.weight.id_for_label }}" class="form-label">Weight (kg)</label>
+                                            <label for="{{ form.weight.id_for_label }}" class="form-label">{% trans "Weight (kg)" %}</label>
                                             {{ form.weight }}
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group mb-3">
-                                            <label for="{{ form.dimensions.id_for_label }}" class="form-label">Dimensions (cm)</label>
+                                            <label for="{{ form.dimensions.id_for_label }}" class="form-label">{% trans "Dimensions (cm)" %}</label>
                                             {{ form.dimensions }}
-                                            <div class="help-text">Format: LxWxH</div>
+                                            <div class="help-text">{% trans "Format: LxWxH" %}</div>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group mb-3">
-                                            <label for="{{ form.material.id_for_label }}" class="form-label">Material</label>
+                                            <label for="{{ form.material.id_for_label }}" class="form-label">{% trans "Material" %}</label>
                                             {{ form.material }}
                                         </div>
                                     </div>
@@ -392,13 +392,13 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group mb-3">
-                                            <label for="{{ form.color.id_for_label }}" class="form-label">Color</label>
+                                            <label for="{{ form.color.id_for_label }}" class="form-label">{% trans "Color" %}</label>
                                             {{ form.color }}
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group mb-3">
-                                            <label for="{{ form.size.id_for_label }}" class="form-label">Size</label>
+                                            <label for="{{ form.size.id_for_label }}" class="form-label">{% trans "Size" %}</label>
                                             {{ form.size }}
                                         </div>
                                     </div>
@@ -408,19 +408,19 @@
                             <!-- Status & Settings Section -->
                             <div class="form-section">
                                 <h4 class="section-title">
-                                    <i class="fas fa-cog"></i>Status & Settings
+                                    <i class="fas fa-cog"></i>{% trans "Status & Settings" %}
                                 </h4>
                                 
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group mb-3">
-                                            <label for="{{ form.status.id_for_label }}" class="form-label required-field">Status</label>
+                                            <label for="{{ form.status.id_for_label }}" class="form-label required-field">{% trans "Status" %}</label>
                                             {{ form.status }}
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group mb-3">
-                                            <label for="{{ form.condition.id_for_label }}" class="form-label required-field">Condition</label>
+                                            <label for="{{ form.condition.id_for_label }}" class="form-label required-field">{% trans "Condition" %}</label>
                                             {{ form.condition }}
                                         </div>
                                     </div>
@@ -430,15 +430,15 @@
                                     <div class="col-md-6">
                                         <div class="form-check form-switch mb-3">
                                             {{ form.is_featured }}
-                                            <label class="form-check-label" for="{{ form.is_featured.id_for_label }}">Feature this product</label>
-                                            <div class="help-text">Show this product in featured sections</div>
+                                            <label class="form-check-label" for="{{ form.is_featured.id_for_label }}">{% trans "Feature this product" %}</label>
+                                            <div class="help-text">{% trans "Show this product in featured sections" %}</div>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="form-check form-switch mb-3">
+                                        <div class="form-check_form-switch mb-3">
                                             {{ form.is_digital }}
-                                            <label class="form-check-label" for="{{ form.is_digital.id_for_label }}">Digital Product</label>
-                                            <div class="help-text">No physical shipping required</div>
+                                            <label class="form-check-label" for="{{ form.is_digital.id_for_label }}">{% trans "Digital Product" %}</label>
+                                            <div class="help-text">{% trans "No physical shipping required" %}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -447,19 +447,19 @@
                             <!-- SEO Section -->
                             <div class="form-section">
                                 <h4 class="section-title">
-                                    <i class="fas fa-search"></i>SEO Settings
+                                    <i class="fas fa-search"></i>{% trans "SEO Settings" %}
                                 </h4>
                                 
                                 <div class="form-group mb-3">
-                                    <label for="{{ form.meta_title.id_for_label }}" class="form-label">Meta Title</label>
+                                    <label for="{{ form.meta_title.id_for_label }}" class="form-label">{% trans "Meta Title" %}</label>
                                     {{ form.meta_title }}
-                                    <div class="help-text">Title for search engines (leave blank to use product name)</div>
+                                    <div class="help-text">{% trans "Title for search engines (leave blank to use product name)" %}</div>
                                 </div>
 
                                 <div class="form-group mb-3">
-                                    <label for="{{ form.meta_description.id_for_label }}" class="form-label">Meta Description</label>
+                                    <label for="{{ form.meta_description.id_for_label }}" class="form-label">{% trans "Meta Description" %}</label>
                                     {{ form.meta_description }}
-                                    <div class="help-text">Description for search engines (leave blank to use short description)</div>
+                                    <div class="help-text">{% trans "Description for search engines (leave blank to use short description)" %}</div>
                                 </div>
                             </div>
 
@@ -468,15 +468,15 @@
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
                                         <a href="{% url 'bika:vendor_dashboard' %}" class="btn btn-outline-secondary">
-                                            <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                                            <i class="fas fa-arrow-left me-2"></i>{% trans "Back to Dashboard" %}
                                         </a>
                                     </div>
                                     <div class="d-flex gap-3">
                                         <button type="submit" name="save_draft" value="true" class="btn btn-outline-primary">
-                                            <i class="fas fa-save me-2"></i>Save as Draft
+                                            <i class="fas fa-save me-2"></i>{% trans "Save as Draft" %}
                                         </button>
                                         <button type="submit" name="publish" value="true" class="btn btn-primary">
-                                            <i class="fas fa-rocket me-2"></i>Publish Product
+                                            <i class="fas fa-rocket me-2"></i>{% trans "Publish Product" %}
                                         </button>
                                     </div>
                                 </div>
@@ -489,21 +489,21 @@
                 <div class="form-card">
                     <div class="form-card-body">
                         <h5 class="section-title">
-                            <i class="fas fa-lightbulb"></i>Tips for Success
+                            <i class="fas fa-lightbulb"></i>{% trans "Tips for Success" %}
                         </h5>
                         <div class="row">
                             <div class="col-md-6">
                                 <ul class="list-unstyled">
-                                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Use high-quality images</li>
-                                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Write detailed descriptions</li>
-                                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Set competitive pricing</li>
+                                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i>{% trans "Use high-quality images" %}</li>
+                                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i>{% trans "Write detailed descriptions" %}</li>
+                                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i>{% trans "Set competitive pricing" %}</li>
                                 </ul>
                             </div>
                             <div class="col-md-6">
                                 <ul class="list-unstyled">
-                                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Use relevant keywords</li>
-                                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Keep inventory updated</li>
-                                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Respond to customer reviews</li>
+                                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i>{% trans "Use relevant keywords" %}</li>
+                                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i>{% trans "Keep inventory updated" %}</li>
+                                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i>{% trans "Respond to customer reviews" %}</li>
                                 </ul>
                             </div>
                         </div>
@@ -519,7 +519,7 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Auto-generate slug from product name
-    const nameField = document.getElementById('{{ form.name.id_for_label }}');
+    const nameField = document.getElementById('{{ form.mushroom_name.id_for_label }}');
     const slugField = document.getElementById('{{ form.slug.id_for_label }}');
     
     if (nameField && slugField) {

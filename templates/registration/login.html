@@ -1,8 +1,8 @@
 {% extends 'bika/base.html' %}
-{% load static %}
+{% load static i18n %}
 {% load crispy_forms_tags %}
 
-{% block title %}Login - Bika{% endblock %}
+{% block title %}{% trans "Login - Bika" %}{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -76,8 +76,8 @@
                         <div class="login-logo">
                             <i class="fas fa-lock"></i>
                         </div>
-                        <h2>Welcome Back</h2>
-                        <p>Sign in to your Bika account</p>
+                        <h2>{% trans "Welcome Back" %}</h2>
+                        <p>{% trans "Sign in to your Bika account" %}</p>
                     </div>
 
                     <!-- Body -->
@@ -97,25 +97,25 @@
                         {% if form.errors %}
                             <div class="alert alert-danger alert-dismissible fade show">
                                 <i class="fas fa-exclamation-triangle me-2"></i>
-                                Please enter a correct username and password. Note that both fields may be case-sensitive.
+                                {% trans "Please enter a correct username and password. Note that both fields may be case-sensitive." %}
                                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                             </div>
                         {% endif %}
 
                         <!-- Login Form -->
-                        <form method="post" action="{% url 'bika:login' %}">  <!-- CHANGED HERE -->
+                        <form method="post" action="{% url 'bika:login' %}">
                             {% csrf_token %}
                             
                             <!-- Username Field -->
                             <div class="form-group">
                                 <label for="id_username" class="form-label">
-                                    <i class="fas fa-user me-2"></i>Username
+                                    <i class="fas fa-user me-2"></i>{% trans "Username" %}
                                 </label>
                                 <input type="text" 
                                        name="username" 
                                        id="id_username" 
                                        class="form-control" 
-                                       placeholder="Enter your username"
+                                       placeholder="{% trans 'Enter your username' %}"
                                        required
                                        autofocus>
                                 {% if form.username.errors %}
@@ -128,13 +128,13 @@
                             <!-- Password Field -->
                             <div class="form-group">
                                 <label for="id_password" class="form-label">
-                                    <i class="fas fa-lock me-2"></i>Password
+                                    <i class="fas fa-lock me-2"></i>{% trans "Password" %}
                                 </label>
                                 <input type="password" 
                                        name="password" 
                                        id="id_password" 
                                        class="form-control" 
-                                       placeholder="Enter your password"
+                                       placeholder="{% trans 'Enter your password' %}"
                                        required>
                                 {% if form.password.errors %}
                                     <div class="text-danger small mt-1">
@@ -148,15 +148,15 @@
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="remember_me" id="remember_me">
                                     <label class="form-check-label" for="remember_me">
-                                        Remember me
+                                        {% trans "Remember me" %}
                                     </label>
                                 </div>
-                                <a href="{% url 'bika:password_reset' %}" class="forgot-password">Forgot password?</a>
+                                <a href="{% url 'bika:password_reset' %}" class="forgot-password">{% trans "Forgot password?" %}</a>
                             </div>
 
                             <!-- Submit Button -->
                             <button type="submit" class="btn btn-login mb-3">
-                                <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                                <i class="fas fa-sign-in-alt me-2"></i>{% trans "Sign In" %}
                             </button>
 
                             <input type="hidden" name="next" value="{{ next }}">
@@ -165,22 +165,22 @@
                         <!-- Demo Credentials (Remove in production) -->
                         {% if debug %}
                         <div class="alert alert-info mt-3">
-                            <h6 class="alert-heading"><i class="fas fa-info-circle me-2"></i>Demo Access</h6>
+                            <h6 class="alert-heading"><i class="fas fa-info-circle me-2"></i>{% trans "Demo Access" %}</h6>
                             <small>
-                                Use the admin credentials you created with <code>createsuperuser</code>
+                                {% blocktrans %}Use the admin credentials you created with <code>createsuperuser</code>{% endblocktrans %}
                             </small>
                         </div>
                         {% endif %}
 
                         <!-- Social Login (Optional) -->
                         <div class="social-login">
-                            <p>Or continue with</p>
+                            <p>{% trans "Or continue with" %}</p>
                             <div class="social-buttons">
                                 <a href="#" class="btn-social btn-google">
-                                    <i class="fab fa-google"></i> Google
+                                    <i class="fab fa-google"></i> {% trans "Google" %}
                                 </a>
                                 <a href="#" class="btn-social btn-facebook">
-                                    <i class="fab fa-facebook-f"></i> Facebook
+                                    <i class="fab fa-facebook-f"></i> {% trans "Facebook" %}
                                 </a>
                             </div>
                         </div>
@@ -188,9 +188,9 @@
                         <!-- Registration Link -->
                         <div class="login-links">
                             <p class="mb-0">
-                                Don't have an account? 
-                                <a href="{% url 'bika:contact' %}" class="ms-1">Contact us to get started</a>or
-                                <a href="{% url 'bika:register' %}" class="ms-1">Create one here</a>
+                                {% trans "Don't have an account?" %} 
+                                <a href="{% url 'bika:contact' %}" class="ms-1">{% trans "Contact us to get started" %}</a>{% trans "or" %}
+                                <a href="{% url 'bika:register' %}" class="ms-1">{% trans "Create one here" %}</a>
                             </p>
                         </div>
                         

@@ -207,82 +207,73 @@ class VendorProfileForm(forms.ModelForm):
 
 # ==================== PRODUCT FORMS ====================
 
+class MultipleFileInput(forms.ClearableFileInput):
+    allow_multiple_selected = True
+
 class ProductForm(forms.ModelForm):
+    images = forms.FileField(
+        widget=MultipleFileInput(attrs={'class': 'form-control', 'multiple': 'multiple'}),
+        required=False,
+        help_text="Upload one or more mushroom images"
+    )
+
     class Meta:
         model = Product
         fields = [
-            'name', 'slug', 'sku', 'category', 'description', 'short_description', 'tags',
-            'price', 'compare_price', 'cost_price', 'tax_rate',
-            'stock_quantity', 'low_stock_threshold', 'track_inventory', 'allow_backorders',
-            'brand', 'model', 'weight', 'dimensions', 'color', 'size', 'material',
-            'status', 'condition', 'is_featured', 'is_digital',
-            'meta_title', 'meta_description'
+            'mushroom_name', 'category', 'description', 'price', 
+            'stock_quantity', 'weight', 'status', 'is_featured', 'images',
+            'sku', 'barcode'
         ]
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Product Name'}),
-            'slug': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'product-slug'}),
-            'sku': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'SKU001'}),
+            'mushroom_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter mushroom name'}),
             'category': forms.Select(attrs={'class': 'form-control'}),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Detailed product description'}),
-            'short_description': forms.Textarea(attrs={'class': 'form-control', 'rows': 2, 'placeholder': 'Brief product description'}),
-            'tags': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'tag1, tag2, tag3'}),
-            'price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'placeholder': '0.00'}),
-            'compare_price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'placeholder': '0.00'}),
-            'cost_price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'placeholder': '0.00'}),
-            'tax_rate': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'placeholder': '0.00'}),
-            'stock_quantity': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': '0'}),
-            'low_stock_threshold': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': '5'}),
-            'track_inventory': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
-            'allow_backorders': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
-            'brand': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Brand Name'}),
-            'model': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Model Number'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Describe the mushroom'}),
+            'price': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Price in RWF'}),
+            'stock_quantity': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Available stock'}),
             'weight': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'placeholder': 'Weight in kg'}),
-            'dimensions': forms.TextInput(attrs={'class': 'form-control', 'placeholder': '10x5x2'}),
-            'color': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Red, Blue, etc.'}),
-            'size': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'S, M, L, XL'}),
-            'material': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Cotton, Plastic, etc.'}),
             'status': forms.Select(attrs={'class': 'form-control'}),
-            'condition': forms.Select(attrs={'class': 'form-control'}),
             'is_featured': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
-            'is_digital': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
-            'meta_title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'SEO Meta Title'}),
-            'meta_description': forms.Textarea(attrs={'class': 'form-control', 'rows': 2, 'placeholder': 'SEO Meta Description'}),
+            'sku': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Auto-generated if left blank'}),
+            'barcode': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Auto-generated if left blank'}),
         }
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Set initial values for new products
         if not self.instance.pk:
-            self.fields['status'].initial = 'draft'
-            self.fields['condition'].initial = 'new'
-            self.fields['track_inventory'].initial = True
-            self.fields['tax_rate'].initial = 0.0
+            self.fields['status'].initial = 'Draft'
+        
+        # Make fields optional for the form (they are generated in the view/save method)
+        self.fields['sku'].required = False
+        self.fields['barcode'].required = False
     
-    def clean_sku(self):
-        sku = self.cleaned_data.get('sku')
-        if sku and Product.objects.filter(sku=sku).exclude(pk=self.instance.pk).exists():
-            raise ValidationError("A product with this SKU already exists.")
-        return sku
-    
+    def clean_images(self):
+        """Handle multiple images by returning the first one for the main product field"""
+        files = self.files.getlist('images')
+        if files:
+            return files[0]
+        return None
+
     def clean_price(self):
         price = self.cleaned_data.get('price')
-        if price and price < 0:
+        if price is None:
+            raise ValidationError("Price is required.")
+        if price < 0:
             raise ValidationError("Price cannot be negative.")
         return price
     
-    def clean_compare_price(self):
-        compare_price = self.cleaned_data.get('compare_price')
-        price = self.cleaned_data.get('price')
-        
-        if compare_price and price and compare_price <= price:
-            raise ValidationError("Compare price must be greater than the current price.")
-        return compare_price
-    
     def clean_stock_quantity(self):
         stock_quantity = self.cleaned_data.get('stock_quantity')
-        if stock_quantity and stock_quantity < 0:
+        if stock_quantity is None:
+            raise ValidationError("Stock quantity is required.")
+        if stock_quantity < 0:
             raise ValidationError("Stock quantity cannot be negative.")
         return stock_quantity
+
+    def clean_mushroom_name(self):
+        mushroom_name = self.cleaned_data.get('mushroom_name')
+        if not mushroom_name:
+            raise ValidationError("Mushroom name is required.")
+        return mushroom_name
 
 class ProductImageForm(forms.ModelForm):
     class Meta:

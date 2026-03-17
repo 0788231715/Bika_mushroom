@@ -28,11 +28,11 @@ class BikaConfig(AppConfig):
             if not SiteInfo.objects.exists():
                 SiteInfo.objects.create(
                     name="Bika",
-                    tagline="AI-Powered Fruit Quality Monitoring & E-commerce Platform",
+                    tagline="Your inventory Our Innovation",
                     description="Your Success Is Our Business - Bika provides exceptional services to help your business grow.",
                     email="contact@bika.com",
-                    phone="+255 123 456 789",
-                    address="Dar es Salaam, Tanzania",
+                    phone="+250 798 780 022",
+                    address="Kigali, Rwanda",
                 )
                 print("Bika: Default SiteInfo created")
             

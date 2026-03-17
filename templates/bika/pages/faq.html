@@ -1,7 +1,7 @@
 {% extends 'bika/base.html' %}
-{% load static %}
+{% load static i18n %}
 
-{% block title %}FAQ - Bika Inventory Solutions{% endblock %}
+{% block title %}{% trans "FAQ - Bika Inventory Solutions" %}{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -42,13 +42,13 @@
     <div class="container">
         <div class="row text-center">
             <div class="col-lg-8 mx-auto">
-                <h1 class="display-4 fw-bold mb-4">Frequently Asked Questions</h1>
-                <p class="lead mb-4">Find answers to common questions about Bika's inventory management solutions and services</p>
+                <h1 class="display-4 fw-bold mb-4">{% trans "Frequently Asked Questions" %}</h1>
+                <p class="lead mb-4">{% trans "Find answers to common questions about Bika's inventory management solutions in Rwanda for 2026." %}</p>
                 
                 <!-- Search Box -->
                 <div class="search-box">
                     <div class="input-group input-group-lg">
-                        <input type="text" class="form-control" placeholder="Search for answers..." id="faqSearch">
+                        <input type="text" class="form-control" placeholder="{% trans 'Search for answers...' %}" id="faqSearch">
                         <button class="btn btn-light" type="button" id="searchButton">
                             <i class="fas fa-search"></i>
                         </button>
@@ -64,8 +64,8 @@
     <div class="container">
         <div class="row text-center mb-5">
             <div class="col-12">
-                <h2 class="section-title">Browse by Category</h2>
-                <p class="section-subtitle">Quickly find answers organized by topic</p>
+                <h2 class="section-title">{% trans "Browse by Category" %}</h2>
+                <p class="section-subtitle">{% trans "Quickly find answers organized by topic" %}</p>
             </div>
         </div>
         
@@ -75,9 +75,9 @@
                     <div class="category-icon mb-3">
                         <i class="fas fa-cube fa-3x text-primary"></i>
                     </div>
-                    <h4>Inventory Management</h4>
-                    <p class="text-muted">Questions about stock tracking, reordering, and warehouse management</p>
-                    <a href="#inventory-faq" class="btn btn-outline-primary">View Questions</a>
+                    <h4>{% trans "Inventory Management" %}</h4>
+                    <p class="text-muted">{% trans "Questions about stock tracking, reordering, and warehouse management" %}</p>
+                    <a href="#inventory-faq" class="btn btn-outline-primary">{% trans "View Questions" %}</a>
                 </div>
             </div>
             
@@ -86,9 +86,9 @@
                     <div class="category-icon mb-3">
                         <i class="fas fa-cogs fa-3x text-primary"></i>
                     </div>
-                    <h4>Implementation & Setup</h4>
-                    <p class="text-muted">Getting started, migration, and system configuration</p>
-                    <a href="#implementation-faq" class="btn btn-outline-primary">View Questions</a>
+                    <h4>{% trans "Implementation & Setup" %}</h4>
+                    <p class="text-muted">{% trans "Getting started, migration, and system configuration" %}</p>
+                    <a href="#implementation-faq" class="btn btn-outline-primary">{% trans "View Questions" %}</a>
                 </div>
             </div>
             
@@ -97,9 +97,9 @@
                     <div class="category-icon mb-3">
                         <i class="fas fa-credit-card fa-3x text-primary"></i>
                     </div>
-                    <h4>Pricing & Plans</h4>
-                    <p class="text-muted">Billing, subscription plans, and payment options</p>
-                    <a href="#pricing-faq" class="btn btn-outline-primary">View Questions</a>
+                    <h4>{% trans "Pricing & Plans" %}</h4>
+                    <p class="text-muted">{% trans "Billing, subscription plans, and payment options" %}</p>
+                    <a href="#pricing-faq" class="btn btn-outline-primary">{% trans "View Questions" %}</a>
                 </div>
             </div>
         </div>
@@ -110,9 +110,9 @@
                     <div class="category-icon mb-3">
                         <i class="fas fa-plug fa-3x text-primary"></i>
                     </div>
-                    <h4>Integrations</h4>
-                    <p class="text-muted">Connecting with other software and platforms</p>
-                    <a href="#integrations-faq" class="btn btn-outline-primary">View Questions</a>
+                    <h4>{% trans "Integrations" %}</h4>
+                    <p class="text-muted">{% trans "Connecting with other software and platforms" %}</p>
+                    <a href="#integrations-faq" class="btn btn-outline-primary">{% trans "View Questions" %}</a>
                 </div>
             </div>
             
@@ -121,9 +121,9 @@
                     <div class="category-icon mb-3">
                         <i class="fas fa-shield-alt fa-3x text-primary"></i>
                     </div>
-                    <h4>Security & Data</h4>
-                    <p class="text-muted">Data protection, privacy, and security measures</p>
-                    <a href="#security-faq" class="btn btn-outline-primary">View Questions</a>
+                    <h4>{% trans "Security & Data" %}</h4>
+                    <p class="text-muted">{% trans "Data protection, privacy, and security measures" %}</p>
+                    <a href="#security-faq" class="btn btn-outline-primary">{% trans "View Questions" %}</a>
                 </div>
             </div>
             
@@ -132,9 +132,9 @@
                     <div class="category-icon mb-3">
                         <i class="fas fa-headset fa-3x text-primary"></i>
                     </div>
-                    <h4>Support & Training</h4>
-                    <p class="text-muted">Customer support, training resources, and documentation</p>
-                    <a href="#support-faq" class="btn btn-outline-primary">View Questions</a>
+                    <h4>{% trans "Support & Training" %}</h4>
+                    <p class="text-muted">{% trans "Customer support, training resources, and documentation" %}</p>
+                    <a href="#support-faq" class="btn btn-outline-primary">{% trans "View Questions" %}</a>
                 </div>
             </div>
         </div>
@@ -149,19 +149,19 @@
             <div class="col-12">
                 <div class="d-flex align-items-center mb-4">
                     <i class="fas fa-cube fa-2x text-primary me-3"></i>
-                    <h3 class="mb-0">Inventory Management</h3>
+                    <h3 class="mb-0">{% trans "Inventory Management" %}</h3>
                 </div>
                 
                 <div class="accordion" id="inventoryAccordion">
                     <div class="accordion-item">
                         <h2 class="accordion-header">
                             <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#inventoryOne">
-                                How does real-time inventory tracking work?
+                                {% trans "How does real-time inventory tracking work?" %}
                             </button>
                         </h2>
                         <div id="inventoryOne" class="accordion-collapse collapse show" data-bs-parent="#inventoryAccordion">
                             <div class="accordion-body">
-                                Our real-time inventory tracking uses barcode scanning, RFID technology, and API integrations to provide instant updates on stock levels. Every movement - from receiving to sales - is tracked automatically, giving you up-to-the-minute accuracy across all locations.
+                                {% trans "Our real-time inventory tracking uses barcode scanning, RFID technology, and API integrations to provide instant updates on stock levels. Every movement - from receiving to sales - is tracked automatically, giving you up-to-the-minute accuracy across all locations." %}
                             </div>
                         </div>
                     </div>
@@ -169,12 +169,12 @@
                     <div class="accordion-item">
                         <h2 class="accordion-header">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#inventoryTwo">
-                                Can Bika handle multiple warehouse locations?
+                                {% trans "Can Bika handle multiple warehouse locations?" %}
                             </button>
                         </h2>
                         <div id="inventoryTwo" class="accordion-collapse collapse" data-bs-parent="#inventoryAccordion">
                             <div class="accordion-body">
-                                Yes! Bika supports unlimited warehouse locations with centralized management. You can track inventory across multiple sites, transfer stock between locations, and set location-specific reorder points and pricing.
+                                {% trans "Yes! Bika supports unlimited warehouse locations with centralized management. You can track inventory across multiple sites, transfer stock between locations, and set location-specific reorder points and pricing." %}
                             </div>
                         </div>
                     </div>
@@ -182,12 +182,12 @@
                     <div class="accordion-item">
                         <h2 class="accordion-header">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#inventoryThree">
-                                How accurate is the demand forecasting?
+                                {% trans "How accurate is the demand forecasting?" %}
                             </button>
                         </h2>
                         <div id="inventoryThree" class="accordion-collapse collapse" data-bs-parent="#inventoryAccordion">
                             <div class="accordion-body">
-                                Our AI-powered demand forecasting achieves 85-95% accuracy by analyzing historical sales data, seasonal trends, market conditions, and promotional activities. The system continuously learns and improves its predictions over time.
+                                {% trans "Our AI-powered demand forecasting achieves 85-95% accuracy by analyzing historical sales data, seasonal trends, market conditions, and promotional activities. The system continuously learns and improves its predictions over time." %}
                             </div>
                         </div>
                     </div>
@@ -200,19 +200,19 @@
             <div class="col-12">
                 <div class="d-flex align-items-center mb-4">
                     <i class="fas fa-cogs fa-2x text-primary me-3"></i>
-                    <h3 class="mb-0">Implementation & Setup</h3>
+                    <h3 class="mb-0">{% trans "Implementation & Setup" %}</h3>
                 </div>
                 
                 <div class="accordion" id="implementationAccordion">
                     <div class="accordion-item">
                         <h2 class="accordion-header">
                             <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#implementationOne">
-                                How long does implementation typically take?
+                                {% trans "How long does implementation typically take?" %}
                             </button>
                         </h2>
                         <div id="implementationOne" class="accordion-collapse collapse show" data-bs-parent="#implementationAccordion">
                             <div class="accordion-body">
-                                Implementation time varies based on business size and complexity. Most businesses are up and running within 2-4 weeks. We provide a dedicated implementation specialist to ensure a smooth transition.
+                                {% trans "Implementation time varies based on business size and complexity. Most businesses are up and running within 2-4 weeks. We provide a dedicated implementation specialist to ensure a smooth transition." %}
                             </div>
                         </div>
                     </div>
@@ -220,12 +220,12 @@
                     <div class="accordion-item">
                         <h2 class="accordion-header">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#implementationTwo">
-                                Do you offer data migration services?
+                                {% trans "Do you offer data migration services?" %}
                             </button>
                         </h2>
                         <div id="implementationTwo" class="accordion-collapse collapse" data-bs-parent="#implementationAccordion">
                             <div class="accordion-body">
-                                Yes, we provide comprehensive data migration services. Our team can help migrate your existing inventory data, customer information, and historical records from most common systems including Excel, QuickBooks, and other inventory management software.
+                                {% trans "Yes, we provide comprehensive data migration services. Our team can help migrate your existing inventory data, customer information, and historical records from most common systems including Excel, QuickBooks, and other inventory management software." %}
                             </div>
                         </div>
                     </div>
@@ -238,19 +238,19 @@
             <div class="col-12">
                 <div class="d-flex align-items-center mb-4">
                     <i class="fas fa-credit-card fa-2x text-primary me-3"></i>
-                    <h3 class="mb-0">Pricing & Plans</h3>
+                    <h3 class="mb-0">{% trans "Pricing & Plans" %}</h3>
                 </div>
                 
                 <div class="accordion" id="pricingAccordion">
                     <div class="accordion-item">
                         <h2 class="accordion-header">
                             <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#pricingOne">
-                                What's included in the free trial?
+                                {% trans "What's included in the free trial?" %}
                             </button>
                         </h2>
                         <div id="pricingOne" class="accordion-collapse collapse show" data-bs-parent="#pricingAccordion">
                             <div class="accordion-body">
-                                Our 14-day free trial includes access to all core features: inventory tracking, basic reporting, up to 1000 SKUs, and standard integrations. You'll have full functionality to test the system with your business data.
+                                {% trans "Our 14-day free trial includes access to all core features: inventory tracking, basic reporting, up to 1000 SKUs, and standard integrations. You'll have full functionality to test the system with your business data." %}
                             </div>
                         </div>
                     </div>
@@ -258,12 +258,12 @@
                     <div class="accordion-item">
                         <h2 class="accordion-header">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#pricingTwo">
-                                Are there any hidden fees?
+                                {% trans "Are there any hidden fees?" %}
                             </button>
                         </h2>
                         <div id="pricingTwo" class="accordion-collapse collapse" data-bs-parent="#pricingAccordion">
                             <div class="accordion-body">
-                                No hidden fees. Our pricing is transparent and includes all standard features. Additional costs may apply for premium integrations, custom development, or dedicated support services, which are always discussed upfront.
+                                {% trans "No hidden fees. Our pricing is transparent and includes all standard features. Additional costs may apply for premium integrations, custom development, or dedicated support services, which are always discussed upfront." %}
                             </div>
                         </div>
                     </div>
@@ -277,19 +277,19 @@
             <div class="col-12">
                 <div class="d-flex align-items-center mb-4">
                     <i class="fas fa-plug fa-2x text-primary me-3"></i>
-                    <h3 class="mb-0">Integrations</h3>
+                    <h3 class="mb-0">{% trans "Integrations" %}</h3>
                 </div>
                 
                 <div class="accordion" id="integrationsAccordion">
                     <div class="accordion-item">
                         <h2 class="accordion-header">
                             <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#integrationsOne">
-                                Which e-commerce platforms do you integrate with?
+                                {% trans "Which e-commerce platforms do you integrate with?" %}
                             </button>
                         </h2>
                         <div id="integrationsOne" class="accordion-collapse collapse show" data-bs-parent="#integrationsAccordion">
                             <div class="accordion-body">
-                                We integrate with all major e-commerce platforms including Shopify, WooCommerce, Magento, BigCommerce, and Amazon. Custom integrations are also available for proprietary systems.
+                                {% trans "We integrate with all major e-commerce platforms including Shopify, WooCommerce, Magento, BigCommerce, and Amazon. Custom integrations are also available for proprietary systems." %}
                             </div>
                         </div>
                     </div>
@@ -305,18 +305,18 @@
         <div class="row">
             <div class="col-lg-8 mx-auto">
                 <div class="contact-promo p-5 text-center">
-                    <h3 class="mb-3">Still Have Questions?</h3>
-                    <p class="mb-4">Our support team is here to help you get the answers you need.</p>
+                    <h3 class="mb-3">{% trans "Still Have Questions?" %}</h3>
+                    <p class="mb-4">{% trans "Our support team is here to help you get the answers you need." %}</p>
                     <div class="contact-options">
                         <a href="{% url 'bika:contact' %}" class="btn btn-primary btn-lg me-3">
-                            <i class="fas fa-envelope me-2"></i>Contact Support
+                            <i class="fas fa-envelope me-2"></i>{% trans "Contact Support" %}
                         </a>
                         <a href="tel:+1-555-123-4567" class="btn btn-outline-primary btn-lg">
-                            <i class="fas fa-phone me-2"></i>Call Us Now
+                            <i class="fas fa-phone me-2"></i>{% trans "Call Us Now" %}
                         </a>
                     </div>
                     <p class="mt-3 text-muted">
-                        <i class="fas fa-clock me-2"></i>Support available Monday-Friday, 9AM-6PM EST
+                        <i class="fas fa-clock me-2"></i>{% trans "Support available Monday-Friday, 9AM-6PM EST" %}
                     </p>
                 </div>
             </div>

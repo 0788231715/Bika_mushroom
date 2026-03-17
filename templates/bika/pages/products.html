@@ -1,7 +1,7 @@
 {% extends 'bika/base.html' %}
-{% load static %}
+{% load static i18n %}
 
-{% block title %}Products - Bika{% endblock %}
+{% block title %}{% trans "Products - Bika" %}{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -403,33 +403,33 @@
 <!-- Hero Section -->
 <section class="products-hero">
     <div class="container">
-        <h1>Our Products</h1>
-        <p>Discover amazing products from trusted vendors. Quality guaranteed with every purchase.</p>
+        <h1>{% trans "Our Products" %}</h1>
+        <p>{% trans "Discover amazing products from trusted vendors. Quality guaranteed with every purchase." %}</p>
         
         <!-- Add Product Button for Vendors and Admins -->
         <div class="text-center mt-4">
             {% if user.is_authenticated and user.is_vendor %}
             <div class="vendor-actions">
                 <a href="{% url 'bika:vendor_add_product' %}" class="btn add-product-btn text-white">
-                    <i class="fas fa-plus me-2"></i>Add New Product
+                    <i class="fas fa-plus me-2"></i>{% trans "Add New Product" %}
                 </a>
                 <a href="{% url 'bika:vendor_dashboard' %}" class="btn btn-outline-light ms-2">
-                    <i class="fas fa-tachometer-alt me-2"></i>Vendor Dashboard
+                    <i class="fas fa-tachometer-alt me-2"></i>{% trans "Vendor Dashboard" %}
                 </a>
             </div>
             {% elif user.is_authenticated and user.is_staff %}
             <div class="admin-actions">
                 <a href="{% url 'bika:vendor_add_product' %}" class="btn admin-add-product-btn">
-                    <i class="fas fa-plus me-2"></i>Add Product as Admin
+                    <i class="fas fa-plus me-2"></i>{% trans "Add Product as Admin" %}
                 </a>
                 <a href="{% url 'admin:index' %}" class="btn btn-outline-light ms-2">
-                    <i class="fas fa-cog me-2"></i>Admin Panel
+                    <i class="fas fa-cog me-2"></i>{% trans "Admin Panel" %}
                 </a>
             </div>
             {% elif not user.is_authenticated %}
             <div class="vendor-actions">
                 <a href="{% url 'bika:vendor_register' %}" class="btn btn-success">
-                    <i class="fas fa-store me-2"></i>Become a Vendor
+                    <i class="fas fa-store me-2"></i>{% trans "Become a Vendor" %}
                 </a>
             </div>
             {% endif %}
@@ -447,17 +447,17 @@
                     <!-- Search -->
                     <div class="search-box">
                         <i class="fas fa-search search-icon"></i>
-                        <input type="text" class="form-control" placeholder="Search products..." id="searchInput" value="{{ query }}">
+                        <input type="text" class="form-control" placeholder="{% trans 'Search products...' %}" id="searchInput" value="{{ query }}">
                     </div>
 
                     <!-- Categories -->
                     <h5 class="filter-title">
-                        <i class="fas fa-tags"></i>Categories
+                        <i class="fas fa-tags"></i>{% trans "Categories" %}
                     </h5>
                     <ul class="category-list">
                         <li class="category-item">
                             <a href="{% url 'bika:product_list' %}" class="category-link {% if not current_category %}active{% endif %}">
-                                All Categories
+                                {% trans "All Categories" %}
                                 <span class="category-count">{{ total_products }}</span>
                             </a>
                         </li>
@@ -475,18 +475,18 @@
                 <!-- Vendor Info -->
                 <div class="filter-card">
                     <h5 class="filter-title">
-                        <i class="fas fa-store"></i>Marketplace
+                        <i class="fas fa-store"></i>{% trans "Marketplace" %}
                     </h5>
                     <div class="d-flex justify-content-between text-muted mb-2">
-                        <span>Total Products:</span>
+                        <span>{% trans "Total Products:" %}</span>
                         <strong>{{ total_products }}</strong>
                     </div>
                     <div class="d-flex justify-content-between text-muted mb-2">
-                        <span>Active Vendors:</span>
+                        <span>{% trans "Active Vendors:" %}</span>
                         <strong>{{ active_vendors }}</strong>
                     </div>
                     <div class="d-flex justify-content-between text-muted">
-                        <span>Categories:</span>
+                        <span>{% trans "Categories:" %}</span>
                         <strong>{{ categories|length }}</strong>
                     </div>
                 </div>
@@ -495,30 +495,30 @@
                 {% if user.is_authenticated %}
                 <div class="filter-card">
                     <h5 class="filter-title">
-                        <i class="fas fa-rocket"></i>Quick Actions
+                        <i class="fas fa-rocket"></i>{% trans "Quick Actions" %}
                     </h5>
                     <div class="d-grid gap-2">
                         {% if user.is_vendor or user.is_staff %}
                         <a href="{% url 'bika:vendor_add_product' %}" class="btn btn-success btn-sm">
-                            <i class="fas fa-plus me-1"></i>Add Product
+                            <i class="fas fa-plus me-1"></i>{% trans "Add Product" %}
                         </a>
                         {% endif %}
                         
                         {% if user.is_vendor %}
                         <a href="{% url 'bika:vendor_product_list' %}" class="btn btn-outline-primary btn-sm">
-                            <i class="fas fa-list me-1"></i>My Products
+                            <i class="fas fa-list me-1"></i>{% trans "My Products" %}
                         </a>
                         <a href="{% url 'bika:vendor_dashboard' %}" class="btn btn-outline-secondary btn-sm">
-                            <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+                            <i class="fas fa-tachometer-alt me-1"></i>{% trans "Dashboard" %}
                         </a>
                         {% endif %}
                         
                         {% if user.is_staff %}
                         <a href="{% url 'admin:index' %}" class="btn btn-outline-warning btn-sm">
-                            <i class="fas fa-cog me-1"></i>Admin Panel
+                            <i class="fas fa-cog me-1"></i>{% trans "Admin Panel" %}
                         </a>
                         <a href="/admin/bika/product/" class="btn btn-outline-info btn-sm">
-                            <i class="fas fa-cubes me-1"></i>Manage Products
+                            <i class="fas fa-cubes me-1"></i>{% trans "Manage Products" %}
                         </a>
                         {% endif %}
                     </div>
@@ -532,12 +532,12 @@
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div class="results-info">
                         {% if products %}
-                            Showing {{ products.start_index }} - {{ products.end_index }} of {{ total_products }} products
+                            {% blocktrans with start=products.start_index end=products.end_index total=total_products %}Showing {{ start }} - {{ end }} of {{ total }} products{% endblocktrans %}
                             {% if current_category %}
-                                in <strong>{{ current_category.name }}</strong>
+                                {% trans "in" %} <strong>{{ current_category.name }}</strong>
                             {% endif %}
                             {% if query %}
-                                for "<strong>{{ query }}</strong>"
+                                {% trans "for" %} "<strong>{{ query }}</strong>"
                             {% endif %}
                         {% endif %}
                     </div>
@@ -545,23 +545,23 @@
                         <!-- Add Product Button for Admins and Vendors -->
                         {% if user.is_authenticated and user.is_staff %}
                         <a href="{% url 'bika:vendor_add_product' %}" class="btn admin-add-product-btn btn-sm">
-                            <i class="fas fa-plus me-1"></i>Add Product
+                            <i class="fas fa-plus me-1"></i>{% trans "Add Product" %}
                         </a>
                         {% elif user.is_authenticated and user.is_vendor %}
                         <a href="{% url 'bika:vendor_add_product' %}" class="btn btn-success btn-sm">
-                            <i class="fas fa-plus me-1"></i>Add Product
+                            <i class="fas fa-plus me-1"></i>{% trans "Add Product" %}
                         </a>
                         {% endif %}
                         
                         <div class="dropdown">
                             <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                <i class="fas fa-sort me-2"></i>Sort By
+                                <i class="fas fa-sort me-2"></i>{% trans "Sort By" %}
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="?{% if query %}q={{ query }}&{% endif %}{% if current_category %}category={{ current_category.slug }}&{% endif %}sort=newest">Newest First</a></li>
-                                <li><a class="dropdown-item" href="?{% if query %}q={{ query }}&{% endif %}{% if current_category %}category={{ current_category.slug }}&{% endif %}sort=price_low">Price: Low to High</a></li>
-                                <li><a class="dropdown-item" href="?{% if query %}q={{ query }}&{% endif %}{% if current_category %}category={{ current_category.slug }}&{% endif %}sort=price_high">Price: High to Low</a></li>
-                                <li><a class="dropdown-item" href="?{% if query %}q={{ query }}&{% endif %}{% if current_category %}category={{ current_category.slug }}&{% endif %}sort=name">Name: A to Z</a></li>
+                                <li><a class="dropdown-item" href="?{% if query %}q={{ query }}&{% endif %}{% if current_category %}category={{ current_category.slug }}&{% endif %}sort=newest">{% trans "Newest First" %}</a></li>
+                                <li><a class="dropdown-item" href="?{% if query %}q={{ query }}&{% endif %}{% if current_category %}category={{ current_category.slug }}&{% endif %}sort=price_low">{% trans "Price: Low to High" %}</a></li>
+                                <li><a class="dropdown-item" href="?{% if query %}q={{ query }}&{% endif %}{% if current_category %}category={{ current_category.slug }}&{% endif %}sort=price_high">{% trans "Price: High to Low" %}</a></li>
+                                <li><a class="dropdown-item" href="?{% if query %}q={{ query }}&{% endif %}{% if current_category %}category={{ current_category.slug }}&{% endif %}sort=name">{% trans "Name: A to Z" %}</a></li>
                             </ul>
                         </div>
                     </div>
@@ -575,8 +575,8 @@
                         <div class="product-card">
                             <!-- Product Image -->
                             <div class="product-image">
-                                {% if product.images.first %}
-                                <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}" class="img-fluid">
+                                {% if product.product_images.first %}
+                                <img src="{{ product.product_images.first.image.url }}" alt="{{ product.name }}" class="img-fluid">
                                 {% else %}
                                 <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-light">
                                     <i class="fas fa-image fa-3x text-muted"></i>
@@ -586,21 +586,21 @@
                                 <!-- Badges -->
                                 <div class="product-badge">
                                     {% if product.is_featured %}
-                                    <span class="badge bg-warning">Featured</span>
+                                    <span class="badge bg-warning">{% trans "Featured" %}</span>
                                     {% endif %}
                                     {% if product.discount_percentage > 0 %}
-                                    <span class="badge bg-danger">{{ product.discount_percentage }}% OFF</span>
+                                    <span class="badge bg-danger">{{ product.discount_percentage }}% {% trans "OFF" %}</span>
                                     {% endif %}
                                 </div>
 
                                 <!-- Quick Actions -->
                                 <div class="product-actions">
-                                    <button class="btn btn-light btn-sm rounded-circle" title="Add to Wishlist">
+                                    <button class="btn btn-light btn-sm rounded-circle" title="{% trans 'Add to Wishlist' %}">
                                         <i class="far fa-heart"></i>
                                     </button>
                                     <!-- Admin/Vendor Edit Button -->
                                     {% if user.is_staff or user == product.vendor %}
-                                    <a href="{% url 'bika:vendor_edit_product' product.id %}" class="btn btn-light btn-sm rounded-circle" title="Edit Product">
+                                    <a href="{% url 'bika:vendor_edit_product' product.id %}" class="btn btn-light btn-sm rounded-circle" title="{% trans 'Edit Product' %}">
                                         <i class="fas fa-edit"></i>
                                     </a>
                                     {% endif %}
@@ -626,9 +626,9 @@
 
                                 <!-- Price -->
                                 <div class="product-price">
-                                    <span class="current-price">${{ product.price }}</span>
+                                    <span class="current-price">{{ product.price }} RWF</span>
                                     {% if product.compare_price %}
-                                    <span class="original-price">${{ product.compare_price }}</span>
+                                    <span class="original-price">{{ product.compare_price }} RWF</span>
                                     {% endif %}
                                 </div>
 
@@ -638,14 +638,14 @@
                                         {% if product.is_in_stock %}
                                             {% if product.is_low_stock %}
                                             <i class="fas fa-exclamation-triangle stock-low"></i>
-                                            <span class="stock-low">Low Stock ({{ product.stock_quantity }})</span>
+                                            <span class="stock-low">{% trans "Low Stock" %} ({{ product.stock_quantity }})</span>
                                             {% else %}
                                             <i class="fas fa-check-circle stock-in"></i>
-                                            <span class="stock-in">In Stock</span>
+                                            <span class="stock-in">{% trans "In Stock" %}</span>
                                             {% endif %}
                                         {% else %}
                                         <i class="fas fa-times-circle stock-out"></i>
-                                        <span class="stock-out">Out of Stock</span>
+                                        <span class="stock-out">{% trans "Out of Stock" %}</span>
                                         {% endif %}
                                     </div>
                                     <div class="vendor-info">
@@ -666,32 +666,32 @@
                     <div class="empty-state-icon">
                         <i class="fas fa-box-open"></i>
                     </div>
-                    <h3>No Products Found</h3>
+                    <h3>{% trans "No Products Found" %}</h3>
                     
                     {% if query %}
-                    <p>We couldn't find any products matching "{{ query }}". Try adjusting your search terms or browse all categories.</p>
+                    <p>{% blocktrans with q=query %}We couldn't find any products matching "{{ q }}". Try adjusting your search terms or browse all categories.{% endblocktrans %}</p>
                     {% elif current_category %}
-                    <p>There are no products available in the "{{ current_category.name }}" category yet. Check back soon or browse other categories.</p>
+                    <p>{% blocktrans with category=current_category.name %}There are no products available in the "{{ category }}" category yet. Check back soon or browse other categories.{% endblocktrans %}</p>
                     {% else %}
-                    <p>No products are currently available in our marketplace. Vendors will be adding products soon!</p>
+                    <p>{% trans "No products are currently available in our marketplace. Vendors will be adding products soon!" %}</p>
                     {% endif %}
 
                     <div class="mt-4">
                         {% if user.is_authenticated and user.is_staff %}
                         <a href="{% url 'bika:vendor_add_product' %}" class="btn admin-add-product-btn btn-lg me-3">
-                            <i class="fas fa-plus me-2"></i>Add Product as Admin
+                            <i class="fas fa-plus me-2"></i>{% trans "Add Product as Admin" %}
                         </a>
                         {% elif user.is_authenticated and user.is_vendor %}
                         <a href="{% url 'bika:vendor_add_product' %}" class="btn btn-primary btn-lg me-3">
-                            <i class="fas fa-plus me-2"></i>Add Your First Product
+                            <i class="fas fa-plus me-2"></i>{% trans "Add Your First Product" %}
                         </a>
                         {% elif not user.is_authenticated %}
                         <a href="{% url 'bika:vendor_register' %}" class="btn btn-success btn-lg me-3">
-                            <i class="fas fa-store me-2"></i>Become a Vendor
+                            <i class="fas fa-store me-2"></i>{% trans "Become a Vendor" %}
                         </a>
                         {% endif %}
                         <a href="{% url 'bika:product_list' %}" class="btn btn-outline-primary btn-lg">
-                            <i class="fas fa-sync me-2"></i>View All Products
+                            <i class="fas fa-sync me-2"></i>{% trans "View All Products" %}
                         </a>
                     </div>
                 </div>
@@ -699,11 +699,11 @@
 
                 <!-- Pagination -->
                 {% if products.has_other_pages %}
-                <nav aria-label="Products pagination">
+                <nav aria-label="{% trans 'Products pagination' %}">
                     <ul class="pagination">
                         {% if products.has_previous %}
                         <li class="page-item">
-                            <a class="page-link" href="?page={{ products.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if current_category %}&category={{ current_category.slug }}{% endif %}" aria-label="Previous">
+                            <a class="page-link" href="?page={{ products.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if current_category %}&category={{ current_category.slug }}{% endif %}" aria-label="{% trans 'Previous' %}">
                                 <i class="fas fa-chevron-left"></i>
                             </a>
                         </li>
@@ -729,7 +729,7 @@
 
                         {% if products.has_next %}
                         <li class="page-item">
-                            <a class="page-link" href="?page={{ products.next_page_number }}{% if query %}&q={{ query }}{% endif %}{% if current_category %}&category={{ current_category.slug }}{% endif %}" aria-label="Next">
+                            <a class="page-link" href="?page={{ products.next_page_number }}{% if query %}&q={{ query }}{% endif %}{% if current_category %}&category={{ current_category.slug }}{% endif %}" aria-label="{% trans 'Next' %}">
                                 <i class="fas fa-chevron-right"></i>
                             </a>
                         </li>
@@ -777,15 +777,15 @@ document.addEventListener('DOMContentLoaded', function() {
             if (icon.classList.contains('far')) {
                 icon.classList.remove('far');
                 icon.classList.add('fas', 'text-danger');
-                this.title = 'Remove from Wishlist';
+                this.title = '{% trans "Remove from Wishlist" %}';
                 // Here you would typically make an AJAX call to add to wishlist
-                showToast('Product added to wishlist!', 'success');
+                showToast('{% trans "Product added to wishlist!" %}', 'success');
             } else {
                 icon.classList.remove('fas', 'text-danger');
                 icon.classList.add('far');
-                this.title = 'Add to Wishlist';
+                this.title = '{% trans "Add to Wishlist" %}';
                 // Here you would typically make an AJAX call to remove from wishlist
-                showToast('Product removed from wishlist!', 'info');
+                showToast('{% trans "Product removed from wishlist!" %}', 'info');
             }
         });
     });
@@ -827,7 +827,7 @@ document.addEventListener('DOMContentLoaded', function() {
     productImages.forEach(img => {
         img.addEventListener('error', function() {
             this.src = "{% static 'images/placeholder-product.jpg' %}";
-            this.alt = "Product image not available";
+            this.alt = "{% trans 'Product image not available' %}";
         });
     });
 });

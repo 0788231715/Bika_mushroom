@@ -101,7 +101,7 @@ class ProductWriteSerializer(serializers.ModelSerializer):
         model = Product
         fields = [
             "id",
-            "name",
+            "mushroom_name",
             "slug",
             "sku",
             "barcode",
@@ -160,7 +160,7 @@ class ProductWriteSerializer(serializers.ModelSerializer):
         return f"{base}{n}"
 
     def validate(self, attrs):
-        name = (attrs.get("name") or "").strip()
+        mushroom_name = (attrs.get("mushroom_name") or "").strip()
         incoming_slug = (attrs.get("slug") or "").strip()
         incoming_sku = (attrs.get("sku") or "").strip() if attrs.get("sku") is not None else ""
 
@@ -185,7 +185,7 @@ class ProductWriteSerializer(serializers.ModelSerializer):
 
         # Slug handling
         if not incoming_slug:
-            source_name = name or getattr(self.instance, "name", "") or "product"
+            source_name = mushroom_name or getattr(self.instance, "mushroom_name", "") or "product"
             attrs["slug"] = self._make_unique_slug(source_name, current_instance=self.instance)
         else:
             attrs["slug"] = self._make_unique_slug(incoming_slug, current_instance=self.instance)
@@ -217,8 +217,8 @@ class ProductWriteSerializer(serializers.ModelSerializer):
         return super().create(validated_data)
 
     def update(self, instance, validated_data):
-        # Keep existing slug if name changes but slug isn't explicitly provided
-        if "name" in validated_data and "slug" not in validated_data:
+        # Keep existing slug if mushroom_name changes but slug isn't explicitly provided
+        if "mushroom_name" in validated_data and "slug" not in validated_data:
             validated_data["slug"] = instance.slug
         return super().update(instance, validated_data)
 
@@ -246,7 +246,7 @@ class ProductListSerializer(serializers.ModelSerializer):
         model = Product
         fields = [
             "id",
-            "name",
+            "mushroom_name",
             "slug",
             "sku",
             "barcode",
@@ -293,7 +293,7 @@ class ProductListSerializer(serializers.ModelSerializer):
 
     def get_primary_image(self, obj):
         request = self.context.get("request")
-        img = obj.images.filter(is_primary=True).first() or obj.images.first()
+        img = obj.product_images.filter(is_primary=True).first() or obj.product_images.first()
         if not img or not img.image:
             return None
         url = img.image.url
@@ -308,7 +308,7 @@ class ProductDetailSerializer(serializers.ModelSerializer):
     vendor_username = serializers.CharField(source="vendor.username", read_only=True)
     vendor_name = serializers.SerializerMethodField()
 
-    images = ProductImageSerializer(many=True, read_only=True)
+    images = ProductImageSerializer(source="product_images", many=True, read_only=True)
 
     visibility = serializers.CharField(read_only=True)
     created_by_id = serializers.IntegerField(source="created_by.id", read_only=True, allow_null=True)
@@ -326,7 +326,7 @@ class ProductDetailSerializer(serializers.ModelSerializer):
         model = Product
         fields = [
             "id",
-            "name",
+            "mushroom_name",
             "slug",
             "sku",
             "barcode",
@@ -414,7 +414,7 @@ class CartItemProductMiniSerializer(serializers.ModelSerializer):
         model = Product
         fields = [
             "id",
-            "name",
+            "mushroom_name",
             "sku",
             "slug",
             "status",
@@ -428,7 +428,7 @@ class CartItemProductMiniSerializer(serializers.ModelSerializer):
 
     def get_primary_image(self, obj):
         request = self.context.get("request")
-        img = obj.images.filter(is_primary=True).first() or obj.images.first()
+        img = obj.product_images.filter(is_primary=True).first() or obj.product_images.first()
         if not img or not img.image:
             return None
         url = img.image.url
@@ -446,7 +446,7 @@ class CartItemProductMiniSerializer(serializers.ModelSerializer):
 
 class CartSerializer(serializers.ModelSerializer):
     product_id = serializers.IntegerField(source="product.id", read_only=True)
-    product_name = serializers.CharField(source="product.name", read_only=True)
+    product_mushroom_name = serializers.CharField(source="product.mushroom_name", read_only=True)
     unit_price = serializers.SerializerMethodField()
     total_price = serializers.SerializerMethodField()
     stock_quantity = serializers.IntegerField(source="product.stock_quantity", read_only=True)
@@ -458,7 +458,7 @@ class CartSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "product_id",
-            "product_name",
+            "product_mushroom_name",
             "quantity",
             "unit_price",
             "total_price",
@@ -475,7 +475,7 @@ class CartSerializer(serializers.ModelSerializer):
 
     def get_image_url(self, obj):
         request = self.context.get("request")
-        first_image = obj.product.images.first() if hasattr(obj.product, "images") else None
+        first_image = obj.product.product_images.first() if hasattr(obj.product, "product_images") else None
         if not first_image:
             return None
 

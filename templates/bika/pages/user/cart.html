@@ -1,9 +1,10 @@
 {% extends 'bika/base.html' %}
 {% load static %}
 {% load humanize %}
+{% load i18n %}
 
 
-{% block title %}Shopping Cart - Bika{% endblock %}
+{% block title %}{% trans "Shopping Cart" %} - Bika{% endblock %}
 
 {% block content %}
 <div class="container py-5">
@@ -17,8 +18,8 @@
         <div class="col-lg-9">
             <div class="card shadow-sm">
                 <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                    <h4 class="mb-0"><i class="fas fa-shopping-cart me-2"></i>Shopping Cart</h4>
-                    <span class="badge bg-light text-primary">{{ cart_items.count }} items</span>
+                    <h4 class="mb-0"><i class="fas fa-shopping-cart me-2"></i>{% trans "Shopping Cart" %}</h4>
+                    <span class="badge bg-light text-primary">{{ cart_items.count }} {% trans "items" %}</span>
                 </div>
                 <div class="card-body">
                     {% if cart_items %}
@@ -26,11 +27,11 @@
                         <table class="table table-borderless">
                             <thead class="border-bottom">
                                 <tr>
-                                    <th>Product</th>
-                                    <th>Price</th>
-                                    <th>Quantity</th>
-                                    <th>Total</th>
-                                    <th>Action</th>
+                                    <th>{% trans "Product" %}</th>
+                                    <th>{% trans "Price" %}</th>
+                                    <th>{% trans "Quantity" %}</th>
+                                    <th>{% trans "Total" %}</th>
+                                    <th>{% trans "Action" %}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -38,8 +39,8 @@
                                 <tr class="cart-item" data-product-id="{{ item.product.id }}">
                                     <td>
                                         <div class="d-flex align-items-center">
-                                            {% if item.product.images.first %}
-                                            <img src="{{ item.product.images.first.image.url }}" 
+                                            {% if item.product.product_images.first %}
+                                            <img src="{{ item.product.product_images.first.image.url }}" 
                                                  alt="{{ item.product.name }}"
                                                  class="rounded me-3"
                                                  style="width: 80px; height: 80px; object-fit: cover;">
@@ -63,7 +64,7 @@
                                                 {% if item.product.is_low_stock %}
                                                 <div class="text-warning small">
                                                     <i class="fas fa-exclamation-triangle me-1"></i>
-                                                    Only {{ item.product.stock_quantity }} left in stock
+                                                    {% blocktranslate with count=item.product.stock_quantity %}Only {{ count }} left in stock{% endblocktranslate %}
                                                 </div>
                                                 {% endif %}
                                             </div>
@@ -71,10 +72,10 @@
                                     </td>
                                     <td class="align-middle">
                                         <div class="product-price">
-                                            <span class="h6 text-primary">${{ item.product.price|floatformat:2 }}</span>
+                                            <span class="h6 text-primary">RWF {{ item.product.price|floatformat:0 }}</span>
                                             {% if item.product.compare_price %}
                                             <small class="text-muted text-decoration-line-through d-block">
-                                                ${{ item.product.compare_price|floatformat:2 }}
+                                                RWF {{ item.product.compare_price|floatformat:0 }}
                                             </small>
                                             {% endif %}
                                         </div>
@@ -95,17 +96,17 @@
                                         </div>
                                     </td>
                                     <td class="align-middle">
-                                        <span class="h6 text-primary item-total">${{ item.total_price|floatformat:2 }}</span>
+                                        <span class="h6 text-primary item-total">RWF {{ item.total_price|floatformat:0 }}</span>
                                     </td>
                                     <td class="align-middle">
                                         <button class="btn btn-outline-danger btn-sm remove-from-cart" 
                                                 data-product-id="{{ item.product.id }}"
-                                                title="Remove from cart">
+                                                title="{% trans 'Remove from cart' %}">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                         <button class="btn btn-outline-primary btn-sm mt-1 add-to-wishlist" 
                                                 data-product-id="{{ item.product.id }}"
-                                                title="Add to wishlist">
+                                                title="{% trans 'Add to wishlist' %}">
                                             <i class="fas fa-heart"></i>
                                         </button>
                                     </td>
@@ -120,10 +121,10 @@
                         <div class="col-md-8">
                             <div class="card bg-light">
                                 <div class="card-body">
-                                    <h6 class="card-title">Have a coupon code?</h6>
+                                    <h6 class="card-title">{% trans "Have a coupon code?" %}</h6>
                                     <div class="input-group">
-                                        <input type="text" class="form-control" placeholder="Enter coupon code">
-                                        <button class="btn btn-primary">Apply</button>
+                                        <input type="text" class="form-control" placeholder="{% trans 'Enter coupon code' %}">
+                                        <button class="btn btn-primary">{% trans "Apply" %}</button>
                                     </div>
                                 </div>
                             </div>
@@ -131,34 +132,34 @@
                         <div class="col-md-4">
                             <div class="card border-primary">
                                 <div class="card-body">
-                                    <h6 class="card-title border-bottom pb-2">Order Summary</h6>
+                                    <h6 class="card-title border-bottom pb-2">{% trans "Order Summary" %}</h6>
                                     <div class="d-flex justify-content-between mb-2">
-                                        <span>Subtotal:</span>
-                                        <span class="cart-subtotal">${{ subtotal|floatformat:2 }}</span>
+                                        <span>{% trans "Subtotal:" %}</span>
+                                        <span class="cart-subtotal">RWF {{ subtotal|floatformat:0 }}</span>
                                     </div>
                                     <div class="d-flex justify-content-between mb-2">
-                                        <span>Shipping:</span>
-                                        <span>${{ shipping_cost|floatformat:2 }}</span>
+                                        <span>{% trans "Shipping:" %}</span>
+                                        <span>RWF {{ shipping_cost|floatformat:0 }}</span>
                                     </div>
                                     <div class="d-flex justify-content-between mb-2">
-                                        <span>Tax ({{ tax_rate_percentage|floatformat:0 }}%):</span>
-                                        <span>${{ tax_amount|floatformat:2 }}</span>
+                                        <span>{% blocktranslate with rate=tax_rate_percentage|floatformat:0 %}Tax ({{ rate }}%):{% endblocktranslate %}</span>
+                                        <span>RWF {{ tax_amount|floatformat:0 }}</span>
                                     </div>
                                     <div class="d-flex justify-content-between mb-3 fw-bold border-top pt-2">
-                                        <span>Total:</span>
-                                        <span class="cart-grand-total">${{ total_amount|floatformat:2 }}</span>
+                                        <span>{% trans "Total:" %}</span>
+                                        <span class="cart-grand-total">RWF {{ total_amount|floatformat:0 }}</span>
                                     </div>
                                     <div class="d-grid gap-2">
                                         <a href="{% url 'bika:checkout' %}" class="btn btn-primary btn-lg">
-                                            <i class="fas fa-lock me-2"></i>Proceed to Checkout
+                                            <i class="fas fa-lock me-2"></i>{% trans "Proceed to Checkout" %}
                                         </a>
                                         <a href="{% url 'bika:product_list' %}" class="btn btn-outline-primary">
-                                            <i class="fas fa-arrow-left me-2"></i>Continue Shopping
+                                            <i class="fas fa-arrow-left me-2"></i>{% trans "Continue Shopping" %}
                                         </a>
                                     </div>
                                     <div class="text-center mt-2">
                                         <small class="text-muted">
-                                            <i class="fas fa-lock me-1"></i>Secure checkout
+                                            <i class="fas fa-lock me-1"></i>{% trans "Secure checkout" %}
                                         </small>
                                     </div>
                                 </div>
@@ -168,10 +169,10 @@
                     {% else %}
                     <div class="text-center py-5">
                         <i class="fas fa-shopping-cart fa-4x text-muted mb-3"></i>
-                        <h4 class="text-muted">Your cart is empty</h4>
-                        <p class="text-muted mb-4">Add some products to your cart and they will appear here.</p>
+                        <h4 class="text-muted">{% trans "Your cart is empty" %}</h4>
+                        <p class="text-muted mb-4">{% trans "Add some products to your cart and they will appear here." %}</p>
                         <a href="{% url 'bika:product_list' %}" class="btn btn-primary">
-                            <i class="fas fa-shopping-bag me-2"></i>Continue Shopping
+                            <i class="fas fa-shopping-bag me-2"></i>{% trans "Continue Shopping" %}
                         </a>
                     </div>
                     {% endif %}
@@ -296,7 +297,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     setTimeout(() => {
                         cartItem.remove();
                         updateCartTotals(data);
-                        showToast('Product removed from cart!', 'success');
+                        showToast('{% trans "Product removed from cart!" %}', 'success');
                         
                         // If no items left, reload page
                         if (document.querySelectorAll('.cart-item').length === 0) {
@@ -304,12 +305,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     }, 300);
                 } else {
-                    showToast(data.message || 'Failed to remove item', 'danger');
+                    showToast(data.message || '{% trans "Failed to remove item" %}', 'danger');
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                showToast('An error occurred', 'danger');
+                showToast('{% trans "An error occurred" %}', 'danger');
             });
         });
     });
@@ -329,14 +330,14 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    showToast('Product added to wishlist!', 'success');
+                    showToast('{% trans "Product added to wishlist!" %}', 'success');
                 } else {
-                    showToast(data.message || 'Failed to add to wishlist', 'danger');
+                    showToast(data.message || '{% trans "Failed to add to wishlist" %}', 'danger');
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                showToast('An error occurred', 'danger');
+                showToast('{% trans "An error occurred" %}', 'danger');
             });
         });
     });
@@ -357,7 +358,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const cartItem = document.querySelector(`.cart-item[data-product-id="${productId}"]`);
                 if (cartItem) {
                     const itemTotal = cartItem.querySelector('.item-total');
-                    itemTotal.textContent = `$${parseFloat(data.item_total).toFixed(2)}`;
+                    itemTotal.textContent = `RWF ${Math.round(parseFloat(data.item_total))}`;
                     
                     // Update quantity input and buttons
                     const quantityInput = cartItem.querySelector('.quantity-input');
@@ -369,15 +370,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (decreaseBtn) decreaseBtn.disabled = quantity <= 1;
                     
                     updateCartTotals(data);
-                    showToast('Cart updated!', 'success');
+                    showToast('{% trans "Cart updated!" %}', 'success');
                 }
             } else {
-                showToast(data.message || 'Failed to update cart', 'danger');
+                showToast(data.message || '{% trans "Failed to update cart" %}', 'danger');
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            showToast('An error occurred', 'danger');
+            showToast('{% trans "An error occurred" %}', 'danger');
         });
     }
     
@@ -385,7 +386,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Update subtotal
         const subtotalElement = document.querySelector('.cart-subtotal');
         if (subtotalElement && data.subtotal !== undefined) {
-            subtotalElement.textContent = `$${parseFloat(data.subtotal).toFixed(2)}`;
+            subtotalElement.textContent = `RWF ${Math.round(parseFloat(data.subtotal))}`;
         }
         
         // Update shipping if provided
@@ -393,7 +394,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (shippingElement && data.shipping_cost !== undefined) {
             const shippingSpan = shippingElement.querySelector('span:last-child');
             if (shippingSpan) {
-                shippingSpan.textContent = `$${parseFloat(data.shipping_cost).toFixed(2)}`;
+                shippingSpan.textContent = `RWF ${Math.round(parseFloat(data.shipping_cost))}`;
             }
         }
         
@@ -402,20 +403,21 @@ document.addEventListener('DOMContentLoaded', function() {
         if (taxElements.length >= 3 && data.tax_amount !== undefined) {
             const taxSpan = taxElements[2].querySelector('span:last-child');
             if (taxSpan) {
-                taxSpan.textContent = `$${parseFloat(data.tax_amount).toFixed(2)}`;
+                taxSpan.textContent = `RWF ${Math.round(parseFloat(data.tax_amount))}`;
             }
         }
         
         // Update grand total
         const grandTotalElement = document.querySelector('.cart-grand-total');
         if (grandTotalElement && data.total_amount !== undefined) {
-            grandTotalElement.textContent = `$${parseFloat(data.total_amount).toFixed(2)}`;
+            grandTotalElement.textContent = `RWF ${Math.round(parseFloat(data.total_amount))}`;
         }
         
         // Update cart count in badge
         const cartBadge = document.querySelector('.card-header .badge');
         if (cartBadge && data.cart_count !== undefined) {
-            cartBadge.textContent = data.cart_count + ' item' + (data.cart_count !== 1 ? 's' : '');
+            const itemText = data.cart_count !== 1 ? '{% trans "items" %}' : '{% trans "item" %}';
+            cartBadge.textContent = data.cart_count + ' ' + itemText;
         }
         
         // Update cart count in header (if exists)

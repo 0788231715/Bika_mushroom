@@ -1,6 +1,5 @@
-{% load static %}
+{% load static i18n %}
 
-<!-- Header -->
 <!-- Header -->
 <header>
     <!-- Top Bar -->
@@ -23,7 +22,25 @@
                         {% endif %}
                         <span>
                             <i class="fas fa-clock me-1"></i>
-                            <span class="small">Mon - Fri: 9:00 - 18:00</span>
+                            <span class="small">{% trans "Mon - Fri: 9:00 - 18:00" %}</span>
+                        </span>
+                        
+                        <!-- Language Switcher in Top Bar -->
+                        <span class="ms-3 d-inline-block">
+                            {% get_current_language as CURRENT_LANG %}
+                            <form action="{% url 'set_language' %}" method="post" class="d-inline" id="lang-form-top">
+                                {% csrf_token %}
+                                <input name="next" type="hidden" value="{{ request.get_full_path }}">
+                                <select name="language" id="django-language-select" class="form-select form-select-sm border-0 bg-transparent text-light p-0" onchange="this.form.submit()" style="width: auto; cursor: pointer; font-size: 0.875rem;">
+                                    {% get_available_languages as LANGUAGES %}
+                                    {% get_language_info_list for LANGUAGES as languages %}
+                                    {% for language in languages %}
+                                        <option value="{{ language.code }}" class="text-dark" {% if language.code == CURRENT_LANG %}selected{% endif %}>
+                                            {{ language.name_local|title }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </form>
                         </span>
                     </div>
                 </div>
@@ -87,35 +104,32 @@
                     <li class="nav-item">
                         <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" 
                            href="{% url 'bika:home' %}">
-                            <i class="fas fa-home d-lg-none me-2"></i>Home
+                            <i class="fas fa-home d-lg-none me-2"></i>{% trans "Home" %}
                         </a>
                     </li>
-
                     <li class="nav-item">
                         <a class="nav-link {% if request.resolver_match.url_name == 'product_list' or 'product' in request.resolver_match.url_name %}active{% endif %}" 
                            href="{% url 'bika:product_list' %}">
-                            <i class="fas fa-shopping-bag d-lg-none me-2"></i>Products
+                            <i class="fas fa-shopping-bag d-lg-none me-2"></i>{% trans "Products" %}
                         </a>
                     </li>
-
                     <li class="nav-item">
                         <a class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}" 
                            href="{% url 'bika:about' %}">
-                            <i class="fas fa-info-circle d-lg-none me-2"></i>About
+                            <i class="fas fa-info-circle d-lg-none me-2"></i>{% trans "About" %}
                         </a>
                     </li>
-
                     <!-- Services Dropdown -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle {% if 'services' in request.resolver_match.url_name %}active{% endif %}" 
                            href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-cogs d-lg-none me-2"></i>Services
+                            <i class="fas fa-cogs d-lg-none me-2"></i>{% trans "Services" %}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-lg">
                             <li>
                                 <a class="dropdown-item dropdown-header" href="{% url 'bika:services' %}">
                                     <i class="fas fa-list me-2"></i>
-                                    <strong>All Services</strong>
+                                    <strong>{% trans "All Services" %}</strong>
                                 </a>
                             </li>
                             <li><hr class="dropdown-divider"></li>
@@ -132,49 +146,32 @@
                                 </a>
                             </li>
                             {% empty %}
-                            <li>
-                                <a class="dropdown-item" href="{% url 'bika:services' %}">
-                                    <i class="fas fa-briefcase me-2"></i>Business Solutions
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="{% url 'bika:services' %}">
-                                    <i class="fas fa-chart-line me-2"></i>Consulting
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="{% url 'bika:services' %}">
-                                    <i class="fas fa-headset me-2"></i>Support
-                                </a>
-                            </li>
+                            <li><a class="dropdown-item" href="{% url 'bika:services' %}"><i class="fas fa-briefcase me-2"></i>{% trans "Business Solutions" %}</a></li>
+                            <li><a class="dropdown-item" href="{% url 'bika:services' %}"><i class="fas fa-chart-line me-2"></i>{% trans "Consulting" %}</a></li>
+                            <li><a class="dropdown-item" href="{% url 'bika:services' %}"><i class="fas fa-headset me-2"></i>{% trans "Support" %}</a></li>
                             {% endfor %}
                         </ul>
                     </li>
-
                     <li class="nav-item">
                         <a class="nav-link {% if request.resolver_match.url_name == 'faq' %}active{% endif %}" 
                            href="{% url 'bika:faq' %}">
-                            <i class="fas fa-question-circle d-lg-none me-2"></i>FAQ
+                            <i class="fas fa-question-circle d-lg-none me-2"></i>{% trans "FAQ" %}
                         </a>
                     </li>
-
                     <li class="nav-item">
                         <a class="nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}" 
                            href="{% url 'bika:contact' %}">
-                            <i class="fas fa-envelope d-lg-none me-2"></i>Contact
+                            <i class="fas fa-envelope d-lg-none me-2"></i>{% trans "Contact" %}
                         </a>
                     </li>
                 </ul>
 
                 <!-- Header Actions -->
                 <div class="header-actions">
-                    <!-- Search Button -->
-                    <button class="btn btn-outline-secondary btn-sm me-2 search-trigger" type="button" title="Search Products">
+                    <button class="btn btn-outline-secondary btn-sm me-2 search-trigger" type="button" title="{% trans 'Search Products' %}">
                         <i class="fas fa-search"></i>
                     </button>
-
-                    <!-- Cart Icon -->
-                    <a href="{% url 'bika:cart' %}" class="btn btn-outline-secondary btn-sm me-2 position-relative" title="Shopping Cart">
+                    <a href="{% url 'bika:cart' %}" class="btn btn-outline-secondary btn-sm me-2 position-relative" title="{% trans 'Shopping Cart' %}">
                         <i class="fas fa-shopping-cart"></i>
                         {% if cart_count and cart_count > 0 %}
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
@@ -183,7 +180,6 @@
                         {% endif %}
                     </a>
 
-                    <!-- User Menu -->
                     {% if user.is_authenticated %}
                     <div class="dropdown user-dropdown">
                         <a class="btn btn-outline-primary dropdown-toggle user-menu" href="#" role="button" 
@@ -192,7 +188,6 @@
                             <span class="d-none d-md-inline">{{ user.username|truncatechars:12 }}</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end shadow-lg">
-                            <!-- Welcome Message -->
                             <li class="dropdown-header">
                                 <div class="d-flex align-items-center">
                                     <div class="user-avatar me-3">
@@ -207,100 +202,40 @@
                                     <div>
                                         <div class="fw-bold">{{ user.get_full_name|default:user.username }}</div>
                                         <small class="text-muted">
-                                            {% if user.is_vendor %}
-                                            <i class="fas fa-store text-success me-1"></i>Vendor
-                                            {% else %}
-                                            <i class="fas fa-user text-info me-1"></i>Customer
-                                            {% endif %}
+                                            {% if user.is_vendor %}<i class="fas fa-store text-success me-1"></i>{% trans "Vendor" %}
+                                            {% else %}<i class="fas fa-user text-info me-1"></i>{% trans "Customer" %}{% endif %}
                                         </small>
                                     </div>
                                 </div>
                             </li>
                             <li><hr class="dropdown-divider m-0"></li>
-
-                            <!-- Vendor Options -->
                             {% if user.is_vendor %}
-                            <li>
-                                <a class="dropdown-item" href="{% url 'bika:vendor_dashboard' %}">
-                                    <i class="fas fa-tachometer-alt me-2 text-primary"></i>Vendor Dashboard
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="{% url 'bika:vendor_add_product' %}">
-                                    <i class="fas fa-plus me-2 text-success"></i>Add Product
-                                </a>
-                            </li>
-                            
-                            <li>
-                                <a class="dropdown-item" href="{% url 'bika:vendor_product_list' %}">
-                                    <i class="fas fa-list me-2 text-info"></i>My Products
-                                </a>
-                            </li>
+                            <li><a class="dropdown-item" href="{% url 'bika:vendor_dashboard' %}"><i class="fas fa-tachometer-alt me-2 text-primary"></i>{% trans "Vendor Dashboard" %}</a></li>
+                            <li><a class="dropdown-item" href="{% url 'bika:vendor_add_product' %}"><i class="fas fa-plus me-2 text-success"></i>{% trans "Add Product" %}</a></li>
+                            <li><a class="dropdown-item" href="{% url 'bika:vendor_product_list' %}"><i class="fas fa-list me-2 text-info"></i>{% trans "My Products" %}</a></li>
                             <li><hr class="dropdown-divider"></li>
                             {% endif %}
-
-                            <!-- Admin Options -->
                             {% if user.is_staff %}
-                            <li>
-                                <a class="dropdown-item" href="{% url 'admin:index' %}">
-                                    <i class="fas fa-cog me-2 text-warning"></i>Admin Panel
-                                </a>
-                            </li>
+                            <li><a class="dropdown-item" href="{% url 'admin:index' %}"><i class="fas fa-cog me-2 text-warning"></i>{% trans "Admin Panel" %}</a></li>
                             <li><hr class="dropdown-divider"></li>
                             {% endif %}
-
-                            <!-- Common User Options -->
-                            <li>
-                                <a class="dropdown-item" href="{% url 'bika:user_profile' %}">
-                                    <i class="fas fa-user me-2 text-info"></i>My Profile
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="{% url 'bika:user_orders' %}">
-                                    <i class="fas fa-shopping-cart me-2 text-secondary"></i>My Orders
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="{% url 'bika:wishlist' %}">
-                                    <i class="fas fa-heart me-2 text-danger"></i>Wishlist
-                                </a>
-                            </li>
+                            <li><a class="dropdown-item" href="{% url 'bika:user_profile' %}"><i class="fas fa-user me-2 text-info"></i>{% trans "My Profile" %}</a></li>
+                            <li><a class="dropdown-item" href="{% url 'bika:user_orders' %}"><i class="fas fa-shopping-cart me-2 text-secondary"></i>{% trans "My Orders" %}</a></li>
+                            <li><a class="dropdown-item" href="{% url 'bika:wishlist' %}"><i class="fas fa-heart me-2 text-danger"></i>{% trans "Wishlist" %}</a></li>
                             <li><hr class="dropdown-divider"></li>
-
-                            <!-- Settings -->
-                            <li>
-                                <a class="dropdown-item" href="{% url 'bika:user_settings' %}">
-                                    <i class="fas fa-cog me-2 text-muted"></i>Settings
-                                </a>
-                            </li>
-
-                            <!-- Logout Options -->
-                            <li>
-                                <a class="dropdown-item text-danger" href="{% url 'bika:logout' %}">
-                                    <i class="fas fa-sign-out-alt me-2"></i>Logout
-                                </a>
-                            </li>
-                            
-                            <!-- Admin Logout (only for staff) -->
-                            {% if user.is_staff %}
-                            <li>
-                                <a class="dropdown-item text-warning" href="{% url 'admin:logout' %}">
-                                    <i class="fas fa-lock me-2"></i>Admin Logout
-                                </a>
-                            </li>
-                            {% endif %}
+                            <li><a class="dropdown-item" href="{% url 'bika:user_settings' %}"><i class="fas fa-cog me-2 text-muted"></i>{% trans "Settings" %}</a></li>
+                            <li><a class="dropdown-item text-danger" href="{% url 'bika:logout' %}"><i class="fas fa-sign-out-alt me-2"></i>{% trans "Logout" %}</a></li>
                         </ul>
                     </div>
                     {% else %}
-                    <!-- Login/Signup Buttons -->
                     <div class="auth-buttons">
                         <a href="{% url 'bika:login' %}" class="btn btn-outline-primary btn-sm login-btn">
                             <i class="fas fa-sign-in-alt me-1"></i>
-                            <span class="d-none d-md-inline">Login</span>
+                            <span class="d-none d-md-inline">{% trans "Login" %}</span>
                         </a>
                         <a href="{% url 'bika:register' %}" class="btn btn-primary btn-sm ms-2">
                             <i class="fas fa-user-plus me-1"></i>
-                            <span class="d-none d-md-inline">Sign Up</span>
+                            <span class="d-none d-md-inline">{% trans "Sign Up" %}</span>
                         </a>
                     </div>
                     {% endif %}
@@ -314,477 +249,84 @@
         <div class="search-container">
             <div class="container">
                 <div class="search-header">
-                    <h5 class="text-white mb-4">Search Products & Services</h5>
+                    <h5 class="text-white mb-4">{% trans "Search Products & Services" %}</h5>
                     <button class="btn-close btn-close-white search-close" type="button" aria-label="Close"></button>
                 </div>
                 <form class="search-form" action="{% url 'bika:product_list' %}" method="get">
                     <div class="input-group input-group-lg">
                         <input type="text" class="form-control search-input" 
-                               placeholder="What are you looking for? Search products, categories, vendors..." 
+                               placeholder="{% trans 'What are you looking for? Search products, categories, vendors...' %}" 
                                name="q" aria-label="Search" autocomplete="off" autofocus>
                         <button class="btn btn-primary search-submit" type="submit">
-                            <i class="fas fa-search me-2"></i>Search
+                            <i class="fas fa-search me-2"></i>{% trans "Search" %}
                         </button>
                     </div>
                 </form>
                 <div class="search-suggestions mt-4">
-                    <h6 class="text-light mb-3">Popular Categories:</h6>
+                    <h6 class="text-light mb-3">{% trans "Popular Categories:" %}</h6>
                     <div class="suggestion-tags">
-                        <a href="{% url 'bika:product_list' %}?category=electronics" class="badge bg-light text-dark me-2 mb-2">Electronics</a>
-                        <a href="{% url 'bika:product_list' %}?category=fashion" class="badge bg-light text-dark me-2 mb-2">Fashion</a>
-                        <a href="{% url 'bika:product_list' %}?category=home" class="badge bg-light text-dark me-2 mb-2">Home & Garden</a>
-                        <a href="{% url 'bika:product_list' %}?category=sports" class="badge bg-light text-dark me-2 mb-2">Sports</a>
-                        <a href="{% url 'bika:product_list' %}?category=books" class="badge bg-light text-dark me-2 mb-2">Books</a>
+                        <a href="{% url 'bika:product_list' %}?category=electronics" class="badge bg-light text-dark me-2 mb-2">{% trans "Electronics" %}</a>
+                        <a href="{% url 'bika:product_list' %}?category=fashion" class="badge bg-light text-dark me-2 mb-2">{% trans "Fashion" %}</a>
+                        <a href="{% url 'bika:product_list' %}?category=home" class="badge bg-light text-dark me-2 mb-2">{% trans "Home & Garden" %}</a>
+                        <a href="{% url 'bika:product_list' %}?category=sports" class="badge bg-light text-dark me-2 mb-2">{% trans "Sports" %}</a>
+                        <a href="{% url 'bika:product_list' %}?category=books" class="badge bg-light text-dark me-2 mb-2">{% trans "Books" %}</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Hidden Google Translate Element -->
+    <div id="google_translate_element" style="display:none !important;"></div>
 </header>
 
-
-<style>
-/* Top Bar Styles */
-.top-bar {
-    font-size: 0.875rem;
-    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%) !important;
+<script type="text/javascript">
+function googleTranslateElementInit() {
+    new google.translate.TranslateElement({
+        pageLanguage: 'en',
+        includedLanguages: 'rw,en',
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+        autoDisplay: false,
+        multilanguagePage: true
+    }, 'google_translate_element');
 }
 
-.top-bar a {
-    transition: opacity 0.3s ease;
-}
-
-.top-bar a:hover {
-    opacity: 0.8;
-    color: #fff !important;
-}
-
-.social-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    transition: all 0.3s ease;
-}
-
-.social-icon:hover {
-    background: rgba(255, 255, 255, 0.2);
-    transform: translateY(-2px);
-}
-
-/* Brand Styles */
-.brand-content {
-    display: flex;
-    align-items: center;
-}
-
-.brand-icon {
-    font-size: 2rem;
-}
-
-.brand-text {
-    display: flex;
-    flex-direction: column;
-}
-
-.brand-name {
-    font-size: 1.5rem;
-    color: #2c3e50;
-    line-height: 1;
-}
-
-.brand-tagline {
-    font-size: 0.75rem;
-    color: #6c757d;
-    font-weight: normal;
-    margin-top: 2px;
-}
-
-.logo-img {
-    transition: transform 0.3s ease;
-}
-
-.logo-img:hover {
-    transform: scale(1.05);
-}
-
-/* Navigation Styles */
-.navbar-nav .nav-link {
-    font-weight: 500;
-    padding: 0.75rem 1rem;
-    margin: 0 0.25rem;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-    color: #495057;
-    position: relative;
-}
-
-.navbar-nav .nav-link:hover {
-    color: #667eea;
-    background: rgba(102, 126, 234, 0.1);
-    transform: translateY(-1px);
-}
-
-.navbar-nav .nav-link.active {
-    color: white !important;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-}
-
-.navbar-nav .nav-link.active::after {
-    content: '';
-    position: absolute;
-    bottom: -8px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 6px;
-    height: 6px;
-    background: #667eea;
-    border-radius: 50%;
-}
-
-/* Dropdown Styles */
-.dropdown-menu-lg {
-    min-width: 400px;
-    border: none;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-    border-radius: 12px;
-    padding: 0;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.dropdown-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 1rem 1.5rem;
-    border-radius: 12px 12px 0 0;
-}
-
-.dropdown-header:hover {
-    background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
-    color: white;
-}
-
-.service-item {
-    padding: 1rem 1.5rem;
-    border-bottom: 1px solid #f8f9fa;
-    transition: all 0.3s ease;
-}
-
-.service-item:last-child {
-    border-bottom: none;
-}
-
-.service-item:hover {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    transform: translateX(5px);
-}
-
-.service-item:hover .service-name,
-.service-item:hover .text-muted {
-    color: white !important;
-}
-
-.service-dropdown-content {
-    display: flex;
-    align-items: flex-start;
-}
-
-.service-name {
-    font-weight: 600;
-    color: #2c3e50;
-    margin-bottom: 0.25rem;
-}
-
-/* User Dropdown Styles */
-.user-dropdown .dropdown-menu {
-    min-width: 280px;
-    border-radius: 12px;
-    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-}
-
-.user-dropdown .dropdown-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 1.25rem;
-}
-
-.user-avatar img {
-    object-fit: cover;
-}
-
-.user-dropdown .dropdown-item {
-    padding: 0.75rem 1.25rem;
-    transition: all 0.3s ease;
-    border-left: 3px solid transparent;
-}
-
-.user-dropdown .dropdown-item:hover {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border-left-color: #667eea;
-    transform: translateX(5px);
-}
-
-.user-dropdown .dropdown-item:hover i {
-    color: white !important;
-}
-
-/* Header Actions */
-.header-actions {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.search-trigger, .user-menu, .login-btn {
-    border-radius: 25px;
-    padding: 0.5rem 1rem;
-    transition: all 0.3s ease;
-    border: 2px solid #dee2e6;
-}
-
-.search-trigger:hover, .user-menu:hover {
-    border-color: #667eea;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-}
-
-.login-btn {
-    border-color: #667eea;
-    color: #667eea;
-}
-
-.login-btn:hover {
-    background: #667eea;
-    color: white;
-    transform: translateY(-2px);
-}
-
-.btn-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border: none;
-    border-radius: 25px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-}
-
-.btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-}
-
-/* Search Overlay */
-.search-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.95);
-    z-index: 9999;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    backdrop-filter: blur(10px);
-}
-
-.search-overlay.show {
-    display: flex;
-    animation: fadeIn 0.3s ease;
-}
-
-.search-container {
-    width: 100%;
-    max-width: 800px;
-    padding: 2rem;
-}
-
-.search-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
-}
-
-.search-input {
-    border: none;
-    border-radius: 10px 0 0 10px;
-    padding: 1.25rem 1.5rem;
-    font-size: 1.1rem;
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
-    border: 2px solid transparent;
-}
-
-.search-input:focus {
-    background: rgba(255, 255, 255, 0.15);
-    border-color: #667eea;
-    box-shadow: none;
-    color: white;
-}
-
-.search-input::placeholder {
-    color: rgba(255, 255, 255, 0.7);
-}
-
-.search-submit {
-    border-radius: 0 10px 10px 0;
-    padding: 1.25rem 2rem;
-    font-weight: 600;
-}
-
-.suggestion-tags .badge {
-    padding: 0.75rem 1rem;
-    font-size: 0.875rem;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    border: 1px solid transparent;
-}
-
-.suggestion-tags .badge:hover {
-    background: #667eea !important;
-    color: white !important;
-    transform: translateY(-2px);
-    border-color: #667eea;
-}
-
-/* Sticky Header Effect */
-.navbar.sticky-top.scrolled {
-    background: rgba(255, 255, 255, 0.98) !important;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 2px 30px rgba(0, 0, 0, 0.1);
-}
-
-/* Mobile Responsive */
-@media (max-width: 991.98px) {
-    .navbar-collapse {
-        background: white;
-        padding: 1rem;
-        border-radius: 10px;
-        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
-        margin-top: 1rem;
-    }
-    
-    .navbar-nav .nav-link {
-        margin: 0.25rem 0;
-        padding: 0.75rem 1rem;
-    }
-    
-    .navbar-nav .nav-link.active::after {
-        display: none;
-    }
-    
-    .dropdown-menu-lg {
-        min-width: auto;
-        margin: 0.5rem 0;
-    }
-    
-    .header-actions {
-        margin-top: 1rem;
-        padding-top: 1rem;
-        border-top: 1px solid #e9ecef;
-        justify-content: center;
-        width: 100%;
-    }
-    
-    .top-bar-info span {
-        display: block;
-        margin-bottom: 0.25rem;
-    }
-    
-    .brand-tagline {
-        display: none !important;
-    }
-    
-    .user-dropdown .dropdown-menu {
-        min-width: auto;
+function triggerFullPageTranslation() {
+    const currentLang = "{{ CURRENT_LANG }}";
+    if (currentLang === 'rw' || currentLang.startsWith('rw')) {
+        const tryTrigger = setInterval(() => {
+            const googleCombo = document.querySelector('.goog-te-combo');
+            if (googleCombo) {
+                if (googleCombo.value !== 'rw') {
+                    googleCombo.value = 'rw';
+                    googleCombo.dispatchEvent(new Event('change'));
+                }
+                clearInterval(tryTrigger);
+            }
+        }, 300);
+        setTimeout(() => clearInterval(tryTrigger), 15000);
+    } else {
+        const tryClear = setInterval(() => {
+            const googleCombo = document.querySelector('.goog-te-combo');
+            if (googleCombo && googleCombo.value !== '') {
+                googleCombo.value = '';
+                googleCombo.dispatchEvent(new Event('change'));
+                clearInterval(tryClear);
+            }
+        }, 500);
+        setTimeout(() => clearInterval(tryClear), 5000);
     }
 }
 
-@media (max-width: 767.98px) {
-    .top-bar {
-        font-size: 0.8rem;
-        text-align: center;
-    }
-    
-    .search-container {
-        padding: 1rem;
-    }
-    
-    .search-input {
-        padding: 1rem;
-    }
-    
-    .search-submit {
-        padding: 1rem 1.5rem;
-    }
-    
-    .auth-buttons {
-        display: flex;
-        gap: 0.5rem;
-    }
-    
-    .auth-buttons .btn {
-        flex: 1;
-    }
-}
-
-/* Animations */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes slideInDown {
-    from {
-        transform: translateY(-100%);
-    }
-    to {
-        transform: translateY(0);
-    }
-}
-
-/* Loading States */
-.nav-link.loading {
-    pointer-events: none;
-    opacity: 0.7;
-}
-
-.nav-link.loading::before {
-    content: '';
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    border: 2px solid transparent;
-    border-top: 2px solid currentColor;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-right: 8px;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-/* Cart Badge */
-.badge.bg-danger {
-    font-size: 0.6rem;
-    padding: 0.25rem 0.4rem;
-}
-</style>
-
-<script>
 document.addEventListener('DOMContentLoaded', function() {
+    triggerFullPageTranslation();
+    const observer = new MutationObserver(function(mutations) {
+        if (document.querySelector('.goog-te-combo')) {
+            triggerFullPageTranslation();
+        }
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+    
     // Search Functionality
     const searchTrigger = document.querySelector('.search-trigger');
     const searchOverlay = document.getElementById('searchOverlay');
@@ -795,23 +337,18 @@ document.addEventListener('DOMContentLoaded', function() {
         searchTrigger.addEventListener('click', function() {
             searchOverlay.classList.add('show');
             document.body.style.overflow = 'hidden';
-            searchInput.focus();
+            setTimeout(() => searchInput.focus(), 100);
         });
-
         searchClose.addEventListener('click', function() {
             searchOverlay.classList.remove('show');
             document.body.style.overflow = '';
         });
-
-        // Close on escape key
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape' && searchOverlay.classList.contains('show')) {
                 searchOverlay.classList.remove('show');
                 document.body.style.overflow = '';
             }
         });
-
-        // Close on overlay click
         searchOverlay.addEventListener('click', function(e) {
             if (e.target === searchOverlay) {
                 searchOverlay.classList.remove('show');
@@ -823,113 +360,70 @@ document.addEventListener('DOMContentLoaded', function() {
     // Sticky Header Effect
     const navbar = document.querySelector('.navbar');
     window.addEventListener('scroll', function() {
-        if (window.scrollY > 50) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
-        }
+        if (window.scrollY > 50) navbar.classList.add('scrolled');
+        else navbar.classList.remove('scrolled');
     });
-
-    // Mobile Menu Close on Click
-    const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
-    const navbarCollapse = document.querySelector('.navbar-collapse');
-    
-    navLinks.forEach(link => {
-        link.addEventListener('click', function() {
-            if (window.innerWidth < 992) {
-                const bsCollapse = new bootstrap.Collapse(navbarCollapse);
-                bsCollapse.hide();
-            }
-        });
-    });
-
-    // Active Navigation Highlighting
-    function setActiveNav() {
-        const currentPath = window.location.pathname;
-        navLinks.forEach(link => {
-            const linkPath = link.getAttribute('href');
-            if (linkPath === currentPath || 
-                (linkPath !== '/' && currentPath.startsWith(linkPath)) ||
-                (linkPath.includes('services') && currentPath.includes('services')) ||
-                (linkPath.includes('products') && currentPath.includes('products'))) {
-                link.classList.add('active');
-            } else {
-                link.classList.remove('active');
-            }
-        });
-    }
-    
-    setActiveNav();
-
-    // Smooth Scroll for Anchor Links
-    document.querySelectorAll('.nav-link[href^="#"]').forEach(link => {
-        link.addEventListener('click', function(e) {
-            const href = this.getAttribute('href');
-            if (href.startsWith('#')) {
-                e.preventDefault();
-                const target = document.querySelector(href);
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                    
-                    // Close mobile menu
-                    if (window.innerWidth < 992) {
-                        const bsCollapse = new bootstrap.Collapse(navbarCollapse);
-                        bsCollapse.hide();
-                    }
-                }
-            }
-        });
-    });
-
-    // Dropdown Hover for Desktop
-    if (window.innerWidth > 992) {
-        const dropdowns = document.querySelectorAll('.dropdown');
-        
-        dropdowns.forEach(dropdown => {
-            dropdown.addEventListener('mouseenter', function() {
-                const dropdownToggle = this.querySelector('.dropdown-toggle');
-                if (!dropdownToggle.classList.contains('show')) {
-                    bootstrap.Dropdown.getOrCreateInstance(dropdownToggle).show();
-                }
-            });
-            
-            dropdown.addEventListener('mouseleave', function() {
-                const dropdownToggle = this.querySelector('.dropdown-toggle');
-                if (dropdownToggle.classList.contains('show')) {
-                    bootstrap.Dropdown.getOrCreateInstance(dropdownToggle).hide();
-                }
-            });
-        });
-    }
-
-    // Search Form Enhancement
-    const searchForm = document.querySelector('.search-form');
-    if (searchForm) {
-        searchForm.addEventListener('submit', function(e) {
-            const searchValue = searchInput.value.trim();
-            if (searchValue === '') {
-                e.preventDefault();
-                searchInput.focus();
-                return false;
-            }
-        });
-    }
-
-    // Initialize tooltips
-    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'));
-    const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
-    });
-
-    // User dropdown enhancement
-    const userDropdown = document.querySelector('.user-dropdown .dropdown-toggle');
-    if (userDropdown) {
-        userDropdown.addEventListener('click', function() {
-            this.classList.toggle('active');
-        });
-    }
 });
+window.addEventListener('load', triggerFullPageTranslation);
 </script>
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+<style>
+/* Top Bar Styles */
+.top-bar { font-size: 0.875rem; background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%) !important; }
+.top-bar a:hover { opacity: 0.8; color: #fff !important; }
+.social-icon { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%; transition: all 0.3s ease; }
+.social-icon:hover { background: rgba(255, 255, 255, 0.2); transform: translateY(-2px); }
+
+/* Brand Styles */
+.brand-content { display: flex; align-items: center; }
+.brand-icon { font-size: 2rem; }
+.brand-text { display: flex; flex-direction: column; }
+.brand-name { font-size: 1.5rem; color: #2c3e50; line-height: 1; }
+.brand-tagline { font-size: 0.75rem; color: #6c757d; font-weight: normal; margin-top: 2px; }
+.logo-img { transition: transform 0.3s ease; }
+.logo-img:hover { transform: scale(1.05); }
+
+/* Navigation Styles */
+.navbar-nav .nav-link { font-weight: 500; padding: 0.75rem 1rem; margin: 0 0.25rem; border-radius: 8px; transition: all 0.3s ease; color: #495057; position: relative; }
+.navbar-nav .nav-link:hover { color: #667eea; background: rgba(102, 126, 234, 0.1); transform: translateY(-1px); }
+.navbar-nav .nav-link.active { color: white !important; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3); }
+.navbar-nav .nav-link.active::after { content: ''; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); width: 6px; height: 6px; background: #667eea; border-radius: 50%; }
+
+/* Dropdown Styles */
+.dropdown-menu-lg { min-width: 400px; border: none; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1); border-radius: 12px; padding: 0; border: 1px solid rgba(0, 0, 0, 0.1); }
+.dropdown-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1rem 1.5rem; border-radius: 12px 12px 0 0; }
+.service-item { padding: 1rem 1.5rem; border-bottom: 1px solid #f8f9fa; transition: all 0.3s ease; }
+.service-item:hover { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); transform: translateX(5px); }
+.service-item:hover .service-name, .service-item:hover .text-muted { color: white !important; }
+.service-dropdown-content { display: flex; align-items: flex-start; }
+.service-name { font-weight: 600; color: #2c3e50; margin-bottom: 0.25rem; }
+
+/* Header Actions */
+.header-actions { display: flex; align-items: center; gap: 0.5rem; }
+.search-trigger, .user-menu, .login-btn { border-radius: 25px; padding: 0.5rem 1rem; transition: all 0.3s ease; border: 2px solid #dee2e6; }
+.search-trigger:hover, .user-menu:hover { border-color: #667eea; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3); }
+.login-btn { border-color: #667eea; color: #667eea; }
+.login-btn:hover { background: #667eea; color: white; transform: translateY(-2px); }
+.btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; border-radius: 25px; font-weight: 600; transition: all 0.3s ease; }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4); }
+
+/* Search Overlay */
+.search-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); z-index: 9999; display: none; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
+.search-overlay.show { display: flex; animation: fadeIn 0.3s ease; }
+.search-container { width: 100%; max-width: 800px; padding: 2rem; }
+.search-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+.search-input { border: none; border-radius: 10px 0 0 10px; padding: 1.25rem 1.5rem; font-size: 1.1rem; background: rgba(255, 255, 255, 0.1); color: white; border: 2px solid transparent; }
+.search-input:focus { background: rgba(255, 255, 255, 0.15); border-color: #667eea; box-shadow: none; color: white; }
+.search-input::placeholder { color: rgba(255, 255, 255, 0.7); }
+.search-submit { border-radius: 0 10px 10px 0; padding: 1.25rem 2rem; font-weight: 600; }
+.suggestion-tags .badge { padding: 0.75rem 1rem; font-size: 0.875rem; text-decoration: none; transition: all 0.3s ease; border: 1px solid transparent; }
+.suggestion-tags .badge:hover { background: #667eea !important; color: white !important; transform: translateY(-2px); border-color: #667eea; }
+
+/* Sticky Header Effect */
+.navbar.sticky-top.scrolled { background: rgba(255, 255, 255, 0.98) !important; backdrop-filter: blur(10px); box-shadow: 0 2px 30px rgba(0, 0, 0, 0.1); }
+
+/* Hide Google Translate Bar */
+.goog-te-banner-frame.skiptranslate, .goog-te-gadget-icon, iframe.goog-te-menu-frame, #goog-gt-tt { display: none !important; visibility: hidden !important; }
+body { top: 0px !important; position: static !important; }
+</style>

@@ -9,12 +9,12 @@ numpy==2.0.2
 pandas==2.2.3
 pillow==12.0.0
 PyJWT==2.11.0
-python-dateutil @ file:///home/conda/feedstock_root/build_artifacts/bld/rattler-build_python-dateutil_1751104122/work
+python-dateutil==2.9.0
 pytz==2025.2
 scikit-learn==1.6.0
-scipy @ file:///Users/runner/miniforge3/conda-bld/scipy-split_1768799550123/work/dist/scipy-1.17.0-cp311-cp311-macosx_10_13_x86_64.whl#sha256=6b442b6252ded28b8a2a4416dbe27758c60f1317a65884fd3bc33550eee34e64
-six @ file:///home/conda/feedstock_root/build_artifacts/bld/rattler-build_six_1753199211/work
+scipy==1.15.0
+six==1.17.0
 sqlparse==0.5.3
-threadpoolctl @ file:///home/conda/feedstock_root/build_artifacts/threadpoolctl_1741878222898/work
+threadpoolctl==3.5.0
 tzdata==2025.2
 xgboost==2.1.2

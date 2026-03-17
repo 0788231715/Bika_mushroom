@@ -1,7 +1,7 @@
 {% extends 'bika/base.html' %}
-{% load static %}
+{% load static i18n %}
 
-{% block title %}Track Products - Bika Vendor{% endblock %}
+{% block title %}{% trans "Track Products" %} - Bika Vendor{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -395,13 +395,13 @@
     <div class="container">
         <div class="row align-items-center">
             <div class="col-md-8">
-                <h1 class="mb-3">Product Tracking</h1>
-                <p class="lead mb-4">Monitor your products in real-time with AI-powered analytics and alerts</p>
+                <h1 class="mb-3">{% trans "Product Tracking" %}</h1>
+                <p class="lead mb-4">{% trans "Monitor your products in real-time with AI-powered analytics and alerts" %}</p>
             </div>
             <div class="col-md-4 text-md-end">
                 <span class="real-time-indicator">
                     <span class="status-dot status-online pulse"></span>
-                    Live Tracking Active
+                    {% trans "Live Tracking Active" %}
                 </span>
             </div>
         </div>
@@ -418,7 +418,7 @@
                         <i class="fas fa-boxes"></i>
                     </div>
                     <div class="stat-number">{{ total_products }}</div>
-                    <div class="stat-label">Total Products</div>
+                    <div class="stat-label">{% trans "Total Products" %}</div>
                 </div>
             </div>
             <div class="col-xl-3 col-md-6">
@@ -427,7 +427,7 @@
                         <i class="fas fa-exclamation-triangle"></i>
                     </div>
                     <div class="stat-number">{{ low_stock_count }}</div>
-                    <div class="stat-label">Low Stock</div>
+                    <div class="stat-label">{% trans "Low Stock" %}</div>
                 </div>
             </div>
             <div class="col-xl-3 col-md-6">
@@ -436,7 +436,7 @@
                         <i class="fas fa-times-circle"></i>
                     </div>
                     <div class="stat-number">{{ out_of_stock_count }}</div>
-                    <div class="stat-label">Out of Stock</div>
+                    <div class="stat-label">{% trans "Out of Stock" %}</div>
                 </div>
             </div>
             <div class="col-xl-3 col-md-6">
@@ -445,7 +445,7 @@
                         <i class="fas fa-bell"></i>
                     </div>
                     <div class="stat-number">{{ active_alerts_count }}</div>
-                    <div class="stat-label">Active Alerts</div>
+                    <div class="stat-label">{% trans "Active Alerts" %}</div>
                 </div>
             </div>
         </div>
@@ -459,16 +459,16 @@
         <div class="quick-actions">
             <div class="row align-items-center">
                 <div class="col-md-8">
-                    <h5 class="mb-2">Quick Actions</h5>
-                    <p class="text-muted mb-0">Manage your product tracking and monitoring</p>
+                    <h5 class="mb-2">{% trans "Quick Actions" %}</h5>
+                    <p class="text-muted mb-0">{% trans "Manage your product tracking and monitoring" %}</p>
                 </div>
                 <div class="col-md-4 text-md-end">
                     <div class="btn-group">
                         <a href="{% url 'bika:vendor_product_list' %}" class="btn btn-primary">
-                            <i class="fas fa-box me-2"></i>Manage Products
+                            <i class="fas fa-box me-2"></i>{% trans "Manage Products" %}
                         </a>
                         <a href="{% url 'bika:vendor_dashboard' %}" class="btn btn-outline-secondary">
-                            <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                            <i class="fas fa-tachometer-alt me-2"></i>{% trans "Dashboard" %}
                         </a>
                     </div>
                 </div>
@@ -481,29 +481,29 @@
                 <div class="col-md-4">
                     <div class="search-box">
                         <i class="fas fa-search search-icon"></i>
-                        <input type="text" class="form-control" placeholder="Search products..." id="searchInput" value="{{ query }}">
+                        <input type="text" class="form-control" placeholder="{% trans 'Search products...' %}" id="searchInput" value="{{ query }}">
                     </div>
                 </div>
                 <div class="col-md-3">
                     <select class="form-select" id="stockFilter">
-                        <option value="">All Stock Levels</option>
-                        <option value="in_stock" {% if stock_filter == 'in_stock' %}selected{% endif %}>In Stock</option>
-                        <option value="low_stock" {% if stock_filter == 'low_stock' %}selected{% endif %}>Low Stock</option>
-                        <option value="out_of_stock" {% if stock_filter == 'out_of_stock' %}selected{% endif %}>Out of Stock</option>
+                        <option value="">{% trans "All Stock Levels" %}</option>
+                        <option value="in_stock" {% if stock_filter == 'in_stock' %}selected{% endif %}>{% trans "In Stock" %}</option>
+                        <option value="low_stock" {% if stock_filter == 'low_stock' %}selected{% endif %}>{% trans "Low Stock" %}</option>
+                        <option value="out_of_stock" {% if stock_filter == 'out_of_stock' %}selected{% endif %}>{% trans "Out of Stock" %}</option>
                     </select>
                 </div>
                 <div class="col-md-3">
                     <select class="form-select" id="statusFilter">
-                        <option value="">All Status</option>
-                        <option value="active" {% if status_filter == 'active' %}selected{% endif %}>Active</option>
-                        <option value="draft" {% if status_filter == 'draft' %}selected{% endif %}>Draft</option>
+                        <option value="">{% trans "All Status" %}</option>
+                        <option value="active" {% if status_filter == 'active' %}selected{% endif %}>{% trans "Active" %}</option>
+                        <option value="draft" {% if status_filter == 'draft' %}selected{% endif %}>{% trans "Draft" %}</option>
                     </select>
                 </div>
                 <div class="col-md-2">
                     <select class="form-select" id="sortFilter">
-                        <option value="updated" {% if sort_filter == 'updated' %}selected{% endif %}>Last Updated</option>
-                        <option value="stock" {% if sort_filter == 'stock' %}selected{% endif %}>Stock Level</option>
-                        <option value="name" {% if sort_filter == 'name' %}selected{% endif %}>Name</option>
+                        <option value="updated" {% if sort_filter == 'updated' %}selected{% endif %}>{% trans "Last Updated" %}</option>
+                        <option value="stock" {% if sort_filter == 'stock' %}selected{% endif %}>{% trans "Stock Level" %}</option>
+                        <option value="name" {% if sort_filter == 'name' %}selected{% endif %}>{% trans "Name" %}</option>
                     </select>
                 </div>
             </div>
@@ -514,7 +514,7 @@
         <div class="alerts-section">
             <h4 class="mb-4">
                 <i class="fas fa-exclamation-triangle text-warning me-2"></i>
-                Active Alerts
+                {% trans "Active Alerts" %}
             </h4>
             
             {% for alert in alerts %}
@@ -527,7 +527,7 @@
                         </div>
                         <div class="alert-time">
                             <i class="far fa-clock me-1"></i>
-                            {{ alert.created_at|timesince }} ago
+                            {{ alert.created_at|timesince }} {% trans "ago" %}
                         </div>
                     </div>
                     <span class="badge bg-{% if alert.severity == 'critical' %}danger{% elif alert.severity == 'high' %}warning{% else %}info{% endif %}">
@@ -539,11 +539,11 @@
                 </div>
                 <div class="alert-actions">
                     <a href="{% url 'bika:vendor_edit_product' alert.product.id %}" class="btn btn-sm btn-outline-primary">
-                        <i class="fas fa-edit me-1"></i>Manage
+                        <i class="fas fa-edit me-1"></i>{% trans "Manage" %}
                     </a>
                     {% if user.is_staff %}
                     <button class="btn btn-sm btn-outline-success" onclick="resolveAlert({{ alert.id }})">
-                        <i class="fas fa-check me-1"></i>Resolve
+                        <i class="fas fa-check me-1"></i>{% trans "Resolve" %}
                     </button>
                     {% endif %}
                 </div>
@@ -560,8 +560,8 @@
                 <div class="product-card">
                     <!-- Product Image -->
                     <div class="product-image position-relative">
-                        {% if product.images.first %}
-                        <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}">
+                        {% if product.product_images.first %}
+                        <img src="{{ product.product_images.first.image.url }}" alt="{{ product.name }}">
                         {% else %}
                         <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-light">
                             <i class="fas fa-image fa-3x text-muted"></i>
@@ -571,10 +571,10 @@
                         <!-- Status Badges -->
                         <div class="product-badge">
                             {% if product.is_featured %}
-                            <span class="badge bg-warning mb-2">Featured</span>
+                            <span class="badge bg-warning mb-2">{% trans "Featured" %}</span>
                             {% endif %}
                             {% if product.discount_percentage > 0 %}
-                            <span class="badge bg-danger">{{ product.discount_percentage }}% OFF</span>
+                            <span class="badge bg-danger">{{ product.discount_percentage }}% {% trans "OFF" %}</span>
                             {% endif %}
                         </div>
 
@@ -582,7 +582,7 @@
                         {% if product.has_critical_alerts %}
                         <div class="alert-badge">
                             <span class="badge bg-danger">
-                                <i class="fas fa-exclamation-triangle"></i> Alert
+                                <i class="fas fa-exclamation-triangle"></i> {% trans "Alert" %}
                             </span>
                         </div>
                         {% endif %}
@@ -595,17 +595,17 @@
                         
                         <!-- Stock Information -->
                         <div class="product-meta">
-                            <div class="product-price">${{ product.price }}</div>
+                            <div class="product-price">{{ product.price|floatformat:0 }} RWF</div>
                             <div class="stock-indicator {% if product.is_in_stock %}{% if product.is_low_stock %}stock-low{% else %}stock-in{% endif %}{% else %}stock-out{% endif %}">
                                 <i class="fas fa-{% if product.is_in_stock %}{% if product.is_low_stock %}exclamation-triangle{% else %}check-circle{% endif %}{% else %}times-circle{% endif %}"></i>
                                 {% if product.is_in_stock %}
                                     {% if product.is_low_stock %}
-                                    Low Stock ({{ product.stock_quantity }})
+                                    {% trans "Low Stock" %} ({{ product.stock_quantity }})
                                     {% else %}
-                                    In Stock ({{ product.stock_quantity }})
+                                    {% trans "In Stock" %} ({{ product.stock_quantity }})
                                     {% endif %}
                                 {% else %}
-                                Out of Stock
+                                {% trans "Out of Stock" %}
                                 {% endif %}
                             </div>
                         </div>
@@ -631,7 +631,7 @@
                         <div class="sensor-data">
                             <h6 class="mb-3">
                                 <i class="fas fa-microchip me-2"></i>
-                                Real-time Monitoring
+                                {% trans "Real-time Monitoring" %}
                             </h6>
                             {% for sensor in product.sensor_data %}
                             <div class="sensor-item">
@@ -650,14 +650,14 @@
                         <!-- Product Actions -->
                         <div class="d-grid gap-2 mt-3">
                             <a href="{% url 'bika:vendor_edit_product' product.id %}" class="btn btn-outline-primary btn-sm">
-                                <i class="fas fa-edit me-1"></i>Manage Stock
+                                <i class="fas fa-edit me-1"></i>{% trans "Manage Stock" %}
                             </a>
                             <div class="btn-group">
                                 <a href="{% url 'bika:product_detail' product.slug %}" class="btn btn-outline-secondary btn-sm" target="_blank">
-                                    <i class="fas fa-eye me-1"></i>View
+                                    <i class="fas fa-eye me-1"></i>{% trans "View" %}
                                 </a>
                                 <button class="btn btn-outline-info btn-sm" onclick="showProductAnalytics({{ product.id }})">
-                                    <i class="fas fa-chart-line me-1"></i>Analytics
+                                    <i class="fas fa-chart-line me-1"></i>{% trans "Analytics" %}
                                 </button>
                             </div>
                         </div>
@@ -672,23 +672,23 @@
             <div class="empty-state-icon">
                 <i class="fas fa-search"></i>
             </div>
-            <h3>No Products Found</h3>
+            <h3>{% trans "No Products Found" %}</h3>
             
             {% if query or stock_filter or status_filter %}
-            <p>We couldn't find any products matching your current filters. Try adjusting your search criteria or clear all filters to see all products.</p>
+            <p>{% trans "We couldn't find any products matching your current filters. Try adjusting your search criteria or clear all filters to see all products." %}</p>
             <div class="mt-4">
                 <a href="{% url 'bika:track_my_products' %}" class="btn btn-outline-primary me-3">
-                    <i class="fas fa-times me-2"></i>Clear Filters
+                    <i class="fas fa-times me-2"></i>{% trans "Clear Filters" %}
                 </a>
                 <a href="{% url 'bika:vendor_add_product' %}" class="btn btn-primary">
-                    <i class="fas fa-plus me-2"></i>Add New Product
+                    <i class="fas fa-plus me-2"></i>{% trans "Add New Product" %}
                 </a>
             </div>
             {% else %}
-            <p>You haven't added any products yet. Start by adding your first product to track its performance and inventory.</p>
+            <p>{% trans "You haven't added any products yet. Start by adding your first product to track its performance and inventory." %}</p>
             <div class="mt-4">
                 <a href="{% url 'bika:vendor_add_product' %}" class="btn btn-primary btn-lg">
-                    <i class="fas fa-plus me-2"></i>Add Your First Product
+                    <i class="fas fa-plus me-2"></i>{% trans "Add Your First Product" %}
                 </a>
             </div>
             {% endif %}
@@ -701,7 +701,7 @@
                 <div class="alerts-section">
                     <h4 class="mb-4">
                         <i class="fas fa-sync-alt text-primary me-2"></i>
-                        Real-time Updates
+                        {% trans "Real-time Updates" %}
                     </h4>
                     <div class="row">
                         <div class="col-md-6">
@@ -710,8 +710,8 @@
                                     <i class="fas fa-database fa-2x text-primary"></i>
                                 </div>
                                 <div>
-                                    <h6 class="mb-1">AI Monitoring</h6>
-                                    <p class="text-muted mb-0">Continuous product quality analysis</p>
+                                    <h6 class="mb-1">{% trans "AI Monitoring" %}</h6>
+                                    <p class="text-muted mb-0">{% trans "Continuous product quality analysis" %}</p>
                                 </div>
                             </div>
                         </div>
@@ -721,15 +721,15 @@
                                     <i class="fas fa-bell fa-2x text-warning"></i>
                                 </div>
                                 <div>
-                                    <h6 class="mb-1">Instant Alerts</h6>
-                                    <p class="text-muted mb-0">Get notified of issues immediately</p>
+                                    <h6 class="mb-1">{% trans "Instant Alerts" %}</h6>
+                                    <p class="text-muted mb-0">{% trans "Get notified of issues immediately" %}</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="text-center mt-3">
                         <button class="btn btn-outline-primary" onclick="refreshData()">
-                            <i class="fas fa-sync-alt me-2"></i>Refresh Data
+                            <i class="fas fa-sync-alt me-2"></i>{% trans "Refresh Data" %}
                         </button>
                     </div>
                 </div>
@@ -743,7 +743,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="analyticsModalTitle">Product Analytics</h5>
+                <h5 class="modal-title" id="analyticsModalTitle">{% trans "Product Analytics" %}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body" id="analyticsModalBody">

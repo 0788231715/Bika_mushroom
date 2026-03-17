@@ -1,7 +1,7 @@
+{% load static i18n %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ CURRENT_LANG|default:'en' }}">
 <head>
-    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% if site_info %}{{ site_info.name }}{% else %}Bika{% endif %}{% endblock %}</title>
@@ -29,7 +29,7 @@
                         <div class="notification-alerts">
                             <a href="{% url 'bika:notifications' %}" class="btn btn-sm btn-warning position-relative">
                                 <i class="fas fa-bell"></i>
-                                Notifications
+                                {% trans "Notifications" %}
                                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="notificationCount">
                                     {{ user.notifications.unread.count|default:0 }}
                                 </span>
@@ -42,51 +42,51 @@
                                 <!-- Admin Only Actions -->
                                 {% if user.is_staff or user.user_type == 'admin' %}
                                 <a href="{% url 'bika:admin_dashboard' %}" class="btn btn-outline-primary">
-                                    <i class="fas fa-tachometer-alt"></i> Admin Dashboard
+                                    <i class="fas fa-tachometer-alt"></i> {% trans "Admin Dashboard" %}
                                 </a>
                                 <a href="{% url 'bika:storage_sites' %}" class="btn btn-outline-secondary">
-                                    <i class="fas fa-warehouse"></i> Storage Sites
+                                    <i class="fas fa-warehouse"></i> {% trans "Storage Sites" %}
                                 </a>
                                 <a href="/admin/bika/productdataset/" class="btn btn-outline-info">
-                                    <i class="fas fa-database"></i> Manage Datasets
+                                    <i class="fas fa-database"></i> {% trans "Manage Datasets" %}
                                 </a>
                                 {% endif %}
                                 
                                 <!-- Vendor Actions -->
                                 {% if user.user_type == 'vendor' or user.is_staff %}
                                 <a href="{% url 'bika:vendor_dashboard' %}" class="btn btn-outline-info">
-                                    <i class="fas fa-store"></i> Vendor Dashboard
+                                    <i class="fas fa-store"></i> {% trans "Vendor Dashboard" %}
                                 </a>
                                 <a href="{% url 'bika:vendor_product_list' %}" class="btn btn-outline-success">
-                                    <i class="fas fa-box"></i> My Products
+                                    <i class="fas fa-box"></i> {% trans "My Products" %}
                                 </a>
                                 <a href="{% url 'bika:track_my_products' %}" class="btn btn-outline-warning">
-                                    <i class="fas fa-map-marker-alt"></i> Track Products
+                                    <i class="fas fa-map-marker-alt"></i> {% trans "Track Products" %}
                                 </a>
                                 {% endif %}
                                 
                                 <!-- Customer Actions -->
                                 {% if user.user_type == 'customer' %}
                                 <a href="{% url 'bika:cart' %}" class="btn btn-outline-primary position-relative">
-                                    <i class="fas fa-shopping-cart"></i> My Cart
+                                    <i class="fas fa-shopping-cart"></i> {% trans "My Cart" %}
                                     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary cart-count-badge" style="display: {% if user.cart.items.count > 0 %}inline{% else %}none{% endif %};">
                                         {{ user.cart.items.count|default:0 }}
                                     </span>
                                 </a>
                                 <a href="{% url 'bika:wishlist' %}" class="btn btn-outline-success position-relative">
-                                    <i class="fas fa-heart"></i> Wishlist
+                                    <i class="fas fa-heart"></i> {% trans "Wishlist" %}
                                     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success wishlist-count-badge" style="display: {% if user.wishlist.items.count > 0 %}inline{% else %}none{% endif %};">
                                         {{ user.wishlist.items.count|default:0 }}
                                     </span>
                                 </a>
                                 <a href="{% url 'bika:user_orders' %}" class="btn btn-outline-info">
-                                    <i class="fas fa-receipt"></i> My Orders
+                                    <i class="fas fa-receipt"></i> {% trans "My Orders" %}
                                 </a>
                                 {% endif %}
                                 
                                 <!-- Common Actions for All Authenticated Users -->
                                 <a href="{% url 'bika:scan_product' %}" class="btn btn-outline-warning">
-                                    <i class="fas fa-qrcode"></i> Scan Product
+                                    <i class="fas fa-qrcode"></i> {% trans "Scan Product" %}
                                 </a>
                             </div>
                         </div>
@@ -104,11 +104,11 @@
             <div class="row align-items-center">
                 <div class="col-md-10">
                     <i class="fas fa-exclamation-triangle me-2"></i>
-                    <strong id="alertTitle">System Alert:</strong>
-                    <span id="alertMessage">Monitoring active</span>
+                    <strong id="alertTitle">{% trans "System Alert:" %}</strong>
+                    <span id="alertMessage">{% trans "Monitoring active" %}</span>
                 </div>
                 <div class="col-md-2 text-end">
-                    <a href="{% url 'bika:notifications' %}" class="btn btn-sm btn-outline-dark">View Alerts</a>
+                    <a href="{% url 'bika:notifications' %}" class="btn btn-sm btn-outline-dark">{% trans "View Alerts" %}</a>
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
             </div>

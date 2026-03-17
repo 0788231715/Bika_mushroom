@@ -98,10 +98,8 @@ class ProductCategory(models.Model):
 
 class Product(models.Model):
     STATUS_CHOICES = [
-        ("draft", "Draft"),
-        ("active", "Active"),
-        ("out_of_stock", "Out of Stock"),
-        ("discontinued", "Discontinued"),
+        ("Draft", "Draft"),
+        ("Published", "Published"),
     ]
 
     CONDITION_CHOICES = [
@@ -118,7 +116,7 @@ class Product(models.Model):
         ("private", "Only creator"),
     ]
 
-    name = models.CharField(max_length=200)
+    mushroom_name = models.CharField(max_length=200)
 
     # ✅ CHANGED: allow blank and auto-generate in save()
     slug = models.SlugField(unique=True, blank=True)
@@ -153,16 +151,18 @@ class Product(models.Model):
 
     brand = models.CharField(max_length=100, blank=True)
     model = models.CharField(max_length=100, blank=True)
-    weight = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True, help_text="Weight in kg")
+    weight = models.FloatField(default=0.0, help_text="Weight in kilograms")
     dimensions = models.CharField(max_length=100, blank=True, help_text="L x W x H in cm")
     color = models.CharField(max_length=50, blank=True)
     size = models.CharField(max_length=50, blank=True)
     material = models.CharField(max_length=100, blank=True)
 
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="draft")
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="Draft")
     condition = models.CharField(max_length=20, choices=CONDITION_CHOICES, default="new")
     is_featured = models.BooleanField(default=False)
     is_digital = models.BooleanField(default=False, verbose_name="Digital Product")
+
+    images = models.ImageField(upload_to="products/", blank=True, null=True)
 
     created_by = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True, related_name="created_products")
     visibility = models.CharField(max_length=20, choices=VISIBILITY_CHOICES, default="unit")
@@ -194,8 +194,17 @@ class Product(models.Model):
             models.Index(fields=["visibility", "status"]),
         ]
 
+    @property
+    def name(self):
+        """Backward compatibility alias for mushroom_name"""
+        return self.mushroom_name
+
+    @name.setter
+    def name(self, value):
+        self.mushroom_name = value
+
     def __str__(self):
-        return f"{self.name} - {self.sku}"
+        return f"{self.mushroom_name} - {self.sku}"
 
     def get_absolute_url(self):
         return reverse("bika:product_detail", kwargs={"slug": self.slug})
@@ -203,7 +212,7 @@ class Product(models.Model):
     def save(self, *args, **kwargs):
         # ✅ Auto-generate slug if not provided
         if not self.slug:
-            base_slug = slugify(self.name) or "product"
+            base_slug = slugify(self.mushroom_name) or "product"
             slug_candidate = base_slug
             counter = 1
             while Product.objects.filter(slug=slug_candidate).exclude(pk=self.pk).exists():
@@ -211,7 +220,7 @@ class Product(models.Model):
                 counter += 1
             self.slug = slug_candidate
 
-        if self.status == "active" and not self.published_at:
+        if self.status == "Published" and not self.published_at:
             self.published_at = timezone.now()
 
         super().save(*args, **kwargs)
@@ -277,7 +286,7 @@ class Product(models.Model):
 
 
 class ProductImage(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="images")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="product_images")
     image = models.ImageField(upload_to="products/")
     alt_text = models.CharField(max_length=200, blank=True)
     display_order = models.IntegerField(default=0)
@@ -400,21 +409,25 @@ class OrderItem(models.Model):
 # ==================== FRUIT MONITORING MODELS ====================
 
 class FruitType(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100, unique=True, verbose_name="Mushroom Type")
     scientific_name = models.CharField(max_length=200, blank=True)
     image = models.ImageField(upload_to="fruits/", blank=True, null=True)
     description = models.TextField(blank=True)
 
-    optimal_temp_min = models.DecimalField(max_digits=5, decimal_places=2, default=2.0)
-    optimal_temp_max = models.DecimalField(max_digits=5, decimal_places=2, default=8.0)
-    optimal_humidity_min = models.DecimalField(max_digits=5, decimal_places=2, default=85.0)
-    optimal_humidity_max = models.DecimalField(max_digits=5, decimal_places=2, default=95.0)
-    optimal_light_max = models.IntegerField(default=100)
-    optimal_co2_max = models.IntegerField(default=400)
+    optimal_temp_min = models.DecimalField(max_digits=5, decimal_places=2, default=2.0, help_text="Min Temp (°C)")
+    optimal_temp_max = models.DecimalField(max_digits=5, decimal_places=2, default=5.0, help_text="Max Temp (°C)")
+    optimal_humidity_min = models.DecimalField(max_digits=5, decimal_places=2, default=90.0, help_text="Min Humidity (%)")
+    optimal_humidity_max = models.DecimalField(max_digits=5, decimal_places=2, default=95.0, help_text="Max Humidity (%)")
+    optimal_light_max = models.IntegerField(default=50, help_text="Max Light (lux)")
+    optimal_co2_max = models.IntegerField(default=800, help_text="Max CO2 (ppm)")
 
-    shelf_life_days = models.IntegerField(default=7)
-    ethylene_sensitive = models.BooleanField(default=False)
-    chilling_sensitive = models.BooleanField(default=True)
+    shelf_life_days = models.IntegerField(default=5, help_text="Average shelf life in days")
+    ethylene_sensitive = models.BooleanField(default=True)
+    chilling_sensitive = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name = "Mushroom Type"
+        verbose_name_plural = "Mushroom Types"
 
     def __str__(self):
         return self.name
@@ -447,10 +460,10 @@ class FruitBatch(models.Model):
         ("discarded", "Discarded"),
     ]
 
-    batch_number = models.CharField(max_length=50, unique=True)
-    fruit_type = models.ForeignKey(FruitType, on_delete=models.CASCADE)
+    batch_number = models.CharField(max_length=50, unique=True, verbose_name="Mushroom Batch ID")
+    fruit_type = models.ForeignKey(FruitType, on_delete=models.CASCADE, verbose_name="Mushroom Type")
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=True)
-    quantity = models.IntegerField(default=0)
+    quantity = models.IntegerField(default=0, help_text="Quantity in kg or units")
     arrival_date = models.DateTimeField(default=timezone.now)
     expected_expiry = models.DateTimeField()
     supplier = models.CharField(max_length=200, blank=True)
@@ -467,7 +480,8 @@ class FruitBatch(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name_plural = "Fruit Batches"
+        verbose_name = "Mushroom Batch"
+        verbose_name_plural = "Mushroom Batches"
 
     def __str__(self):
         return f"{self.batch_number} - {self.fruit_type.name}"
@@ -489,21 +503,21 @@ class FruitQualityReading(models.Model):
         ("Rotten", "Rotten"),
     ]
 
-    fruit_batch = models.ForeignKey(FruitBatch, on_delete=models.CASCADE, related_name="quality_readings")
+    fruit_batch = models.ForeignKey(FruitBatch, on_delete=models.CASCADE, related_name="quality_readings", verbose_name="Mushroom Batch")
     timestamp = models.DateTimeField(auto_now_add=True)
 
-    temperature = models.DecimalField(max_digits=5, decimal_places=2)
-    humidity = models.DecimalField(max_digits=5, decimal_places=2)
+    temperature = models.DecimalField(max_digits=5, decimal_places=2, help_text="Temp in °C")
+    humidity = models.DecimalField(max_digits=5, decimal_places=2, help_text="Humidity %")
     light_intensity = models.DecimalField(max_digits=10, decimal_places=2, help_text="Light in lux")
-    co2_level = models.IntegerField()
+    co2_level = models.IntegerField(help_text="CO2 in ppm")
 
-    actual_class = models.CharField(max_length=20, choices=QUALITY_CLASSES, blank=True)
-    predicted_class = models.CharField(max_length=20, choices=QUALITY_CLASSES)
+    actual_class = models.CharField(max_length=20, choices=QUALITY_CLASSES, blank=True, verbose_name="Actual Quality")
+    predicted_class = models.CharField(max_length=20, choices=QUALITY_CLASSES, verbose_name="AI Predicted Quality")
     confidence_score = models.DecimalField(max_digits=5, decimal_places=2, default=0.0)
 
     ethylene_level = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True, help_text="Ethylene in ppm")
     weight_loss = models.DecimalField(max_digits=5, decimal_places=2, default=0.0, help_text="Weight loss percentage")
-    firmness = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True, help_text="Firmness in N")
+    firmness = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True, help_text="Firmness index")
 
     model_used = models.CharField(max_length=50, blank=True)
     model_version = models.CharField(max_length=20, blank=True)
@@ -511,6 +525,8 @@ class FruitQualityReading(models.Model):
     notes = models.TextField(blank=True)
 
     class Meta:
+        verbose_name = "Mushroom Quality Reading"
+        verbose_name_plural = "Mushroom Quality Readings"
         ordering = ["-timestamp"]
         indexes = [models.Index(fields=["fruit_batch", "timestamp"])]
 
@@ -689,8 +705,8 @@ class Payment(models.Model):
     ]
 
     CURRENCIES = [
-        ("TZS", "Tanzanian Shilling"),
         ("RWF", "Rwandan Franc"),
+        ("TZS", "Tanzanian Shilling"),
         ("UGX", "Ugandan Shilling"),
         ("KES", "Kenyan Shilling"),
         ("USD", "US Dollar"),
@@ -700,7 +716,7 @@ class Payment(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="payments")
     payment_method = models.CharField(max_length=20, choices=PAYMENT_METHODS)
     amount = models.DecimalField(max_digits=12, decimal_places=2)
-    currency = models.CharField(max_length=3, choices=CURRENCIES, default="TZS")
+    currency = models.CharField(max_length=3, choices=CURRENCIES, default="RWF")
     status = models.CharField(max_length=20, choices=PAYMENT_STATUS, default="pending")
 
     # ✅ FIX: must be NULLable, otherwise empty-string duplicates can crash with unique=True
