@@ -236,13 +236,13 @@ class CustomAdminActions:
 
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
-    list_display = ['profile_preview', 'username', 'email', 'user_type', 'is_active', 'is_staff', 'date_joined', 'action_buttons']
+    list_display = ['username', 'email', 'user_type', 'is_active', 'is_staff', 'date_joined', 'action_buttons']
     list_filter = ['user_type', 'is_active', 'is_staff', 'date_joined']
     search_fields = ['username', 'email', 'first_name', 'last_name', 'business_name']
-    readonly_fields = ['profile_preview', 'date_joined', 'last_login']
+    readonly_fields = ['date_joined', 'last_login']
     fieldsets = (
         ('Personal Info', {
-            'fields': ('username', 'email', 'first_name', 'last_name', 'phone', 'profile_picture', 'profile_preview')
+            'fields': ('username', 'email', 'first_name', 'last_name', 'phone', 'profile_picture')
         }),
         ('User Type & Permissions', {
             'fields': ('user_type', 'is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')
@@ -266,12 +266,6 @@ class CustomUserAdmin(admin.ModelAdmin):
     )
     actions = ['activate_users', 'deactivate_users', 'make_vendors', 'make_customers']
     
-    def profile_preview(self, obj):
-        if obj.profile_picture:
-            return format_html('<img src="{}" width="50" height="50" style="object-fit: cover; border-radius: 50%;" />', obj.profile_picture.url)
-        return format_html('<div style="width: 50px; height: 50px; background: #eee; border-radius: 50%; display: flex; align-items: center; justify-content: center;"><i class="fas fa-user text-muted"></i></div>')
-    profile_preview.short_description = 'Profile Preview'
-
     def action_buttons(self, obj):
         return format_html(
             '<a href="{}" class="button">View</a>',
@@ -302,22 +296,15 @@ class CustomUserAdmin(admin.ModelAdmin):
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
     extra = 1
-    fields = ['image', 'image_preview', 'alt_text', 'display_order', 'is_primary']
-    readonly_fields = ['image_preview']
-
-    def image_preview(self, obj):
-        if obj.image:
-            return format_html('<img src="{}" width="50" height="50" style="object-fit: cover;" />', obj.image.url)
-        return "-"
-    image_preview.short_description = 'Preview'
+    fields = ['image', 'alt_text', 'display_order', 'is_primary']
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['image_preview', 'mushroom_name', 'category', 'vendor', 'price_rwf', 'stock_quantity', 
+    list_display = ['mushroom_name', 'category', 'vendor', 'price_rwf', 'stock_quantity', 
                    'status', 'is_featured', 'created_at']
     list_filter = ['status', 'category', 'vendor', 'is_featured', 'created_at']
     search_fields = ['mushroom_name', 'description']
-    readonly_fields = ['image_preview', 'created_at', 'updated_at', 'published_at', 'views_count']
+    readonly_fields = ['created_at', 'updated_at', 'published_at', 'views_count']
     list_editable = ['status', 'is_featured']
     list_per_page = 20
     inlines = [ProductImageInline]
@@ -327,7 +314,7 @@ class ProductAdmin(admin.ModelAdmin):
             'fields': ('mushroom_name', 'slug', 'category', 'vendor')
         }),
         ('Mushroom Details', {
-            'fields': ('description', 'price', 'stock_quantity', 'weight', 'images', 'image_preview')
+            'fields': ('description', 'price', 'stock_quantity', 'weight', 'images')
         }),
         ('Status & Visibility', {
             'fields': ('status', 'is_featured', 'visibility')
@@ -337,12 +324,6 @@ class ProductAdmin(admin.ModelAdmin):
             'classes': ('collapse',),
         }),
     )
-
-    def image_preview(self, obj):
-        if obj.images:
-            return format_html('<img src="{}" width="100" height="100" style="object-fit: cover; border-radius: 8px;" />', obj.images.url)
-        return "No Image"
-    image_preview.short_description = 'Main Image Preview'
 
     def price_rwf(self, obj):
         if obj.price is not None:
@@ -362,18 +343,11 @@ except NotRegistered:
 
 @admin.register(ProductCategory)
 class ProductCategoryAdmin(admin.ModelAdmin):
-    list_display = ['image_preview', 'name', 'slug', 'product_count', 'is_active', 'display_order']
+    list_display = ['name', 'slug', 'product_count', 'is_active', 'display_order']
     list_filter = ['is_active', 'parent']
     search_fields = ['name', 'description']
     list_editable = ['display_order', 'is_active']
     prepopulated_fields = {'slug': ('name',)}
-    readonly_fields = ['image_preview']
-
-    def image_preview(self, obj):
-        if obj.image:
-            return format_html('<img src="{}" width="50" height="50" style="object-fit: cover; border-radius: 4px;" />', obj.image.url)
-        return "-"
-    image_preview.short_description = 'Preview'
 
     def product_count(self, obj):
         return obj.products.count()
@@ -381,23 +355,17 @@ class ProductCategoryAdmin(admin.ModelAdmin):
 
 @admin.register(ProductImage)
 class ProductImageAdmin(admin.ModelAdmin):
-    list_display = ['product', 'image_preview', 'alt_text', 'display_order', 'is_primary']
+    list_display = ['product', 'image', 'alt_text', 'display_order', 'is_primary']
     list_filter = ['is_primary', 'product']
-    search_fields = ['product__name', 'alt_text']
+    search_fields = ['product__mushroom_name', 'alt_text']
     list_editable = ['display_order', 'is_primary']  # These are in list_display
-    
-    def image_preview(self, obj):
-        if obj.image:
-            return format_html('<img src="{}" width="50" height="50" />', obj.image.url)
-        return "-"
-    image_preview.short_description = 'Preview'
 
 @admin.register(ProductReview)
 class ProductReviewAdmin(admin.ModelAdmin):
     list_display = ['product', 'user', 'rating_stars', 'title', 'is_approved', 
                    'is_verified_purchase', 'created_at']
     list_filter = ['rating', 'is_approved', 'is_verified_purchase', 'created_at']
-    search_fields = ['product__name', 'user__username', 'title', 'comment']
+    search_fields = ['product__mushroom_name', 'user__username', 'title', 'comment']
     list_editable = ['is_approved']  # This is in list_display
     readonly_fields = ['created_at', 'updated_at']
     actions = ['approve_reviews', 'disapprove_reviews']
@@ -423,14 +391,14 @@ class ProductReviewAdmin(admin.ModelAdmin):
 class WishlistAdmin(admin.ModelAdmin):
     list_display = ['user', 'product', 'added_at']
     list_filter = ['added_at']
-    search_fields = ['user__username', 'product__name']
+    search_fields = ['user__username', 'product__mushroom_name']
     readonly_fields = ['added_at']
 
 @admin.register(Cart)
 class CartAdmin(admin.ModelAdmin):
     list_display = ['user', 'product', 'quantity', 'total_price', 'added_at']
     list_filter = ['added_at']
-    search_fields = ['user__username', 'product__name']
+    search_fields = ['user__username', 'product__mushroom_name']
     readonly_fields = ['added_at', 'updated_at']
     
     def total_price(self, obj):
@@ -476,7 +444,7 @@ class OrderAdmin(admin.ModelAdmin):
 @admin.register(OrderItem)
 class OrderItemAdmin(admin.ModelAdmin):
     list_display = ['order', 'product', 'quantity', 'price', 'total_price']
-    search_fields = ['order__order_number', 'product__name']
+    search_fields = ['order__order_number', 'product__mushroom_name']
     
     def total_price(self, obj):
         return f"{obj.total_price:,.0f} RWF" if obj.total_price else "0 RWF"
@@ -517,18 +485,11 @@ class CurrencyExchangeRateAdmin(admin.ModelAdmin):
 
 @admin.register(FruitType)
 class FruitTypeAdmin(admin.ModelAdmin):
-    list_display = ['image_preview', 'name', 'scientific_name', 'optimal_temp_range', 'optimal_humidity_range', 
+    list_display = ['name', 'scientific_name', 'optimal_temp_range', 'optimal_humidity_range', 
                    'shelf_life_days', 'batch_count']
     list_filter = ['ethylene_sensitive', 'chilling_sensitive']
     search_fields = ['name', 'scientific_name']
     list_editable = ['shelf_life_days']  # This is in list_display
-    readonly_fields = ['image_preview']
-    
-    def image_preview(self, obj):
-        if obj.image:
-            return format_html('<img src="{}" width="50" height="50" style="object-fit: cover; border-radius: 4px;" />', obj.image.url)
-        return "-"
-    image_preview.short_description = 'Preview'
     
     def optimal_temp_range(self, obj):
         return f"{obj.optimal_temp_min} - {obj.optimal_temp_max}°C"
@@ -639,7 +600,7 @@ class RealTimeSensorDataAdmin(admin.ModelAdmin):
     list_display = ['product', 'fruit_batch', 'sensor_type', 'value_with_unit', 
                    'location', 'recorded_at']
     list_filter = ['sensor_type', 'location', 'recorded_at']
-    search_fields = ['product__name', 'fruit_batch__batch_number']
+    search_fields = ['product__mushroom_name', 'fruit_batch__batch_number']
     readonly_fields = ['recorded_at']
     
     def value_with_unit(self, obj):
@@ -682,7 +643,7 @@ class ProductAlertAdmin(admin.ModelAdmin):
     list_display = ['product', 'alert_type_display', 'severity_badge', 'is_resolved', 
                    'created_at', 'resolved_at']
     list_filter = ['alert_type', 'severity', 'is_resolved', 'created_at']
-    search_fields = ['product__name', 'message']
+    search_fields = ['product__mushroom_name', 'message']
     readonly_fields = ['created_at', 'resolved_at']
     list_editable = ['is_resolved']  # This is in list_display
     actions = ['mark_resolved', 'mark_unresolved']
@@ -761,18 +722,11 @@ class SiteInfoAdmin(admin.ModelAdmin):
 
 @admin.register(Service)
 class ServiceAdmin(admin.ModelAdmin):
-    list_display = ['image_preview', 'name', 'slug', 'display_order', 'is_active', 'created_at']
+    list_display = ['name', 'slug', 'display_order', 'is_active', 'created_at']
     list_filter = ['is_active', 'created_at']
     search_fields = ['name', 'description']
     prepopulated_fields = {'slug': ('name',)}
     list_editable = ['display_order', 'is_active']  # These are in list_display
-    readonly_fields = ['image_preview']
-    
-    def image_preview(self, obj):
-        if obj.image:
-            return format_html('<img src="{}" width="50" height="50" style="object-fit: cover; border-radius: 4px;" />', obj.image.url)
-        return "-"
-    image_preview.short_description = 'Preview'
 
 @admin.register(Testimonial)
 class TestimonialAdmin(admin.ModelAdmin):

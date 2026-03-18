@@ -383,15 +383,15 @@
     .products-hero h1 {
         font-size: 2.5rem;
     }
-    
+
     .products-hero {
         padding: 60px 0 30px;
     }
-    
+
     .product-image {
         height: 200px;
     }
-    
+
     .filter-section {
         padding: 20px 0;
     }
@@ -400,57 +400,51 @@
 {% endblock %}
 
 {% block content %}
-<!-- Hero Section -->
 <section class="products-hero">
     <div class="container">
         <h1>{% trans "Our Products" %}</h1>
         <p>{% trans "Discover amazing products from trusted vendors. Quality guaranteed with every purchase." %}</p>
-        
-        <!-- Add Product Button for Vendors and Admins -->
+
         <div class="text-center mt-4">
             {% if user.is_authenticated and user.is_vendor %}
-            <div class="vendor-actions">
-                <a href="{% url 'bika:vendor_add_product' %}" class="btn add-product-btn text-white">
-                    <i class="fas fa-plus me-2"></i>{% trans "Add New Product" %}
-                </a>
-                <a href="{% url 'bika:vendor_dashboard' %}" class="btn btn-outline-light ms-2">
-                    <i class="fas fa-tachometer-alt me-2"></i>{% trans "Vendor Dashboard" %}
-                </a>
-            </div>
+                <div class="vendor-actions">
+                    <a href="{% url 'bika:vendor_add_product' %}" class="btn add-product-btn text-white">
+                        <i class="fas fa-plus me-2"></i>{% trans "Add New Product" %}
+                    </a>
+                    <a href="{% url 'bika:vendor_dashboard' %}" class="btn btn-outline-light ms-2">
+                        <i class="fas fa-tachometer-alt me-2"></i>{% trans "Vendor Dashboard" %}
+                    </a>
+                </div>
             {% elif user.is_authenticated and user.is_staff %}
-            <div class="admin-actions">
-                <a href="{% url 'bika:vendor_add_product' %}" class="btn admin-add-product-btn">
-                    <i class="fas fa-plus me-2"></i>{% trans "Add Product as Admin" %}
-                </a>
-                <a href="{% url 'admin:index' %}" class="btn btn-outline-light ms-2">
-                    <i class="fas fa-cog me-2"></i>{% trans "Admin Panel" %}
-                </a>
-            </div>
+                <div class="admin-actions">
+                    <a href="{% url 'bika:vendor_add_product' %}" class="btn admin-add-product-btn">
+                        <i class="fas fa-plus me-2"></i>{% trans "Add Product as Admin" %}
+                    </a>
+                    <a href="{% url 'admin:index' %}" class="btn btn-outline-light ms-2">
+                        <i class="fas fa-cog me-2"></i>{% trans "Admin Panel" %}
+                    </a>
+                </div>
             {% elif not user.is_authenticated %}
-            <div class="vendor-actions">
-                <a href="{% url 'bika:vendor_register' %}" class="btn btn-success">
-                    <i class="fas fa-store me-2"></i>{% trans "Become a Vendor" %}
-                </a>
-            </div>
+                <div class="vendor-actions">
+                    <a href="{% url 'bika:vendor_register' %}" class="btn btn-success">
+                        <i class="fas fa-store me-2"></i>{% trans "Become a Vendor" %}
+                    </a>
+                </div>
             {% endif %}
         </div>
     </div>
 </section>
 
-<!-- Filter Section -->
 <section class="filter-section">
     <div class="container">
         <div class="row">
-            <!-- Sidebar Filters -->
             <div class="col-lg-3">
                 <div class="filter-card">
-                    <!-- Search -->
                     <div class="search-box">
                         <i class="fas fa-search search-icon"></i>
                         <input type="text" class="form-control" placeholder="{% trans 'Search products...' %}" id="searchInput" value="{{ query }}">
                     </div>
 
-                    <!-- Categories -->
                     <h5 class="filter-title">
                         <i class="fas fa-tags"></i>{% trans "Categories" %}
                     </h5>
@@ -462,17 +456,16 @@
                             </a>
                         </li>
                         {% for category in categories %}
-                        <li class="category-item">
-                            <a href="{% url 'bika:products_by_category' category.slug %}" class="category-link {% if current_category.slug == category.slug %}active{% endif %}">
-                                {{ category.name }}
-                                <span class="category-count">{{ category.product_count }}</span>
-                            </a>
-                        </li>
+                            <li class="category-item">
+                                <a href="{% url 'bika:products_by_category' category.slug %}" class="category-link {% if current_category and current_category.slug == category.slug %}active{% endif %}">
+                                    {{ category.name }}
+                                    <span class="category-count">{{ category.product_count }}</span>
+                                </a>
+                            </li>
                         {% endfor %}
                     </ul>
                 </div>
 
-                <!-- Vendor Info -->
                 <div class="filter-card">
                     <h5 class="filter-title">
                         <i class="fas fa-store"></i>{% trans "Marketplace" %}
@@ -483,7 +476,7 @@
                     </div>
                     <div class="d-flex justify-content-between text-muted mb-2">
                         <span>{% trans "Active Vendors:" %}</span>
-                        <strong>{{ active_vendors }}</strong>
+                        <strong>{{ active_vendors|default:"0" }}</strong>
                     </div>
                     <div class="d-flex justify-content-between text-muted">
                         <span>{% trans "Categories:" %}</span>
@@ -491,44 +484,41 @@
                     </div>
                 </div>
 
-                <!-- Quick Actions -->
                 {% if user.is_authenticated %}
-                <div class="filter-card">
-                    <h5 class="filter-title">
-                        <i class="fas fa-rocket"></i>{% trans "Quick Actions" %}
-                    </h5>
-                    <div class="d-grid gap-2">
-                        {% if user.is_vendor or user.is_staff %}
-                        <a href="{% url 'bika:vendor_add_product' %}" class="btn btn-success btn-sm">
-                            <i class="fas fa-plus me-1"></i>{% trans "Add Product" %}
-                        </a>
-                        {% endif %}
-                        
-                        {% if user.is_vendor %}
-                        <a href="{% url 'bika:vendor_product_list' %}" class="btn btn-outline-primary btn-sm">
-                            <i class="fas fa-list me-1"></i>{% trans "My Products" %}
-                        </a>
-                        <a href="{% url 'bika:vendor_dashboard' %}" class="btn btn-outline-secondary btn-sm">
-                            <i class="fas fa-tachometer-alt me-1"></i>{% trans "Dashboard" %}
-                        </a>
-                        {% endif %}
-                        
-                        {% if user.is_staff %}
-                        <a href="{% url 'admin:index' %}" class="btn btn-outline-warning btn-sm">
-                            <i class="fas fa-cog me-1"></i>{% trans "Admin Panel" %}
-                        </a>
-                        <a href="/admin/bika/product/" class="btn btn-outline-info btn-sm">
-                            <i class="fas fa-cubes me-1"></i>{% trans "Manage Products" %}
-                        </a>
-                        {% endif %}
+                    <div class="filter-card">
+                        <h5 class="filter-title">
+                            <i class="fas fa-rocket"></i>{% trans "Quick Actions" %}
+                        </h5>
+                        <div class="d-grid gap-2">
+                            {% if user.is_vendor or user.is_staff %}
+                                <a href="{% url 'bika:vendor_add_product' %}" class="btn btn-success btn-sm">
+                                    <i class="fas fa-plus me-1"></i>{% trans "Add Product" %}
+                                </a>
+                            {% endif %}
+
+                            {% if user.is_vendor %}
+                                <a href="{% url 'bika:vendor_product_list' %}" class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-list me-1"></i>{% trans "My Products" %}
+                                </a>
+                                <a href="{% url 'bika:vendor_dashboard' %}" class="btn btn-outline-secondary btn-sm">
+                                    <i class="fas fa-tachometer-alt me-1"></i>{% trans "Dashboard" %}
+                                </a>
+                            {% endif %}
+
+                            {% if user.is_staff %}
+                                <a href="{% url 'admin:index' %}" class="btn btn-outline-warning btn-sm">
+                                    <i class="fas fa-cog me-1"></i>{% trans "Admin Panel" %}
+                                </a>
+                                <a href="/admin/bika/product/" class="btn btn-outline-info btn-sm">
+                                    <i class="fas fa-cubes me-1"></i>{% trans "Manage Products" %}
+                                </a>
+                            {% endif %}
+                        </div>
                     </div>
-                </div>
                 {% endif %}
             </div>
 
-            <!-- Products Grid -->
             <div class="col-lg-9">
-                <!-- Results Header -->
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div class="results-info">
                         {% if products %}
@@ -541,18 +531,18 @@
                             {% endif %}
                         {% endif %}
                     </div>
+
                     <div class="d-flex gap-2">
-                        <!-- Add Product Button for Admins and Vendors -->
                         {% if user.is_authenticated and user.is_staff %}
-                        <a href="{% url 'bika:vendor_add_product' %}" class="btn admin-add-product-btn btn-sm">
-                            <i class="fas fa-plus me-1"></i>{% trans "Add Product" %}
-                        </a>
+                            <a href="{% url 'bika:vendor_add_product' %}" class="btn admin-add-product-btn btn-sm">
+                                <i class="fas fa-plus me-1"></i>{% trans "Add Product" %}
+                            </a>
                         {% elif user.is_authenticated and user.is_vendor %}
-                        <a href="{% url 'bika:vendor_add_product' %}" class="btn btn-success btn-sm">
-                            <i class="fas fa-plus me-1"></i>{% trans "Add Product" %}
-                        </a>
+                            <a href="{% url 'bika:vendor_add_product' %}" class="btn btn-success btn-sm">
+                                <i class="fas fa-plus me-1"></i>{% trans "Add Product" %}
+                            </a>
                         {% endif %}
-                        
+
                         <div class="dropdown">
                             <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
                                 <i class="fas fa-sort me-2"></i>{% trans "Sort By" %}
@@ -567,179 +557,189 @@
                     </div>
                 </div>
 
-                <!-- Products Grid -->
                 {% if products %}
-                <div class="row">
-                    {% for product in products %}
-                    <div class="col-xl-4 col-lg-6 col-md-6 mb-4">
-                        <div class="product-card">
-                            <!-- Product Image -->
-                            <div class="product-image">
-                                {% if product.product_images.first %}
-                                <img src="{{ product.product_images.first.image.url }}" alt="{{ product.name }}" class="img-fluid">
-                                {% else %}
-                                <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-light">
-                                    <i class="fas fa-image fa-3x text-muted"></i>
-                                </div>
-                                {% endif %}
-                                
-                                <!-- Badges -->
-                                <div class="product-badge">
-                                    {% if product.is_featured %}
-                                    <span class="badge bg-warning">{% trans "Featured" %}</span>
-                                    {% endif %}
-                                    {% if product.discount_percentage > 0 %}
-                                    <span class="badge bg-danger">{{ product.discount_percentage }}% {% trans "OFF" %}</span>
-                                    {% endif %}
-                                </div>
-
-                                <!-- Quick Actions -->
-                                <div class="product-actions">
-                                    <button class="btn btn-light btn-sm rounded-circle" title="{% trans 'Add to Wishlist' %}">
-                                        <i class="far fa-heart"></i>
-                                    </button>
-                                    <!-- Admin/Vendor Edit Button -->
-                                    {% if user.is_staff or user == product.vendor %}
-                                    <a href="{% url 'bika:vendor_edit_product' product.id %}" class="btn btn-light btn-sm rounded-circle" title="{% trans 'Edit Product' %}">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    {% endif %}
-                                </div>
-                            </div>
-
-                            <!-- Product Info -->
-                            <div class="product-info">
-                                <!-- Category -->
-                                <div class="product-category">
-                                    {{ product.category.name }}
-                                </div>
-
-                                <!-- Title -->
-                                <h3 class="product-title">
-                                    <a href="{% url 'bika:product_detail' product.slug %}">{{ product.name }}</a>
-                                </h3>
-
-                                <!-- Description -->
-                                <p class="product-description">
-                                    {{ product.short_description|default:product.description|truncatewords:20 }}
-                                </p>
-
-                                <!-- Price -->
-                                <div class="product-price">
-                                    <span class="current-price">{{ product.price }} RWF</span>
-                                    {% if product.compare_price %}
-                                    <span class="original-price">{{ product.compare_price }} RWF</span>
-                                    {% endif %}
-                                </div>
-
-                                <!-- Meta Information -->
-                                <div class="product-meta">
-                                    <div class="stock-status">
-                                        {% if product.is_in_stock %}
-                                            {% if product.is_low_stock %}
-                                            <i class="fas fa-exclamation-triangle stock-low"></i>
-                                            <span class="stock-low">{% trans "Low Stock" %} ({{ product.stock_quantity }})</span>
+                    <div class="row">
+                        {% for product in products %}
+                            <div class="col-xl-4 col-lg-6 col-md-6 mb-4">
+                                <div class="product-card">
+                                    <div class="product-image">
+                                        {% with first_image=product.product_images.first %}
+                                            {% if first_image and first_image.image %}
+                                                <img src="{{ first_image.image.url }}" alt="{{ product.mushroom_name }}" class="img-fluid">
                                             {% else %}
-                                            <i class="fas fa-check-circle stock-in"></i>
-                                            <span class="stock-in">{% trans "In Stock" %}</span>
+                                                <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-light">
+                                                    <i class="fas fa-image fa-3x text-muted"></i>
+                                                </div>
                                             {% endif %}
-                                        {% else %}
-                                        <i class="fas fa-times-circle stock-out"></i>
-                                        <span class="stock-out">{% trans "Out of Stock" %}</span>
-                                        {% endif %}
-                                    </div>
-                                    <div class="vendor-info">
-                                        <div class="vendor-avatar">
-                                            {{ product.vendor.username|first|upper }}
+                                        {% endwith %}
+
+                                        <div class="product-badge">
+                                            {% if product.is_featured %}
+                                                <span class="badge bg-warning">{% trans "Featured" %}</span>
+                                            {% endif %}
+                                            {% if product.discount_percentage > 0 %}
+                                                <span class="badge bg-danger">{{ product.discount_percentage }}% {% trans "OFF" %}</span>
+                                            {% endif %}
                                         </div>
-                                        <span>{{ product.vendor.business_name|default:product.vendor.username }}</span>
+
+                                        <div class="product-actions">
+                                            <button class="btn btn-light btn-sm rounded-circle" title="{% trans 'Add to Wishlist' %}" type="button">
+                                                <i class="far fa-heart"></i>
+                                            </button>
+                                            {% if user.is_staff or user == product.vendor %}
+                                                <a href="{% url 'bika:vendor_edit_product' product.id %}" class="btn btn-light btn-sm rounded-circle" title="{% trans 'Edit Product' %}">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+
+                                    <div class="product-info">
+                                        <div class="product-category">
+                                            {% if product.category %}
+                                                {{ product.category.name }}
+                                            {% else %}
+                                                {% trans "Uncategorized" %}
+                                            {% endif %}
+                                        </div>
+
+                                        <h3 class="product-title">
+                                            <a href="{% url 'bika:product_detail' product.slug %}">{{ product.mushroom_name }}</a>
+                                        </h3>
+
+                                        <p class="product-description">
+                                            {{ product.short_description|default:product.description|truncatewords:20 }}
+                                        </p>
+
+                                        <div class="product-price">
+                                            <span class="current-price">{{ product.price }} RWF</span>
+                                            {% if product.compare_price %}
+                                                <span class="original-price">{{ product.compare_price }} RWF</span>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="product-meta">
+                                            <div class="stock-status">
+                                                {% if product.is_in_stock %}
+                                                    {% if product.is_low_stock %}
+                                                        <i class="fas fa-exclamation-triangle stock-low"></i>
+                                                        <span class="stock-low">{% trans "Low Stock" %} ({{ product.stock_quantity }})</span>
+                                                    {% else %}
+                                                        <i class="fas fa-check-circle stock-in"></i>
+                                                        <span class="stock-in">{% trans "In Stock" %}</span>
+                                                    {% endif %}
+                                                {% else %}
+                                                    <i class="fas fa-times-circle stock-out"></i>
+                                                    <span class="stock-out">{% trans "Out of Stock" %}</span>
+                                                {% endif %}
+                                            </div>
+
+                                            <div class="vendor-info">
+                                                <div class="vendor-avatar">
+                                                    {% if product.vendor and product.vendor.username %}
+                                                        {{ product.vendor.username|first|upper }}
+                                                    {% else %}
+                                                        ?
+                                                    {% endif %}
+                                                </div>
+                                                <span>
+                                                    {% if product.vendor %}
+                                                        {% if product.vendor.business_name %}
+                                                            {{ product.vendor.business_name }}
+                                                        {% elif product.vendor.username %}
+                                                            {{ product.vendor.username }}
+                                                        {% else %}
+                                                            {% trans "Unknown Vendor" %}
+                                                        {% endif %}
+                                                    {% else %}
+                                                        {% trans "Unknown Vendor" %}
+                                                    {% endif %}
+                                                </span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <div class="empty-state-icon">
+                            <i class="fas fa-box-open"></i>
+                        </div>
+                        <h3>{% trans "No Products Found" %}</h3>
+
+                        {% if query %}
+                            <p>{% blocktrans with q=query %}We couldn't find any products matching "{{ q }}". Try adjusting your search terms or browse all categories.{% endblocktrans %}</p>
+                        {% elif current_category %}
+                            <p>{% blocktrans with category=current_category.name %}There are no products available in the "{{ category }}" category yet. Check back soon or browse other categories.{% endblocktrans %}</p>
+                        {% else %}
+                            <p>{% trans "No products are currently available in our marketplace. Vendors will be adding products soon!" %}</p>
+                        {% endif %}
+
+                        <div class="mt-4">
+                            {% if user.is_authenticated and user.is_staff %}
+                                <a href="{% url 'bika:vendor_add_product' %}" class="btn admin-add-product-btn btn-lg me-3">
+                                    <i class="fas fa-plus me-2"></i>{% trans "Add Product as Admin" %}
+                                </a>
+                            {% elif user.is_authenticated and user.is_vendor %}
+                                <a href="{% url 'bika:vendor_add_product' %}" class="btn btn-primary btn-lg me-3">
+                                    <i class="fas fa-plus me-2"></i>{% trans "Add Your First Product" %}
+                                </a>
+                            {% elif not user.is_authenticated %}
+                                <a href="{% url 'bika:vendor_register' %}" class="btn btn-success btn-lg me-3">
+                                    <i class="fas fa-store me-2"></i>{% trans "Become a Vendor" %}
+                                </a>
+                            {% endif %}
+                            <a href="{% url 'bika:product_list' %}" class="btn btn-outline-primary btn-lg">
+                                <i class="fas fa-sync me-2"></i>{% trans "View All Products" %}
+                            </a>
                         </div>
                     </div>
-                    {% endfor %}
-                </div>
-                {% else %}
-                <!-- Empty State -->
-                <div class="empty-state">
-                    <div class="empty-state-icon">
-                        <i class="fas fa-box-open"></i>
-                    </div>
-                    <h3>{% trans "No Products Found" %}</h3>
-                    
-                    {% if query %}
-                    <p>{% blocktrans with q=query %}We couldn't find any products matching "{{ q }}". Try adjusting your search terms or browse all categories.{% endblocktrans %}</p>
-                    {% elif current_category %}
-                    <p>{% blocktrans with category=current_category.name %}There are no products available in the "{{ category }}" category yet. Check back soon or browse other categories.{% endblocktrans %}</p>
-                    {% else %}
-                    <p>{% trans "No products are currently available in our marketplace. Vendors will be adding products soon!" %}</p>
-                    {% endif %}
-
-                    <div class="mt-4">
-                        {% if user.is_authenticated and user.is_staff %}
-                        <a href="{% url 'bika:vendor_add_product' %}" class="btn admin-add-product-btn btn-lg me-3">
-                            <i class="fas fa-plus me-2"></i>{% trans "Add Product as Admin" %}
-                        </a>
-                        {% elif user.is_authenticated and user.is_vendor %}
-                        <a href="{% url 'bika:vendor_add_product' %}" class="btn btn-primary btn-lg me-3">
-                            <i class="fas fa-plus me-2"></i>{% trans "Add Your First Product" %}
-                        </a>
-                        {% elif not user.is_authenticated %}
-                        <a href="{% url 'bika:vendor_register' %}" class="btn btn-success btn-lg me-3">
-                            <i class="fas fa-store me-2"></i>{% trans "Become a Vendor" %}
-                        </a>
-                        {% endif %}
-                        <a href="{% url 'bika:product_list' %}" class="btn btn-outline-primary btn-lg">
-                            <i class="fas fa-sync me-2"></i>{% trans "View All Products" %}
-                        </a>
-                    </div>
-                </div>
                 {% endif %}
 
-                <!-- Pagination -->
                 {% if products.has_other_pages %}
-                <nav aria-label="{% trans 'Products pagination' %}">
-                    <ul class="pagination">
-                        {% if products.has_previous %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ products.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if current_category %}&category={{ current_category.slug }}{% endif %}" aria-label="{% trans 'Previous' %}">
-                                <i class="fas fa-chevron-left"></i>
-                            </a>
-                        </li>
-                        {% else %}
-                        <li class="page-item disabled">
-                            <span class="page-link"><i class="fas fa-chevron-left"></i></span>
-                        </li>
-                        {% endif %}
-
-                        {% for i in products.paginator.page_range %}
-                            {% if products.number == i %}
-                            <li class="page-item active">
-                                <span class="page-link">{{ i }}</span>
-                            </li>
-                            {% else %}
-                                {% if i <= products.number|add:3 and i >= products.number|add:-3 %}
+                    <nav aria-label="{% trans 'Products pagination' %}">
+                        <ul class="pagination">
+                            {% if products.has_previous %}
                                 <li class="page-item">
-                                    <a class="page-link" href="?page={{ i }}{% if query %}&q={{ query }}{% endif %}{% if current_category %}&category={{ current_category.slug }}{% endif %}">{{ i }}</a>
+                                    <a class="page-link" href="?page={{ products.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if current_category %}&category={{ current_category.slug }}{% endif %}" aria-label="{% trans 'Previous' %}">
+                                        <i class="fas fa-chevron-left"></i>
+                                    </a>
                                 </li>
-                                {% endif %}
+                            {% else %}
+                                <li class="page-item disabled">
+                                    <span class="page-link"><i class="fas fa-chevron-left"></i></span>
+                                </li>
                             {% endif %}
-                        {% endfor %}
 
-                        {% if products.has_next %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ products.next_page_number }}{% if query %}&q={{ query }}{% endif %}{% if current_category %}&category={{ current_category.slug }}{% endif %}" aria-label="{% trans 'Next' %}">
-                                <i class="fas fa-chevron-right"></i>
-                            </a>
-                        </li>
-                        {% else %}
-                        <li class="page-item disabled">
-                            <span class="page-link"><i class="fas fa-chevron-right"></i></span>
-                        </li>
-                        {% endif %}
-                    </ul>
-                </nav>
+                            {% for i in products.paginator.page_range %}
+                                {% if products.number == i %}
+                                    <li class="page-item active">
+                                        <span class="page-link">{{ i }}</span>
+                                    </li>
+                                {% else %}
+                                    {% if i <= products.number|add:3 and i >= products.number|add:-3 %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ i }}{% if query %}&q={{ query }}{% endif %}{% if current_category %}&category={{ current_category.slug }}{% endif %}">{{ i }}</a>
+                                        </li>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+
+                            {% if products.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ products.next_page_number }}{% if query %}&q={{ query }}{% endif %}{% if current_category %}&category={{ current_category.slug }}{% endif %}" aria-label="{% trans 'Next' %}">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled">
+                                    <span class="page-link"><i class="fas fa-chevron-right"></i></span>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
                 {% endif %}
             </div>
         </div>
@@ -750,49 +750,44 @@
 {% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Search functionality
     const searchInput = document.getElementById('searchInput');
     let searchTimeout;
-    
-    searchInput.addEventListener('input', function() {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(() => {
-            const query = this.value.trim();
-            if (query.length > 2 || query.length === 0) {
-                window.location.href = `{% url 'bika:product_list' %}?q=${encodeURIComponent(query)}`;
-            }
-        }, 500);
-    });
 
-    // Add to wishlist functionality
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                const query = this.value.trim();
+                if (query.length > 2 || query.length === 0) {
+                    window.location.href = `{% url 'bika:product_list' %}?q=${encodeURIComponent(query)}`;
+                }
+            }, 500);
+        });
+    }
+
     const wishlistButtons = document.querySelectorAll('.product-actions .btn');
     wishlistButtons.forEach(button => {
         button.addEventListener('click', function(e) {
-            // Don't prevent default for edit buttons (they are links)
             if (this.getAttribute('href')) return;
-            
+
             e.preventDefault();
             const icon = this.querySelector('i');
-            
+
             if (icon.classList.contains('far')) {
                 icon.classList.remove('far');
                 icon.classList.add('fas', 'text-danger');
                 this.title = '{% trans "Remove from Wishlist" %}';
-                // Here you would typically make an AJAX call to add to wishlist
                 showToast('{% trans "Product added to wishlist!" %}', 'success');
             } else {
                 icon.classList.remove('fas', 'text-danger');
                 icon.classList.add('far');
                 this.title = '{% trans "Add to Wishlist" %}';
-                // Here you would typically make an AJAX call to remove from wishlist
                 showToast('{% trans "Product removed from wishlist!" %}', 'info');
             }
         });
     });
 
-    // Toast notification function
     function showToast(message, type = 'info') {
-        // Create toast element
         const toast = document.createElement('div');
         toast.className = `toast align-items-center text-white bg-${type} border-0`;
         toast.innerHTML = `
@@ -801,28 +796,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
             </div>
         `;
-        
-        // Add to toast container
+
         let toastContainer = document.querySelector('.toast-container');
         if (!toastContainer) {
             toastContainer = document.createElement('div');
             toastContainer.className = 'toast-container position-fixed top-0 end-0 p-3';
             document.body.appendChild(toastContainer);
         }
-        
+
         toastContainer.appendChild(toast);
-        
-        // Show toast
+
         const bsToast = new bootstrap.Toast(toast);
         bsToast.show();
-        
-        // Remove from DOM after hide
+
         toast.addEventListener('hidden.bs.toast', () => {
             toast.remove();
         });
     }
 
-    // Product image loading error handling
     const productImages = document.querySelectorAll('.product-image img');
     productImages.forEach(img => {
         img.addEventListener('error', function() {

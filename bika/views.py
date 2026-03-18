@@ -93,7 +93,7 @@ class HomeView(TemplateView):
         # Get featured products
         try:
             featured_products = Product.objects.filter(
-                status='active',
+                status='Published',
                 is_featured=True
             ).select_related('category', 'vendor')[:8]
             
@@ -127,7 +127,7 @@ class HomeView(TemplateView):
         )[:8]
         
         # Get stats for homepage
-        context['total_products'] = Product.objects.filter(status='active').count()
+        context['total_products'] = Product.objects.filter(status='Published').count()
         context['total_vendors'] = CustomUser.objects.filter(
             user_type='vendor', 
             is_active=True
@@ -146,30 +146,30 @@ def product_search_view(request):
     
     # Search products
     products = Product.objects.filter(
-        Q(name__icontains=query) | 
+        Q(mushroom_name__icontains=query) | 
         Q(description__icontains=query) |
         Q(short_description__icontains=query) |
         Q(tags__icontains=query) |
         Q(category__name__icontains=query),
-        status='active'
+        status='Published'
     ).select_related('category', 'vendor')
-    
+
     # Get search suggestions
     suggestions = []
     if products.exists():
         suggestions = Product.objects.filter(
             category__in=products.values_list('category', flat=True),
-            status='active'
+            status='Published'
         ).exclude(id__in=products.values_list('id', flat=True))[:5]
-    
+
     # Get categories
     categories = ProductCategory.objects.filter(
         is_active=True,
         parent__isnull=True
     ).annotate(
-        product_count=Count('products', filter=Q(products__status='active'))
+        product_count=Count('products', filter=Q(products__status='Published'))
     )
-    
+
     # Pagination
     paginator = Paginator(products, 12)
     page_number = request.GET.get('page')
@@ -179,7 +179,7 @@ def product_search_view(request):
         page_obj = paginator.get_page(1)
     except EmptyPage:
         page_obj = paginator.get_page(paginator.num_pages)
-    
+
     context = {
         'products': page_obj,
         'query': query,
@@ -188,7 +188,7 @@ def product_search_view(request):
         'total_results': products.count(),
         'site_info': SiteInfo.objects.first(),
     }
-    
+
     return render(request, 'bika/pages/search_results.html', context)
 
 def user_settings(request):
@@ -204,34 +204,35 @@ def user_settings(request):
 def quick_add_to_cart(request, product_id):
     """Quick add to cart (for AJAX requests)"""
     product = get_object_or_404(Product, id=product_id)
-    
+
     # Check stock
     if product.track_inventory and product.stock_quantity < 1:
         return JsonResponse({
             'success': False,
             'message': f'Product out of stock!'
         })
-    
+
     # Add to cart
     cart_item, created = Cart.objects.get_or_create(
         user=request.user,
         product=product,
         defaults={'quantity': 1}
     )
-    
+
     if not created:
         cart_item.quantity += 1
         cart_item.save()
-    
+
     # Get updated cart count
     cart_count = Cart.objects.filter(user=request.user).count()
-    
+
     return JsonResponse({
         'success': True,
-        'message': f'{product.name} added to cart!',
+        'message': f'{product.mushroom_name} added to cart!',
         'cart_count': cart_count,
         'created': created
     })
+
 def about_view(request):
     services = Service.objects.filter(is_active=True)
     testimonials = Testimonial.objects.filter(is_active=True)[:4]
@@ -380,8 +381,8 @@ def admin_dashboard(request):
     
     # ===== PRODUCT STATISTICS =====
     total_products = Product.objects.count()
-    active_products = Product.objects.filter(status='active').count()
-    draft_products = Product.objects.filter(status='draft').count()
+    active_products = Product.objects.filter(status='Published').count()
+    draft_products = Product.objects.filter(status='Draft').count()
     out_of_stock = Product.objects.filter(
         stock_quantity=0, 
         track_inventory=True
@@ -391,7 +392,7 @@ def admin_dashboard(request):
         stock_quantity__lte=F('low_stock_threshold'),
         track_inventory=True
     ).count()
-    featured_products = Product.objects.filter(is_featured=True, status='active').count()
+    featured_products = Product.objects.filter(is_featured=True, status='Published').count()
     
     # ===== ORDER STATISTICS =====
     total_orders = Order.objects.count()
@@ -529,7 +530,6 @@ def admin_dashboard(request):
     }
     
     return render(request, 'bika/pages/admin/dashboard.html', context)
-
 @staff_member_required
 @require_GET
 def sales_analytics_api(request):
@@ -537,18 +537,17 @@ def sales_analytics_api(request):
     days = int(request.GET.get('days', 30))
     end_date = timezone.now()
     start_date = end_date - timedelta(days=days)
-    
-    # Generate daily sales data
+
     sales_data = []
     current_date = start_date
-    
+
     while current_date <= end_date:
         next_date = current_date + timedelta(days=1)
         daily_sales = Order.objects.filter(
             created_at__range=[current_date, next_date],
             status='delivered'
         ).aggregate(total=Sum('total_amount'))['total'] or 0
-        
+
         sales_data.append({
             'date': current_date.strftime('%Y-%m-%d'),
             'sales': float(daily_sales),
@@ -557,26 +556,26 @@ def sales_analytics_api(request):
                 status='delivered'
             ).count()
         })
-        
+
         current_date = next_date
-    
-    # Get top selling products
+
     top_products = OrderItem.objects.filter(
         order__created_at__range=[start_date, end_date],
         order__status='delivered'
     ).values(
-        'product__name', 'product__sku'
+        'product__mushroom_name', 'product__sku'
     ).annotate(
         total_quantity=Sum('quantity'),
         total_revenue=Sum(F('quantity') * F('price'))
     ).order_by('-total_quantity')[:5]
-    
+
     return JsonResponse({
         'success': True,
         'sales_data': sales_data,
         'top_products': list(top_products),
         'total_days': days
     })
+
 
 @staff_member_required
 @require_GET
@@ -585,7 +584,7 @@ def get_active_alerts(request):
     alerts = ProductAlert.objects.filter(
         is_resolved=False
     ).select_related('product').order_by('-created_at')[:10]
-    
+
     alert_list = []
     for alert in alerts:
         alert_list.append({
@@ -593,11 +592,11 @@ def get_active_alerts(request):
             'title': f"{alert.alert_type.replace('_', ' ').title()} Alert",
             'message': alert.message,
             'severity': alert.severity,
-            'product': alert.product.name if alert.product else 'Unknown',
+            'product': alert.product.mushroom_name if alert.product else 'Unknown',
             'created_at': alert.created_at.strftime('%Y-%m-%d %H:%M'),
             'details': json.loads(alert.details) if alert.details else {}
         })
-    
+
     return JsonResponse({
         'success': True,
         'alerts': alert_list,
@@ -1064,7 +1063,7 @@ def get_product_quality_prediction(request, product_id):
 
 def product_list_view(request):
     """Display all active products with filtering and pagination"""
-    products = Product.objects.filter(status='active').select_related('category', 'vendor')
+    products = Product.objects.filter(status='Published').select_related('category', 'vendor')
     
     # Get filter parameters
     category_slug = request.GET.get('category')
@@ -1156,7 +1155,7 @@ def product_detail_view(request, slug):
     """Display single product details"""
     product = get_object_or_404(Product.objects.select_related(
         'category', 'vendor'
-    ).prefetch_related('product_images'), slug=slug, status='active')
+    ).prefetch_related('product_images'), slug=slug, status='Published')
     
     # Increment view count
     product.views_count += 1
@@ -1224,7 +1223,7 @@ def products_by_category_view(request, category_slug):
     subcategory_ids = list(category.subcategories.values_list('id', flat=True)) + [category.id]
     products = Product.objects.filter(
         category_id__in=subcategory_ids,
-        status='active'
+        status='Published'
     ).select_related('category', 'vendor')
     
     # Get filter parameters
@@ -1489,27 +1488,24 @@ def vendor_add_product(request):
     if not request.user.is_vendor() and not request.user.is_staff:
         messages.error(request, "Access denied. Vendor account required.")
         return redirect('bika:home')
-    
+
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES)
-        
+
         if form.is_valid():
             try:
                 product = form.save(commit=False)
                 product.vendor = request.user
-                
-                # Generate SKU if not provided
+
                 if not product.sku:
                     product.sku = f"PROD{timezone.now().strftime('%Y%m%d%H%M%S')}"
-                
-                # Generate barcode if not provided
+
                 if not product.barcode:
                     import random
                     product.barcode = f"8{random.randint(100000000000, 999999999999)}"
-                
+
                 product.save()
-                
-                # Handle multiple images
+
                 images = request.FILES.getlist('images')
                 for i, image in enumerate(images):
                     ProductImage.objects.create(
@@ -1519,25 +1515,25 @@ def vendor_add_product(request):
                         display_order=i,
                         is_primary=(i == 0)
                     )
-                
+
                 messages.success(request, 'Product added successfully!')
                 return redirect('bika:vendor_product_list')
-                
+
             except Exception as e:
+                print(f"Save error: {e}")
                 messages.error(request, f'Error saving product: {str(e)}')
         else:
-            # Log form errors for debugging
             print(f"Form errors: {form.errors}")
             messages.error(request, 'Please correct the errors below.')
     else:
         form = ProductForm()
-    
+
     context = {
         'form': form,
         'title': 'Add New Product',
         'site_info': SiteInfo.objects.first(),
     }
-    
+
     return render(request, 'bika/pages/vendor/add_product.html', context)
 
 @login_required

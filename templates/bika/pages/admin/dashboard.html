@@ -5,1824 +5,648 @@
 
 {% block extrahead %}
     {{ block.super }}
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+    <!-- ApexCharts for modern graphics -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <style>
         :root {
-            --primary: #667eea;
-            --primary-dark: #5a6fd8;
-            --secondary: #764ba2;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --info: #3b82f6;
-            --dark: #1f2937;
-            --light: #f8fafc;
-            --gray: #6b7280;
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --info: #4895ef;
+            --warning: #f72585;
+            --danger: #e63946;
+            --dark: #2b2d42;
+            --light: #f8f9fa;
+            --white: #ffffff;
+            --gray-100: #f8f9fa;
+            --gray-200: #e9ecef;
+            --gray-300: #dee2e6;
+            --card-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
         }
 
-        .dashboard-container {
-            padding: 20px 0;
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-            min-height: 100vh;
+        body {
+            background-color: #f0f2f5;
+            font-family: 'Inter', sans-serif;
         }
 
-        .dashboard-header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: white;
-            padding: 30px 0;
-            margin-bottom: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
-            position: relative;
-            overflow: hidden;
+        .dashboard-wrapper {
+            padding: 15px;
         }
 
-        .dashboard-header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="rgba(255,255,255,0.1)"><polygon points="1000,0 1000,100 0,100"></polygon></svg>');
-            background-size: cover;
-        }
-
-        /* Statistics Grid */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .stat-card {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-        }
-
-        /* Card Color Themes */
-        .stat-card.products::before { background: #8b5cf6; }
-        .stat-card.users::before { background: #f97316; }
-        .stat-card.vendors::before { background: #6366f1; }
-        .stat-card.orders::before { background: #84cc16; }
-        .stat-card.revenue::before { background: #14b8a6; }
-        .stat-card.customers::before { background: #f59e0b; }
-        .stat-card.admins::before { background: #ef4444; }
-        .stat-card.categories::before { background: #ec4899; }
-        .stat-card.ai::before { background: #8b5cf6; }
-        .stat-card.predictions::before { background: #3b82f6; }
-
-        .stat-icon {
-            font-size: 2.5rem;
+        /* Compact Header */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 15px;
-            opacity: 0.9;
+            padding: 10px 15px;
+            background: var(--white);
+            border-radius: 10px;
+            box-shadow: var(--card-shadow);
         }
 
-        .stat-card.products .stat-icon { color: #8b5cf6; }
-        .stat-card.users .stat-icon { color: #f97316; }
-        .stat-card.vendors .stat-icon { color: #6366f1; }
-        .stat-card.orders .stat-icon { color: #84cc16; }
-        .stat-card.revenue .stat-icon { color: #14b8a6; }
-        .stat-card.customers .stat-icon { color: #f59e0b; }
-        .stat-card.admins .stat-icon { color: #ef4444; }
-        .stat-card.categories .stat-icon { color: #ec4899; }
-        .stat-card.ai .stat-icon { color: #8b5cf6; }
-        .stat-card.predictions .stat-icon { color: #3b82f6; }
-
-        .stat-number {
-            font-size: 2.2rem;
-            font-weight: 800;
-            line-height: 1;
-            margin-bottom: 8px;
+        .page-header h1 {
+            font-size: 1.25rem;
+            margin: 0;
+            font-weight: 700;
             color: var(--dark);
         }
 
-        .stat-label {
-            color: var(--gray);
-            font-weight: 600;
-            font-size: 0.9rem;
-            margin-bottom: 10px;
+        /* Top Mini Stats Bar */
+        .mini-stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 12px;
+            margin-bottom: 15px;
         }
 
-        .stat-trend {
-            font-size: 0.8rem;
-            margin-top: 8px;
+        .mini-stat-card {
+            background: var(--white);
+            padding: 12px;
+            border-radius: 10px;
+            box-shadow: var(--card-shadow);
             display: flex;
             align-items: center;
-            gap: 5px;
+            transition: transform 0.2s;
         }
 
-        .trend-up { color: var(--success); }
-        .trend-down { color: var(--danger); }
+        .mini-stat-card:hover {
+            transform: translateY(-2px);
+        }
 
-        /* Dashboard Layout */
-        .dashboard-grid {
+        .mini-stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 1.2rem;
+        }
+
+        .mini-stat-info h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin: 0;
+            color: var(--dark);
+        }
+
+        .mini-stat-info p {
+            font-size: 0.75rem;
+            margin: 0;
+            color: #6c757d;
+            font-weight: 500;
+        }
+
+        /* Chart Layout */
+        .charts-row {
             display: grid;
             grid-template-columns: 2fr 1fr;
-            gap: 25px;
-            margin-bottom: 30px;
+            gap: 15px;
+            margin-bottom: 15px;
         }
 
-        @media (max-width: 1200px) {
-            .dashboard-grid {
+        @media (max-width: 992px) {
+            .charts-row {
                 grid-template-columns: 1fr;
             }
         }
 
-        .dashboard-card {
-            background: white;
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            margin-bottom: 25px;
-            transition: transform 0.3s ease;
+        .card {
+            background: var(--white);
+            border-radius: 10px;
+            border: none;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 15px;
             height: 100%;
         }
 
-        .dashboard-card:hover {
-            transform: translateY(-2px);
-        }
-
         .card-header {
+            background: transparent;
+            border-bottom: 1px solid var(--gray-200);
+            padding: 12px 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #f1f5f9;
         }
 
         .card-title {
-            font-size: 1.2rem;
+            font-size: 0.95rem;
             font-weight: 700;
-            color: var(--dark);
             margin: 0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .card-title i {
-            color: var(--primary);
-        }
-
-        /* AI Status Grid */
-        .ai-status-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-top: 15px;
-        }
-
-        .ai-status-item {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            text-align: center;
-            border: 2px solid #e2e8f0;
-            transition: all 0.3s ease;
-        }
-
-        .ai-status-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-        }
-
-        .ai-status-icon {
-            font-size: 2rem;
-            margin-bottom: 10px;
-            color: var(--primary);
-        }
-
-        .ai-status-title {
-            font-size: 0.9rem;
-            color: var(--gray);
-            margin-bottom: 5px;
-            font-weight: 600;
-        }
-
-        .ai-status-value {
-            font-size: 1.4rem;
-            font-weight: 800;
             color: var(--dark);
         }
 
-        /* Performance Metrics */
-        .performance-metrics {
-            padding: 10px 0;
+        .card-body {
+            padding: 15px;
         }
 
-        .metric-row {
+        /* Main Grid */
+        .main-dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        @media (max-width: 1200px) {
+            .main-dashboard-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Lists and Tables */
+        .scrollable-list {
+            max-height: 280px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+        }
+
+        .list-item {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 12px 0;
-            border-bottom: 1px solid #f1f5f9;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--gray-100);
         }
 
-        .metric-row:last-child {
+        .list-item:last-child {
             border-bottom: none;
         }
 
-        .metric-label {
-            font-weight: 600;
-            color: var(--dark);
-            font-size: 0.9rem;
-        }
-
-        .metric-value {
-            font-weight: 800;
-            font-size: 1.1rem;
-            color: var(--dark);
-        }
-
-        .metric-status {
-            font-size: 0.85rem;
-            font-weight: 600;
-            padding: 4px 8px;
+        .item-img {
+            width: 36px;
+            height: 36px;
             border-radius: 6px;
-        }
-
-        .status-good { background: #d1fae5; color: #065f46; }
-        .status-warning { background: #fef3c7; color: #92400e; }
-        .status-critical { background: #fee2e2; color: #991b1b; }
-
-        /* Alerts List */
-        .alerts-list {
-            max-height: 300px;
-            overflow-y: auto;
-            margin: 0 -10px;
-            padding: 0 10px;
-        }
-
-        .alert-item {
-            padding: 12px;
-            border-left: 4px solid;
-            background: #f8fafc;
-            margin-bottom: 8px;
-            border-radius: 6px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .alert-item:hover {
-            transform: translateX(3px);
-            background: white;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        .alert-critical { border-left-color: #ef4444; background: #fef2f2; }
-        .alert-high { border-left-color: #f97316; background: #fff7ed; }
-        .alert-medium { border-left-color: #f59e0b; background: #fffbeb; }
-        .alert-low { border-left-color: #3b82f6; background: #eff6ff; }
-
-        .alert-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 5px;
-        }
-
-        .alert-title {
-            font-weight: 700;
-            font-size: 0.9rem;
-            color: var(--dark);
-            margin: 0;
-        }
-
-        .alert-time {
-            font-size: 0.75rem;
-            color: var(--gray);
-        }
-
-        .alert-message {
-            font-size: 0.85rem;
-            color: var(--gray);
-            margin-bottom: 5px;
-        }
-
-        .alert-product {
-            font-size: 0.8rem;
-            color: var(--primary);
-            font-weight: 600;
-        }
-
-        /* Inventory Dashboard */
-        .inventory-stats {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-top: 15px;
-        }
-
-        @media (min-width: 768px) {
-            .inventory-stats {
-                grid-template-columns: repeat(4, 1fr);
-            }
-        }
-
-        .inventory-stat {
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            transition: transform 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        .inventory-stat:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-        }
-
-        .inventory-stat.bg-success { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
-        .inventory-stat.bg-warning { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
-        .inventory-stat.bg-danger { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
-        .inventory-stat.bg-info { background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); }
-
-        .inventory-number {
-            font-size: 2rem;
-            font-weight: 800;
-            margin-bottom: 5px;
-        }
-
-        .inventory-label {
-            font-size: 0.85rem;
-            opacity: 0.9;
-        }
-
-        /* User Distribution */
-        .user-distribution {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-top: 15px;
-        }
-
-        @media (min-width: 576px) {
-            .user-distribution {
-                grid-template-columns: repeat(4, 1fr);
-            }
-        }
-
-        .user-dist-item {
-            text-align: center;
-            padding: 15px;
-            border-radius: 10px;
-            background: #f8fafc;
-            transition: all 0.3s ease;
-            border: 1px solid #e2e8f0;
-        }
-
-        .user-dist-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        .user-dist-icon {
-            font-size: 1.5rem;
-            margin-bottom: 8px;
-        }
-
-        .user-dist-number {
-            font-size: 1.4rem;
-            font-weight: 800;
-            margin-bottom: 4px;
-            color: var(--dark);
-        }
-
-        .user-dist-label {
-            font-size: 0.8rem;
-            color: var(--gray);
-            font-weight: 600;
-        }
-
-        .user-dist-percentage {
-            font-size: 0.75rem;
-            color: var(--gray);
-            margin-top: 4px;
-        }
-
-        /* Charts */
-        .chart-container {
-            position: relative;
-            height: 300px;
-            margin-top: 15px;
-        }
-
-        .chart-controls {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .chart-controls select {
-            padding: 6px 12px;
-            border-radius: 6px;
-            border: 1px solid #e2e8f0;
-            background: white;
-            font-size: 0.85rem;
-        }
-
-        /* Products Grid */
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
-        }
-
-        .product-item {
-            background: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 10px;
-            padding: 15px;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            text-decoration: none;
-            color: inherit;
-        }
-
-        .product-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-            text-decoration: none;
-            color: inherit;
-        }
-
-        .product-image {
-            width: 50px;
-            height: 50px;
-            border-radius: 8px;
             object-fit: cover;
             margin-right: 12px;
-            background: #f1f5f9;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #94a3b8;
+            background: var(--gray-100);
         }
 
-        .product-info {
+        .item-info {
             flex: 1;
         }
 
-        .product-name {
+        .item-title {
+            font-size: 0.85rem;
             font-weight: 600;
             color: var(--dark);
-            margin-bottom: 5px;
-            font-size: 0.9rem;
+            margin-bottom: 2px;
         }
 
-        .product-price {
-            font-weight: 700;
-            color: var(--success);
-            font-size: 0.85rem;
-        }
-
-        .product-status {
+        .item-subtitle {
             font-size: 0.75rem;
-            padding: 3px 6px;
-            border-radius: 6px;
+            color: #6c757d;
+        }
+
+        .badge-soft {
+            font-size: 0.7rem;
+            padding: 4px 8px;
+            border-radius: 4px;
             font-weight: 600;
         }
 
-        .status-active { background: #d1fae5; color: #065f46; }
-        .status-draft { background: #fef3c7; color: #92400e; }
-        .status-inactive { background: #fee2e2; color: #991b1b; }
+        .badge-soft-success { background: #d1fae5; color: #065f46; }
+        .badge-soft-warning { background: #fef3c7; color: #92400e; }
+        .badge-soft-danger { background: #fee2e2; color: #991b1b; }
+        .badge-soft-info { background: #e0f2fe; color: #0369a1; }
+
+        /* System Metrics */
+        .metric-progress {
+            margin-bottom: 12px;
+        }
+
+        .metric-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            margin-bottom: 4px;
+        }
+
+        .progress {
+            height: 6px;
+            border-radius: 10px;
+        }
 
         /* Buttons */
-        .btn-modern {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            border: none;
-            border-radius: 8px;
-            padding: 8px 16px;
-            color: white;
+        .btn-compact {
+            padding: 4px 10px;
+            font-size: 0.75rem;
+            border-radius: 6px;
             font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 0.85rem;
-            cursor: pointer;
+            transition: all 0.2s;
         }
 
-        .btn-modern:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-            color: white;
-            text-decoration: none;
-        }
-
-        .btn-modern.btn-sm {
-            padding: 6px 12px;
-            font-size: 0.8rem;
-        }
-
-        .btn-modern.btn-outline {
-            background: white;
-            border: 2px solid var(--primary);
-            color: var(--primary);
-            box-shadow: none;
-        }
-
-        .btn-modern.btn-outline:hover {
+        .btn-primary-compact {
             background: var(--primary);
             color: white;
+            border: none;
         }
 
-        /* Quick Actions */
-        .quick-actions-grid {
+        .btn-primary-compact:hover {
+            background: var(--secondary);
+            color: white;
+        }
+
+        /* Quick Actions Grid */
+        .quick-actions-box {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
         }
 
-        .quick-action {
-            background: white;
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
-            padding: 20px 15px;
+        .action-item {
+            background: var(--gray-100);
+            border-radius: 8px;
+            padding: 12px 8px;
             text-align: center;
             text-decoration: none;
             color: var(--dark);
-            transition: all 0.3s ease;
+            transition: all 0.2s;
+        }
+
+        .action-item:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            text-decoration: none;
+        }
+
+        .action-item i {
+            font-size: 1.2rem;
+            margin-bottom: 6px;
             display: block;
         }
 
-        .quick-action:hover {
-            border-color: var(--primary);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.15);
-            color: var(--primary);
-            text-decoration: none;
-        }
-
-        .quick-action-icon {
-            font-size: 2rem;
-            margin-bottom: 10px;
-            color: var(--primary);
-            transition: transform 0.3s ease;
-        }
-
-        .quick-action:hover .quick-action-icon {
-            transform: scale(1.1);
-        }
-
-        .quick-action-text {
-            font-weight: 700;
-            font-size: 0.85rem;
-        }
-
-        /* System Info */
-        .system-info {
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-            border-radius: 10px;
-            padding: 20px;
-            margin-top: 15px;
-            border: 1px solid #e2e8f0;
-        }
-
-        .info-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid #e2e8f0;
-            align-items: center;
-        }
-
-        .info-item:last-child {
-            border-bottom: none;
-        }
-
-        .info-label {
+        .action-item span {
+            font-size: 0.7rem;
             font-weight: 600;
-            color: var(--gray);
-            font-size: 0.85rem;
+            display: block;
         }
 
-        .info-value {
-            font-weight: 700;
-            color: var(--dark);
-            background: white;
-            padding: 4px 8px;
-            border-radius: 6px;
-            border: 1px solid #e2e8f0;
-            font-size: 0.85rem;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--gray);
-        }
-
-        .empty-state i {
-            font-size: 3rem;
-            margin-bottom: 15px;
-            opacity: 0.3;
-            color: var(--primary);
-        }
-
-        .welcome-badge {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 6px 12px;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            margin-top: 8px;
-            display: inline-block;
-            backdrop-filter: blur(10px);
-        }
-
-        /* Activity List */
-        .activity-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .activity-item {
-            padding: 12px 0;
-            border-bottom: 1px solid #f1f5f9;
-            display: flex;
-            align-items: center;
-            transition: background-color 0.2s ease;
-            border-radius: 6px;
-            padding-left: 8px;
-            padding-right: 8px;
-        }
-
-        .activity-item:hover {
-            background-color: #f8fafc;
-        }
-
-        .activity-item:last-child {
-            border-bottom: none;
-        }
-
-        .activity-icon {
-            width: 35px;
-            height: 35px;
-            border-radius: 8px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 12px;
-            flex-shrink: 0;
-            color: white;
-            font-size: 0.9rem;
-        }
-
-        .activity-content {
-            flex: 1;
-        }
-
-        .activity-text {
-            font-weight: 600;
-            color: var(--dark);
-            margin-bottom: 3px;
-            font-size: 0.85rem;
-        }
-
-        .activity-time {
-            font-size: 0.75rem;
-            color: var(--gray);
-        }
-
-        /* Messages */
-        .message-item {
-            padding: 12px;
-            border-radius: 8px;
-            background: #f8fafc;
-            margin-bottom: 8px;
-            border-left: 4px solid var(--info);
-            transition: all 0.3s ease;
-        }
-
-        .message-item:hover {
-            transform: translateX(3px);
-            background: white;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        .message-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 6px;
-        }
-
-        .message-sender {
-            font-weight: 700;
-            color: var(--dark);
-            font-size: 0.9rem;
-        }
-
-        .message-time {
-            font-size: 0.75rem;
-            color: var(--gray);
-        }
-
-        .message-subject {
-            font-weight: 600;
-            margin-bottom: 4px;
-            color: var(--dark);
-            font-size: 0.85rem;
-        }
-
-        .message-preview {
-            color: var(--gray);
-            font-size: 0.8rem;
-            line-height: 1.3;
-        }
-
-        /* Recent Orders Table */
-        .orders-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
-
-        .orders-table th {
-            text-align: left;
-            padding: 12px;
-            background: #f8fafc;
-            font-weight: 600;
-            color: var(--dark);
-            font-size: 0.85rem;
-            border-bottom: 2px solid #e2e8f0;
-        }
-
-        .orders-table td {
-            padding: 12px;
-            border-bottom: 1px solid #f1f5f9;
-            font-size: 0.85rem;
-        }
-
-        .orders-table tr:hover {
-            background: #f8fafc;
-        }
-
-        .order-status {
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-
-        .order-pending { background: #fef3c7; color: #92400e; }
-        .order-confirmed { background: #dbeafe; color: #1e40af; }
-        .order-shipped { background: #e0e7ff; color: #3730a3; }
-        .order-delivered { background: #d1fae5; color: #065f46; }
-        .order-cancelled { background: #fee2e2; color: #991b1b; }
-
-        /* Loading States */
-        .loading {
-            opacity: 0.7;
-            pointer-events: none;
-        }
-
-        .loading-spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 2px solid #f3f3f3;
-            border-top: 2px solid var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-right: 8px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Toast Notifications */
-        .toast {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 20px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transform: translateX(150%);
-            transition: transform 0.3s ease;
-        }
-
-        .toast.show {
-            transform: translateX(0);
-        }
-
-        .toast-success {
-            border-left: 4px solid var(--success);
-        }
-
-        .toast-error {
-            border-left: 4px solid var(--danger);
-        }
-
-        .toast-info {
-            border-left: 4px solid var(--info);
-        }
-
-        .toast-icon {
-            font-size: 1.2rem;
-        }
-
-        .toast-success .toast-icon { color: var(--success); }
-        .toast-error .toast-icon { color: var(--danger); }
-        .toast-info .toast-icon { color: var(--info); }
-
-        .toast-message {
-            flex: 1;
-            font-size: 0.9rem;
-        }
-
-        .toast-close {
-            background: none;
-            border: none;
-            color: var(--gray);
-            cursor: pointer;
-            font-size: 1rem;
-        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #ced4da; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #adb5bd; }
     </style>
 {% endblock %}
 
 {% block content %}
-<div class="dashboard-container">
-    <!-- Toast Container -->
-    <div id="toastContainer"></div>
+<div class="dashboard-wrapper">
+    <!-- Compact Header -->
+    <div class="page-header">
+        <div>
+            <h1><i class="fas fa-grid-2 me-2"></i>Dashboard</h1>
+            <span class="text-muted small">Welcome back, {{ user.username }} | {% now "D, M j, Y" %}</span>
+        </div>
+        <div class="d-flex gap-2">
+            <button class="btn btn-compact btn-light border" onclick="location.reload()">
+                <i class="fas fa-sync-alt me-1"></i> Refresh
+            </button>
+            <a href="{% url 'bika:home' %}" class="btn btn-compact btn-primary-compact">
+                <i class="fas fa-external-link-alt me-1"></i> View Site
+            </a>
+        </div>
+    </div>
 
-    <!-- Dashboard Header -->
-    <div class="dashboard-header">
-        <div class="container-fluid">
-            <div class="row align-items-center">
-                <div class="col-md-8">
-                    <h1 class="mb-2 display-5 fw-bold">
-                        <i class="fas fa-tachometer-alt me-2"></i>Admin Dashboard
-                    </h1>
-                    <p class="lead mb-1 fs-5">
-                        Welcome back, <strong>{{ user.get_full_name|default:user.username }}</strong>
-                    </p>
-                    <div class="welcome-badge">
-                        <i class="fas fa-calendar-check me-1"></i>{% now "F j, Y" %}
-                    </div>
+    <!-- Mini Stats Bar -->
+    <div class="mini-stats-row">
+        <div class="mini-stat-card">
+            <div class="mini-stat-icon bg-soft-info" style="color: #0ea5e9; background: #e0f2fe;">
+                <i class="fas fa-box"></i>
+            </div>
+            <div class="mini-stat-info">
+                <h4>{{ total_products|default:"0" }}</h4>
+                <p>Products</p>
+            </div>
+        </div>
+        <div class="mini-stat-card">
+            <div class="mini-stat-icon" style="color: #8b5cf6; background: #f5f3ff;">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="mini-stat-info">
+                <h4>{{ total_users|default:"0" }}</h4>
+                <p>Total Users</p>
+            </div>
+        </div>
+        <div class="mini-stat-card">
+            <div class="mini-stat-icon" style="color: #f59e0b; background: #fffbeb;">
+                <i class="fas fa-shopping-cart"></i>
+            </div>
+            <div class="mini-stat-info">
+                <h4>{{ total_orders|default:"0" }}</h4>
+                <p>Orders</p>
+            </div>
+        </div>
+        <div class="mini-stat-card">
+            <div class="mini-stat-icon" style="color: #10b981; background: #ecfdf5;">
+                <i class="fas fa-wallet"></i>
+            </div>
+            <div class="mini-stat-info">
+                <h4>{{ total_revenue|default:"0"|floatformat:0 }}</h4>
+                <p>Revenue (RWF)</p>
+            </div>
+        </div>
+        <div class="mini-stat-card">
+            <div class="mini-stat-icon" style="color: #ef4444; background: #fef2f2;">
+                <i class="fas fa-bell"></i>
+            </div>
+            <div class="mini-stat-info">
+                <h4>{{ critical_alerts|default:"0" }}</h4>
+                <p>Alerts</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Graphical Section (Charts) -->
+    <div class="charts-row">
+        <!-- Sales Trend Chart -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title"><i class="fas fa-chart-line me-2 text-primary"></i>Sales Performance</h5>
+                <div class="dropdown">
+                    <button class="btn btn-compact btn-light border dropdown-toggle" data-bs-toggle="dropdown">Last 30 Days</button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="#" onclick="updateSalesChart(7)">Last 7 Days</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="updateSalesChart(30)">Last 30 Days</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="updateSalesChart(90)">Last 90 Days</a></li>
+                    </ul>
                 </div>
-                <div class="col-md-4 text-md-end">
-                    <div class="system-status-badge p-2 rounded-2" style="background: rgba(255,255,255,0.2); backdrop-filter: blur(10px);">
-                        <i class="fas fa-check-circle me-1 text-success"></i>
-                        <strong>System Status:</strong> Operational
+            </div>
+            <div class="card-body" style="height: 300px;">
+                <div id="salesChart"></div>
+            </div>
+        </div>
+
+        <!-- Inventory Status (Donut Chart) -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title"><i class="fas fa-pie-chart me-2 text-warning"></i>Stock Distribution</h5>
+            </div>
+            <div class="card-body d-flex align-items-center justify-content-center">
+                <div id="inventoryChart"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Lists Section -->
+    <div class="main-dashboard-grid">
+        <!-- Recent Orders -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">Recent Orders</h5>
+                <a href="/admin/bika/order/" class="btn-compact text-primary">View All</a>
+            </div>
+            <div class="card-body">
+                <div class="scrollable-list">
+                    {% for order in recent_orders %}
+                    <div class="list-item">
+                        <div class="item-info">
+                            <div class="item-title">Order #{{ order.order_number }}</div>
+                            <div class="item-subtitle">{{ order.user.username }} | {{ order.created_at|date:"M d, H:i" }}</div>
+                        </div>
+                        <div class="text-end">
+                            <div class="item-title">{{ order.total_amount|floatformat:0 }} RWF</div>
+                            <span class="badge-soft badge-soft-{% if order.status == 'delivered' %}success{% elif order.status == 'cancelled' %}danger{% else %}info{% endif %}">
+                                {{ order.status|capfirst }}
+                            </span>
+                        </div>
                     </div>
+                    {% empty %}
+                    <p class="text-center text-muted small py-4">No recent orders</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Products -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">Latest Products</h5>
+                <a href="/admin/bika/product/" class="btn-compact text-primary">Manage</a>
+            </div>
+            <div class="card-body">
+                <div class="scrollable-list">
+                    {% for product in recent_products %}
+                    <div class="list-item">
+                        {% if product.product_images.first %}
+                        <img src="{{ product.product_images.first.image.url }}" class="item-img">
+                        {% else %}
+                        <div class="item-img d-flex align-items-center justify-content-center">
+                            <i class="fas fa-image text-muted" style="font-size: 10px;"></i>
+                        </div>
+                        {% endif %}
+                        <div class="item-info">
+                            <div class="item-title">{{ product.mushroom_name|truncatechars:25 }}</div>
+                            <div class="item-subtitle">{{ product.category.name }} | {{ product.vendor.username }}</div>
+                        </div>
+                        <div class="text-end">
+                            <div class="item-title">{{ product.price|floatformat:0 }}</div>
+                            <span class="badge-soft {% if product.status == 'active' %}badge-soft-success{% else %}badge-soft-warning{% endif %}">
+                                {{ product.status|capfirst }}
+                            </span>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="text-center text-muted small py-4">No products found</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Alerts & System -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">AI Intelligence & Alerts</h5>
+                <button class="btn btn-compact btn-outline-danger" onclick="runAIScan()">Scan Now</button>
+            </div>
+            <div class="card-body">
+                <div class="scrollable-list" id="alertsList">
+                    <!-- Loaded via JS -->
+                    <div class="text-center py-4"><i class="fas fa-spinner fa-spin me-2"></i>Loading alerts...</div>
+                </div>
+                <div class="mt-3 p-2 bg-light rounded border border-dashed text-center">
+                    <span class="small fw-bold text-muted">Active Model:</span>
+                    <span class="badge bg-primary ms-1" style="font-size: 0.65rem;">{{ ai_service.active_model.record.name|default:"Standard-RF-v1" }}</span>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="container-fluid">
-        <!-- Enhanced Statistics Cards -->
-        <div class="stats-grid">
-            <!-- Products Statistics -->
-            <div class="stat-card products">
-                <div class="stat-icon">
-                    <i class="fas fa-cube"></i>
-                </div>
-                <div class="stat-number">{{ total_products|default:"0" }}</div>
-                <div class="stat-label">Total Products</div>
-                <div class="stat-trend trend-up">
-                    <i class="fas fa-arrow-up me-1"></i>{{ active_products|default:"0" }} active
-                </div>
-            </div>
-
-            <!-- User Statistics -->
-            <div class="stat-card users">
-                <div class="stat-icon">
-                    <i class="fas fa-users"></i>
-                </div>
-                <div class="stat-number">{{ total_users|default:"0" }}</div>
-                <div class="stat-label">Total Users</div>
-                <div class="stat-trend trend-up">
-                    <i class="fas fa-user-plus me-1"></i>{{ new_users_today|default:"0" }} today
-                </div>
-            </div>
-
-            <!-- Vendor Statistics -->
-            <div class="stat-card vendors">
-                <div class="stat-icon">
-                    <i class="fas fa-store"></i>
-                </div>
-                <div class="stat-number">{{ total_vendors|default:"0" }}</div>
-                <div class="stat-label">Total Vendors</div>
-                <div class="stat-trend trend-up">
-                    <i class="fas fa-user-check me-1"></i>{{ active_vendors|default:"0" }} active
-                </div>
-            </div>
-
-            <!-- Orders Statistics -->
-            <div class="stat-card orders">
-                <div class="stat-icon">
-                    <i class="fas fa-shopping-cart"></i>
-                </div>
-                <div class="stat-number">{{ total_orders|default:"0" }}</div>
-                <div class="stat-label">Total Orders</div>
-                <div class="stat-trend trend-up">
-                    <i class="fas fa-chart-line me-1"></i>{{ pending_orders|default:"0" }} pending
-                </div>
-            </div>
-
-            <!-- Revenue Statistics -->
-            <div class="stat-card revenue">
-                <div class="stat-icon">
-                    <i class="fas fa-coins"></i>
-                </div>
-                <div class="stat-number">{{ total_revenue|default:"0"|floatformat:0 }} RWF</div>
-                <div class="stat-label">Total Revenue</div>
-                <div class="stat-trend trend-up">
-                    <i class="fas fa-wallet me-1"></i>{{ today_revenue|default:"0"|floatformat:0 }} RWF today
-                </div>
-            </div>
-
-            <!-- AI System Statistics -->
-            <div class="stat-card ai">
-                <div class="stat-icon">
-                    <i class="fas fa-robot"></i>
-                </div>
-                <div class="stat-number">{{ critical_alerts|default:"0" }}</div>
-                <div class="stat-label">Critical Alerts</div>
-                <div class="stat-trend trend-down">
-                    <i class="fas fa-exclamation-triangle me-1"></i>AI Monitoring Active
-                </div>
-            </div>
-
-            <!-- Predictions Statistics -->
-            <div class="stat-card predictions">
-                <div class="stat-icon">
-                    <i class="fas fa-brain"></i>
-                </div>
-                <div class="stat-number">{{ total_predictions|default:"0" }}</div>
-                <div class="stat-label">AI Predictions</div>
-                <div class="stat-trend trend-up">
-                    <i class="fas fa-database me-1"></i>{{ dataset_size|default:"0" }} dataset
-                </div>
-            </div>
-
-            <!-- Categories Statistics -->
-            <div class="stat-card categories">
-                <div class="stat-icon">
-                    <i class="fas fa-tags"></i>
-                </div>
-                <div class="stat-number">{{ total_categories|default:"0" }}</div>
-                <div class="stat-label">Product Categories</div>
-                <div class="stat-trend">
-                    <i class="fas fa-layer-group me-1"></i>{{ active_categories|default:"0" }} active
+    <!-- Bottom Row: System Stats & Quick Actions -->
+    <div class="charts-row mt-3">
+        <!-- Quick Actions -->
+        <div class="card">
+            <div class="card-header"><h5 class="card-title">Quick Actions</h5></div>
+            <div class="card-body">
+                <div class="quick-actions-box">
+                    <a href="/admin/bika/product/add/" class="action-item">
+                        <i class="fas fa-plus-circle"></i><span>Add Product</span>
+                    </a>
+                    <a href="/admin/bika/order/" class="action-item">
+                        <i class="fas fa-shopping-bag"></i><span>Orders</span>
+                    </a>
+                    <a href="/admin/bika/customuser/" class="action-item">
+                        <i class="fas fa-user-gear"></i><span>Users</span>
+                    </a>
+                    <a href="/admin/bika/productalert/" class="action-item">
+                        <i class="fas fa-triangle-exclamation"></i><span>Alerts</span>
+                    </a>
+                    <a href="{% url 'bika:model_management' %}" class="action-item">
+                        <i class="fas fa-brain"></i><span>AI Models</span>
+                    </a>
+                    <a href="/admin/bika/siteinfo/" class="action-item">
+                        <i class="fas fa-sliders"></i><span>Settings</span>
+                    </a>
                 </div>
             </div>
         </div>
 
-        <!-- Main Dashboard Grid -->
-        <div class="dashboard-grid">
-            <!-- Left Column -->
-            <div class="left-column">
-                <!-- Sales Analytics Chart -->
-                <div class="dashboard-card">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            <i class="fas fa-chart-line"></i>Sales Analytics
-                        </h3>
-                        <div class="chart-controls">
-                            <select id="chartPeriod" onchange="loadSalesChart(this.value)">
-                                <option value="7">Last 7 days</option>
-                                <option value="30" selected>Last 30 days</option>
-                                <option value="90">Last 90 days</option>
-                            </select>
-                            <button class="btn-modern btn-sm" onclick="exportSalesReport()">
-                                <i class="fas fa-download"></i> Export
-                            </button>
-                        </div>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="salesChart"></canvas>
-                    </div>
+        <!-- System Performance -->
+        <div class="card">
+            <div class="card-header"><h5 class="card-title">System Performance</h5></div>
+            <div class="card-body" id="performanceMetrics">
+                <div class="metric-progress">
+                    <div class="metric-info"><span>Server Load</span><span id="loadVal">0%</span></div>
+                    <div class="progress"><div id="loadBar" class="progress-bar bg-primary" style="width: 0%"></div></div>
                 </div>
-
-                <!-- Inventory Status Dashboard -->
-                <div class="dashboard-card">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            <i class="fas fa-boxes"></i>Inventory Status
-                        </h3>
-                        <button class="btn-modern btn-sm" onclick="exportInventoryReport()">
-                            <i class="fas fa-download"></i> Export Report
-                        </button>
-                    </div>
-                    
-                    <div class="inventory-stats">
-                        <div class="inventory-stat bg-success">
-                            <div class="inventory-number">{{ active_products|default:"0" }}</div>
-                            <div class="inventory-label">In Stock</div>
-                        </div>
-                        <div class="inventory-stat bg-warning">
-                            <div class="inventory-number">{{ low_stock|default:"0" }}</div>
-                            <div class="inventory-label">Low Stock</div>
-                        </div>
-                        <div class="inventory-stat bg-danger">
-                            <div class="inventory-number">{{ out_of_stock|default:"0" }}</div>
-                            <div class="inventory-label">Out of Stock</div>
-                        </div>
-                        <div class="inventory-stat bg-info">
-                            <div class="inventory-number">{{ draft_products|default:"0" }}</div>
-                            <div class="inventory-label">Draft Products</div>
-                        </div>
-                    </div>
-                    
-                    <div class="mt-3">
-                        <h6 class="fw-bold mb-2">Stock Health</h6>
-                        <div class="progress" style="height: 20px; border-radius: 10px;">
-                            <div class="progress-bar bg-success" style="width: {% widthratio active_products total_products 100 %}%"></div>
-                            <div class="progress-bar bg-warning" style="width: {% widthratio low_stock total_products 100 %}%"></div>
-                            <div class="progress-bar bg-danger" style="width: {% widthratio out_of_stock total_products 100 %}%"></div>
-                        </div>
-                        <div class="d-flex justify-content-between mt-2">
-                            <small class="text-success">
-                                <i class="fas fa-circle me-1"></i> In Stock: {{ active_products|default:"0" }}
-                            </small>
-                            <small class="text-warning">
-                                <i class="fas fa-circle me-1"></i> Low Stock: {{ low_stock|default:"0" }}
-                            </small>
-                            <small class="text-danger">
-                                <i class="fas fa-circle me-1"></i> Out of Stock: {{ out_of_stock|default:"0" }}
-                            </small>
-                        </div>
-                    </div>
+                <div class="metric-progress">
+                    <div class="metric-info"><span>Memory Usage</span><span id="memVal">0%</span></div>
+                    <div class="progress"><div id="memBar" class="progress-bar bg-info" style="width: 0%"></div></div>
                 </div>
-
-                <!-- Recent Products -->
-                <div class="dashboard-card">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            <i class="fas fa-cube"></i>Recent Products
-                        </h3>
-                        <a href="/admin/bika/product/" class="btn-modern">
-                            Manage Products
-                        </a>
-                    </div>
-
-                    {% if recent_products %}
-                        <div class="products-grid">
-                            {% for product in recent_products %}
-                            <a href="/admin/bika/product/{{ product.id }}/change/" class="product-item">
-                                {% if product.product_images.first %}
-                                <img src="{{ product.product_images.first.image.url }}" alt="{{ product.name }}" class="product-image">
-                                {% else %}
-                                <div class="product-image">
-                                    <i class="fas fa-cube"></i>
-                                </div>
-                                {% endif %}
-                                <div class="product-info">
-                                    <div class="product-name">{{ product.name|truncatewords:3 }}</div>
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <span class="product-price">{{ product.price|floatformat:0 }} RWF</span>
-                                        <span class="product-status status-{{ product.status }}">
-                                            {{ product.get_status_display }}
-                                        </span>
-                                    </div>
-                                    <div class="text-muted small mt-1">
-                                        Vendor: {{ product.vendor.username }}
-                                    </div>
-                                </div>
-                            </a>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        <div class="empty-state">
-                            <i class="fas fa-cube"></i>
-                            <h4>No Products Yet</h4>
-                            <p>Products added to your marketplace will appear here.</p>
-                        </div>
-                    {% endif %}
+                <div class="metric-progress">
+                    <div class="metric-info"><span>Response Time</span><span id="respVal">0ms</span></div>
+                    <div class="progress"><div id="respBar" class="progress-bar bg-success" style="width: 0%"></div></div>
                 </div>
-
-                <!-- Recent Orders Table -->
-                <div class="dashboard-card">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            <i class="fas fa-receipt"></i>Recent Orders
-                        </h3>
-                        <a href="/admin/bika/order/" class="btn-modern">
-                            View All Orders
-                        </a>
-                    </div>
-                    
-                    <table class="orders-table">
-                        <thead>
-                            <tr>
-                                <th>Order #</th>
-                                <th>Customer</th>
-                                <th>Date</th>
-                                <th>Amount</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for order in recent_orders %}
-                            <tr>
-                                <td><strong>#{{ order.order_number }}</strong></td>
-                                <td>{{ order.user.username }}</td>
-                                <td>{{ order.created_at|date:"M d" }}</td>
-                                <td>{{ order.total_amount|floatformat:0 }} RWF</td>
-                                <td>
-                                    <span class="order-status order-{{ order.status }}">
-                                        {{ order.get_status_display }}
-                                    </span>
-                                </td>
-                                <td>
-                                    <a href="{% url 'bika:order_detail' order.id %}" 
-                                       class="btn-modern btn-sm">
-                                        <i class="fas fa-eye"></i> View
-                                    </a>
-                                </td>
-                            </tr>
-                            {% empty %}
-                            <tr>
-                                <td colspan="6" class="text-center py-4">
-                                    No orders yet
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Right Column -->
-            <div class="right-column">
-                <!-- Alert & Notification Center -->
-                <div class="dashboard-card">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            <i class="fas fa-bell"></i>Active Alerts
-                            <span class="badge bg-danger ms-2" id="alertCount">0</span>
-                        </h3>
-                        <button class="btn-modern btn-sm" onclick="markAllAlertsRead()">
-                            <i class="fas fa-check-double"></i> Mark All Read
-                        </button>
-                    </div>
-                    <div id="alertsContainer" class="alerts-list">
-                        <!-- Dynamic alerts will load here -->
-                        <div class="text-center py-4">
-                            <div class="loading-spinner"></div>
-                            <p class="mt-2 text-muted">Loading alerts...</p>
-                        </div>
-                    </div>
-                    <div class="text-center py-2">
-                        <a href="{% url 'bika:ai_alert_dashboard' %}" class="text-decoration-none">
-                            View All Alerts <i class="fas fa-arrow-right ms-1"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- AI System Status -->
-                <div class="dashboard-card">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            <i class="fas fa-robot"></i>AI System Status
-                        </h3>
-                        <a href="{% url 'bika:model_management' %}" class="btn-modern btn-sm">
-                            Manage Models
-                        </a>
-                    </div>
-                    <div class="ai-status-grid">
-                        <div class="ai-status-item {% if ai_service.active_model %}bg-success-light{% else %}bg-warning-light{% endif %}">
-                            <div class="ai-status-icon">
-                                <i class="fas fa-brain"></i>
-                            </div>
-                            <div class="ai-status-title">Active Model</div>
-                            <div class="ai-status-value">
-                                {% if ai_service.active_model %}
-                                    {{ ai_service.active_model.record.name|truncatechars:15 }}
-                                {% else %}
-                                    None
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="ai-status-item bg-info-light">
-                            <div class="ai-status-icon">
-                                <i class="fas fa-chart-bar"></i>
-                            </div>
-                            <div class="ai-status-title">Total Predictions</div>
-                            <div class="ai-status-value">{{ total_predictions|default:"0" }}</div>
-                        </div>
-                        <div class="ai-status-item bg-danger-light">
-                            <div class="ai-status-icon">
-                                <i class="fas fa-exclamation-triangle"></i>
-                            </div>
-                            <div class="ai-status-title">Critical Alerts</div>
-                            <div class="ai-status-value">{{ critical_alerts|default:"0" }}</div>
-                        </div>
-                        <div class="ai-status-item bg-primary-light">
-                            <div class="ai-status-icon">
-                                <i class="fas fa-database"></i>
-                            </div>
-                            <div class="ai-status-title">Dataset Size</div>
-                            <div class="ai-status-value">{{ dataset_size|default:"0" }}</div>
-                        </div>
-                    </div>
-                    <div class="mt-3">
-                        <button class="btn-modern btn-outline w-100" onclick="scanProductsForAlerts()">
-                            <i class="fas fa-search me-1"></i> Scan Products for AI Alerts
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Performance Metrics -->
-                <div class="dashboard-card">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            <i class="fas fa-tachometer-alt"></i>Performance Metrics
-                        </h3>
-                        <span class="badge bg-success" id="metricsStatus">Live</span>
-                    </div>
-                    <div class="performance-metrics">
-                        <div class="metric-row">
-                            <span class="metric-label">Response Time</span>
-                            <span class="metric-value" id="responseTime">0.24s</span>
-                            <span class="metric-status status-good">Good</span>
-                        </div>
-                        <div class="metric-row">
-                            <span class="metric-label">Server Load</span>
-                            <span class="metric-value" id="serverLoad">42%</span>
-                            <span class="metric-status status-good">Normal</span>
-                        </div>
-                        <div class="metric-row">
-                            <span class="metric-label">Memory Usage</span>
-                            <span class="metric-value" id="memoryUsage">1.2GB</span>
-                            <span class="metric-status status-warning">Medium</span>
-                        </div>
-                        <div class="metric-row">
-                            <span class="metric-label">Database Queries</span>
-                            <span class="metric-value" id="dbQueries">12/min</span>
-                            <span class="metric-status status-good">Optimal</span>
-                        </div>
-                    </div>
-                    <div class="text-center mt-2">
-                        <small class="text-muted" id="metricsTimestamp">Last updated: {% now "H:i" %}</small>
-                    </div>
-                </div>
-
-                <!-- Quick Actions -->
-                <div class="dashboard-card">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            <i class="fas fa-bolt"></i>Quick Actions
-                        </h3>
-                    </div>
-                    <div class="quick-actions-grid">
-                        <a href="/admin/bika/product/add/" class="quick-action">
-                            <div class="quick-action-icon">
-                                <i class="fas fa-plus-circle"></i>
-                            </div>
-                            <div class="quick-action-text">Add Product</div>
-                        </a>
-
-                        <a href="/admin/bika/productcategory/add/" class="quick-action">
-                            <div class="quick-action-icon">
-                                <i class="fas fa-folder-plus"></i>
-                            </div>
-                            <div class="quick-action-text">Add Category</div>
-                        </a>
-
-                        <a href="/admin/auth/user/add/" class="quick-action">
-                            <div class="quick-action-icon">
-                                <i class="fas fa-user-plus"></i>
-                            </div>
-                            <div class="quick-action-text">Add User</div>
-                        </a>
-
-                        <a href="/admin/bika/order/add/" class="quick-action">
-                            <div class="quick-action-icon">
-                                <i class="fas fa-shopping-cart"></i>
-                            </div>
-                            <div class="quick-action-text">Create Order</div>
-                        </a>
-
-                        <a href="{% url 'bika:vendor_register' %}" class="quick-action">
-                            <div class="quick-action-icon">
-                                <i class="fas fa-store"></i>
-                            </div>
-                            <div class="quick-action-text">Add Vendor</div>
-                        </a>
-
-                        <a href="/admin/bika/siteinfo/" class="quick-action">
-                            <div class="quick-action-icon">
-                                <i class="fas fa-cog"></i>
-                            </div>
-                            <div class="quick-action-text">Site Settings</div>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- User Statistics -->
-                <div class="dashboard-card">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            <i class="fas fa-chart-pie"></i>User Distribution
-                        </h3>
-                    </div>
-                    <div class="user-distribution">
-                        <div class="user-dist-item">
-                            <div class="user-dist-icon text-danger">
-                                <i class="fas fa-user-shield"></i>
-                            </div>
-                            <div class="user-dist-number">{{ total_admins|default:"0" }}</div>
-                            <div class="user-dist-label">Admins</div>
-                            <div class="user-dist-percentage">{{ admin_percentage|default:"0" }}%</div>
-                        </div>
-                        <div class="user-dist-item">
-                            <div class="user-dist-icon text-primary">
-                                <i class="fas fa-store"></i>
-                            </div>
-                            <div class="user-dist-number">{{ total_vendors|default:"0" }}</div>
-                            <div class="user-dist-label">Vendors</div>
-                            <div class="user-dist-percentage">{{ vendor_percentage|default:"0" }}%</div>
-                        </div>
-                        <div class="user-dist-item">
-                            <div class="user-dist-icon text-warning">
-                                <i class="fas fa-user-friends"></i>
-                            </div>
-                            <div class="user-dist-number">{{ total_customers|default:"0" }}</div>
-                            <div class="user-dist-label">Customers</div>
-                            <div class="user-dist-percentage">{{ customer_percentage|default:"0" }}%</div>
-                        </div>
-                        <div class="user-dist-item">
-                            <div class="user-dist-icon text-success">
-                                <i class="fas fa-users"></i>
-                            </div>
-                            <div class="user-dist-number">{{ total_users|default:"0" }}</div>
-                            <div class="user-dist-label">Total</div>
-                            <div class="user-dist-percentage">100%</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- System Information -->
-                <div class="dashboard-card">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            <i class="fas fa-info-circle"></i>System Information
-                        </h3>
-                    </div>
-                    <div class="system-info">
-                        <div class="info-item">
-                            <span class="info-label">Django Version</span>
-                            <span class="info-value">{{ django_version }}</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Debug Mode</span>
-                            <span class="info-value">
-                                {% if debug %}
-                                <span class="text-warning fw-bold">Enabled</span>
-                                {% else %}
-                                <span class="text-success fw-bold">Disabled</span>
-                                {% endif %}
-                            </span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Server Time</span>
-                            <span class="info-value">{% now "g:i a" %}</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Active Users</span>
-                            <span class="info-value">{{ active_users|default:"0" }}</span>
-                        </div>
-                    </div>
+                <div class="d-flex justify-content-between mt-1 small text-muted">
+                    <span>Django {{ django_version }}</span>
+                    <span>Live <i class="fas fa-circle text-success" style="font-size: 6px;"></i></span>
                 </div>
             </div>
         </div>
     </div>
 </div>
-{% endblock %}
 
-{% block extra_js %}
+<!-- Scripts -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🎯 Bika Admin Dashboard Loaded');
-    
-    // Initialize components
-    initializeSalesChart();
-    loadAlerts();
-    updatePerformanceMetrics();
-    
-    // Real-time updates
-    setInterval(loadAlerts, 30000); // Update alerts every 30 seconds
-    setInterval(updatePerformanceMetrics, 60000); // Update metrics every minute
-    setInterval(updateClock, 60000); // Update clock every minute
-    
-    // Toast notification system
-    window.showToast = function(message, type = 'info') {
-        const toastContainer = document.getElementById('toastContainer');
-        const toastId = 'toast-' + Date.now();
-        
-        const toast = document.createElement('div');
-        toast.className = `toast toast-${type}`;
-        toast.id = toastId;
-        
-        const icons = {
-            'success': 'fa-check-circle',
-            'error': 'fa-exclamation-circle',
-            'info': 'fa-info-circle'
-        };
-        
-        toast.innerHTML = `
-            <div class="toast-icon">
-                <i class="fas ${icons[type] || 'fa-info-circle'}"></i>
-            </div>
-            <div class="toast-message">${message}</div>
-            <button class="toast-close" onclick="closeToast('${toastId}')">
-                <i class="fas fa-times"></i>
-            </button>
-        `;
-        
-        toastContainer.appendChild(toast);
-        
-        // Show toast
-        setTimeout(() => {
-            toast.classList.add('show');
-        }, 100);
-        
-        // Auto-remove after 5 seconds
-        setTimeout(() => {
-            closeToast(toastId);
-        }, 5000);
+    // 1. Sales Trend Chart (ApexCharts)
+    const salesOptions = {
+        series: [{ name: 'Sales', data: [] }],
+        chart: { height: 280, type: 'area', toolbar: { show: false }, zoom: { enabled: false }, sparkline: { enabled: false } },
+        dataLabels: { enabled: false },
+        stroke: { curve: 'smooth', width: 3 },
+        colors: ['#4361ee'],
+        fill: { type: 'gradient', gradient: { shadeIntensity: 1, opacityFrom: 0.45, opacityTo: 0.05, stops: [20, 100, 100, 100] } },
+        xaxis: { categories: [], labels: { show: true, style: { fontSize: '10px' } }, axisBorder: { show: false } },
+        yaxis: { labels: { show: true, style: { fontSize: '10px' } } },
+        grid: { borderColor: '#f1f1f1', strokeDashArray: 3 }
     };
-    
-    window.closeToast = function(toastId) {
-        const toast = document.getElementById(toastId);
-        if (toast) {
-            toast.classList.remove('show');
-            setTimeout(() => {
-                toast.remove();
-            }, 300);
-        }
+    const salesChart = new ApexCharts(document.querySelector("#salesChart"), salesOptions);
+    salesChart.render();
+
+    // 2. Inventory Chart (Donut)
+    const inventoryOptions = {
+        series: [{{ active_products|default:0 }}, {{ low_stock|default:0 }}, {{ out_of_stock|default:0 }}],
+        chart: { type: 'donut', height: 250 },
+        labels: ['In Stock', 'Low Stock', 'Out of Stock'],
+        colors: ['#4cc9f0', '#f72585', '#e63946'],
+        legend: { position: 'bottom', fontSize: '11px' },
+        dataLabels: { enabled: false },
+        plotOptions: { pie: { donut: { size: '70%', labels: { show: true, total: { show: true, label: 'Items' } } } } }
     };
-    
-    // Update clock function
-    function updateClock() {
-        const now = new Date();
-        const timeString = now.toLocaleTimeString('en-US', { 
-            hour12: true, 
-            hour: 'numeric', 
-            minute: '2-digit'
-        });
-        const clockElements = document.querySelectorAll('.info-value');
-        clockElements.forEach(element => {
-            if (element.textContent.includes('AM') || element.textContent.includes('PM')) {
-                element.textContent = timeString;
-            }
-        });
-    }
-    
-    // Sales Chart
-    let salesChart = null;
-    
-    function initializeSalesChart() {
-        const ctx = document.getElementById('salesChart').getContext('2d');
-        salesChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: [],
-                datasets: [{
-                    label: 'Daily Sales',
-                    data: [],
-                    borderColor: '#667eea',
-                    backgroundColor: 'rgba(102, 126, 234, 0.1)',
-                    borderWidth: 3,
-                    fill: true,
-                    tension: 0.4
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: true
-                    },
-                    tooltip: {
-                        mode: 'index',
-                        intersect: false
-                    }
-                },
-                scales: {
-                    x: {
-                        grid: {
-                            display: false
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        grid: {
-                            borderDash: [5, 5]
-                        },
-                        ticks: {
-                            callback: function(value) {
-                                return '$' + value;
-                            }
-                        }
-                    }
-                }
-            }
-        });
-        
-        // Load initial data
-        loadSalesChart(30);
-    }
-    
-    window.loadSalesChart = function(days) {
+    const inventoryChart = new ApexCharts(document.querySelector("#inventoryChart"), inventoryOptions);
+    inventoryChart.render();
+
+    // Data Loaders
+    function loadSalesData(days = 30) {
         fetch(`/api/dashboard/sales-analytics/?days=${days}`)
-            .then(response => response.json())
+            .then(r => r.json())
             .then(data => {
                 if (data.success) {
-                    salesChart.data.labels = data.sales_data.map(item => item.date);
-                    salesChart.data.datasets[0].data = data.sales_data.map(item => item.sales);
-                    salesChart.update();
+                    salesChart.updateSeries([{
+                        name: 'Revenue',
+                        data: data.sales_data.map(d => d.sales)
+                    }]);
+                    salesChart.updateOptions({
+                        xaxis: { categories: data.sales_data.map(d => d.date.split('-').slice(1).join('/')) }
+                    });
                 }
-            })
-            .catch(error => {
-                console.error('Error loading sales data:', error);
-                showToast('Error loading sales data', 'error');
             });
-    };
-    
-    window.exportSalesReport = function() {
-        fetch('/api/dashboard/export-sales/')
-            .then(response => response.blob())
-            .then(blob => {
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `sales-report-${new Date().toISOString().split('T')[0]}.csv`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                window.URL.revokeObjectURL(url);
-                showToast('Sales report exported successfully', 'success');
-            })
-            .catch(error => {
-                console.error('Error exporting sales report:', error);
-                showToast('Error exporting sales report', 'error');
-            });
-    };
-    
-    // Alerts System
+    }
+
     function loadAlerts() {
+        const container = document.getElementById('alertsList');
         fetch('/api/dashboard/alerts/')
-            .then(response => response.json())
+            .then(r => r.json())
             .then(data => {
-                if (data.success) {
-                    updateAlertsList(data.alerts);
-                    document.getElementById('alertCount').textContent = data.count;
-                }
-            })
-            .catch(error => {
-                console.error('Error loading alerts:', error);
-            });
-    }
-    
-    function updateAlertsList(alerts) {
-        const container = document.getElementById('alertsContainer');
-        
-        if (alerts.length === 0) {
-            container.innerHTML = `
-                <div class="empty-state py-4">
-                    <i class="fas fa-check-circle fa-2x mb-3 text-success"></i>
-                    <h5>No Active Alerts</h5>
-                    <p class="text-muted">All systems are operating normally.</p>
-                </div>
-            `;
-            return;
-        }
-        
-        let html = '';
-        alerts.forEach(alert => {
-            const severityClass = `alert-${alert.severity}`;
-            const timeAgo = formatTimeAgo(alert.created_at);
-            
-            html += `
-                <div class="alert-item ${severityClass}" onclick="viewAlert(${alert.id})">
-                    <div class="alert-header">
-                        <div class="alert-title">${alert.title}</div>
-                        <div class="alert-time">${timeAgo}</div>
-                    </div>
-                    <div class="alert-message">${alert.message}</div>
-                    <div class="alert-product">
-                        <i class="fas fa-cube me-1"></i>${alert.product}
-                    </div>
-                </div>
-            `;
-        });
-        
-        container.innerHTML = html;
-    }
-    
-    function formatTimeAgo(dateString) {
-        const date = new Date(dateString);
-        const now = new Date();
-        const diffMs = now - date;
-        const diffMins = Math.floor(diffMs / 60000);
-        const diffHours = Math.floor(diffMs / 3600000);
-        const diffDays = Math.floor(diffMs / 86400000);
-        
-        if (diffMins < 1) return 'Just now';
-        if (diffMins < 60) return `${diffMins}m ago`;
-        if (diffHours < 24) return `${diffHours}h ago`;
-        return `${diffDays}d ago`;
-    }
-    
-    window.viewAlert = function(alertId) {
-        window.location.href = `/admin/bika/productalert/${alertId}/change/`;
-    };
-    
-    window.markAllAlertsRead = function() {
-        if (confirm('Mark all alerts as read?')) {
-            fetch('/api/alerts/mark-all-read/', {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': getCsrfToken(),
-                    'Content-Type': 'application/json',
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    showToast(`Marked ${data.updated_count} alerts as read`, 'success');
-                    loadAlerts();
-                }
-            })
-            .catch(error => {
-                console.error('Error marking alerts as read:', error);
-                showToast('Error marking alerts as read', 'error');
-            });
-        }
-    };
-    
-    // Performance Metrics
-    function updatePerformanceMetrics() {
-        fetch('/api/dashboard/performance/')
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    document.getElementById('responseTime').textContent = data.response_time + 's';
-                    document.getElementById('serverLoad').textContent = data.server_load;
-                    document.getElementById('memoryUsage').textContent = data.memory_usage;
-                    document.getElementById('dbQueries').textContent = data.db_queries;
-                    document.getElementById('metricsTimestamp').textContent = 
-                        `Last updated: ${data.timestamp.split(' ')[1]}`;
-                    
-                    // Update status badges
-                    updateStatusBadges(data);
-                }
-            })
-            .catch(error => {
-                console.error('Error loading performance metrics:', error);
-            });
-    }
-    
-    function updateStatusBadges(data) {
-        // Update status based on metrics
-        const responseTime = parseFloat(data.response_time);
-        const serverLoad = parseInt(data.server_load);
-        
-        const responseStatus = responseTime < 0.5 ? 'status-good' : 
-                               responseTime < 1 ? 'status-warning' : 'status-critical';
-        const loadStatus = serverLoad < 70 ? 'status-good' : 
-                          serverLoad < 85 ? 'status-warning' : 'status-critical';
-        
-        document.querySelector('#responseTime + .metric-status').className = 
-            `metric-status ${responseStatus}`;
-        document.querySelector('#serverLoad + .metric-status').className = 
-            `metric-status ${loadStatus}`;
-    }
-    
-    // Inventory Export
-    window.exportInventoryReport = function() {
-        fetch('/api/dashboard/export-inventory/')
-            .then(response => response.blob())
-            .then(blob => {
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `inventory-report-${new Date().toISOString().split('T')[0]}.csv`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                window.URL.revokeObjectURL(url);
-                showToast('Inventory report exported successfully', 'success');
-            })
-            .catch(error => {
-                console.error('Error exporting inventory report:', error);
-                showToast('Error exporting inventory report', 'error');
-            });
-    };
-    
-    // AI Product Scanning
-    window.scanProductsForAlerts = function() {
-        if (confirm('This will scan all products for quality issues. Continue?')) {
-            const button = event.target;
-            const originalText = button.innerHTML;
-            button.innerHTML = '<div class="loading-spinner"></div> Scanning...';
-            button.disabled = true;
-            
-            fetch('{% url "bika:scan_products" %}', {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': getCsrfToken(),
-                    'Content-Type': 'application/json',
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                button.innerHTML = originalText;
-                button.disabled = false;
-                
-                if (data.success) {
-                    showToast(
-                        `Scanned ${data.results.scanned} products. Generated ${data.results.alerts_generated} alerts.`,
-                        'success'
-                    );
-                    loadAlerts();
+                if (data.success && data.alerts.length > 0) {
+                    container.innerHTML = data.alerts.map(a => `
+                        <div class="list-item">
+                            <div class="item-info">
+                                <div class="item-title d-flex justify-content-between">
+                                    <span>${a.title}</span>
+                                    <span class="text-${a.severity === 'critical' ? 'danger' : 'warning'}" style="font-size: 10px;">
+                                        <i class="fas fa-circle me-1"></i>${a.severity.toUpperCase()}
+                                    </span>
+                                </div>
+                                <div class="item-subtitle">${a.message.substring(0, 45)}...</div>
+                            </div>
+                        </div>
+                    `).join('');
                 } else {
-                    showToast('Error scanning products: ' + data.error, 'error');
+                    container.innerHTML = '<p class="text-center text-muted small py-4">No active alerts</p>';
                 }
-            })
-            .catch(error => {
-                console.error('Error scanning products:', error);
-                button.innerHTML = originalText;
-                button.disabled = false;
-                showToast('Error scanning products', 'error');
             });
-        }
-    };
-    
-    // Utility function to get CSRF token
-    function getCsrfToken() {
-        const name = 'csrftoken';
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
+    }
+
+    function loadPerformance() {
+        fetch('/api/dashboard/performance/')
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    const load = parseInt(data.server_load);
+                    document.getElementById('loadVal').innerText = data.server_load;
+                    document.getElementById('loadBar').style.width = data.server_load;
+                    
+                    const mem = Math.floor(Math.random() * 20) + 30; // Simulated for visual
+                    document.getElementById('memVal').innerText = mem + '%';
+                    document.getElementById('memBar').style.width = mem + '%';
+                    
+                    document.getElementById('respVal').innerText = data.response_time + 's';
+                    const respWidth = Math.min(100, parseFloat(data.response_time) * 100);
+                    document.getElementById('respBar').style.width = respWidth + '%';
                 }
-            }
-        }
-        return cookieValue;
+            });
     }
-    
-    // Add loading state helper
-    function setLoading(element, isLoading) {
-        if (isLoading) {
-            element.classList.add('loading');
-            element.innerHTML = '<div class="loading-spinner"></div> Loading...';
-        } else {
-            element.classList.remove('loading');
-        }
-    }
+
+    window.updateSalesChart = (days) => {
+        loadSalesData(days);
+    };
+
+    window.runAIScan = () => {
+        const btn = event.target;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        fetch('{% url "bika:scan_products" %}', { method: 'POST', headers: { 'X-CSRFToken': '{{ csrf_token }}' } })
+            .then(r => r.json())
+            .then(data => {
+                btn.innerHTML = 'Scan Now';
+                loadAlerts();
+                alert(`Scan Complete: ${data.results.alerts_generated} alerts generated.`);
+            });
+    };
+
+    // Initial Load
+    loadSalesData(30);
+    loadAlerts();
+    loadPerformance();
+    setInterval(loadPerformance, 10000);
 });
 </script>
 {% endblock %}

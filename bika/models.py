@@ -46,7 +46,7 @@ class CustomUser(AbstractUser):
     phone = models.CharField(max_length=20, blank=True)
     company = models.CharField(max_length=100, blank=True)
     address = models.TextField(blank=True)
-    profile_picture = models.ImageField(upload_to="profiles/", blank=True, null=True)
+    profile_picture = models.FileField(upload_to="profiles/", blank=True, null=True)
     email_verified = models.BooleanField(default=False)
     phone_verified = models.BooleanField(default=False)
 
@@ -55,7 +55,7 @@ class CustomUser(AbstractUser):
 
     business_name = models.CharField(max_length=200, blank=True)
     business_description = models.TextField(blank=True)
-    business_logo = models.ImageField(upload_to="business_logos/", blank=True, null=True)
+    business_logo = models.FileField(upload_to="business_logos/", blank=True, null=True)
     business_verified = models.BooleanField(default=False)
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -80,7 +80,7 @@ class ProductCategory(models.Model):
     name = models.CharField(max_length=100)
     slug = models.SlugField(unique=True)
     description = models.TextField(blank=True)
-    image = models.ImageField(upload_to="categories/", blank=True, null=True)
+    image = models.FileField(upload_to="categories/", blank=True, null=True)
     display_order = models.IntegerField(default=0)
     is_active = models.BooleanField(default=True)
     parent = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True, related_name="subcategories")
@@ -162,7 +162,7 @@ class Product(models.Model):
     is_featured = models.BooleanField(default=False)
     is_digital = models.BooleanField(default=False, verbose_name="Digital Product")
 
-    images = models.ImageField(upload_to="products/", blank=True, null=True)
+    images = models.FileField(upload_to="products/", blank=True, null=True)
 
     created_by = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True, related_name="created_products")
     visibility = models.CharField(max_length=20, choices=VISIBILITY_CHOICES, default="unit")
@@ -281,13 +281,13 @@ class Product(models.Model):
 
     def get_related_products(self, limit=4):
         if self.category_id:
-            return Product.objects.filter(category=self.category, status="active").exclude(id=self.id)[:limit]
-        return Product.objects.filter(status="active").exclude(id=self.id)[:limit]
+            return Product.objects.filter(category=self.category, status="Published").exclude(id=self.id)[:limit]
+        return Product.objects.filter(status="Published").exclude(id=self.id)[:limit]
 
 
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="product_images")
-    image = models.ImageField(upload_to="products/")
+    image = models.FileField(upload_to="products/")
     alt_text = models.CharField(max_length=200, blank=True)
     display_order = models.IntegerField(default=0)
     is_primary = models.BooleanField(default=False)
@@ -411,7 +411,7 @@ class OrderItem(models.Model):
 class FruitType(models.Model):
     name = models.CharField(max_length=100, unique=True, verbose_name="Mushroom Type")
     scientific_name = models.CharField(max_length=200, blank=True)
-    image = models.ImageField(upload_to="fruits/", blank=True, null=True)
+    image = models.FileField(upload_to="fruits/", blank=True, null=True)
     description = models.TextField(blank=True)
 
     optimal_temp_min = models.DecimalField(max_digits=5, decimal_places=2, default=2.0, help_text="Min Temp (°C)")
@@ -812,8 +812,8 @@ class SiteInfo(models.Model):
     email = models.EmailField(default="contact@bika.com")
     phone = models.CharField(max_length=20, blank=True)
     address = models.TextField(blank=True)
-    logo = models.ImageField(upload_to="site/logo/", blank=True, null=True)
-    favicon = models.ImageField(upload_to="site/favicon/", blank=True, null=True)
+    logo = models.FileField(upload_to="site/logo/", blank=True, null=True)
+    favicon = models.FileField(upload_to="site/favicon/", blank=True, null=True)
 
     facebook_url = models.URLField(blank=True)
     twitter_url = models.URLField(blank=True)
@@ -858,7 +858,7 @@ class Service(models.Model):
     slug = models.SlugField(unique=True)
     description = models.TextField()
     icon = models.CharField(max_length=100, help_text="Font Awesome icon class")
-    image = models.ImageField(upload_to="services/", blank=True, null=True)
+    image = models.FileField(upload_to="services/", blank=True, null=True)
     display_order = models.IntegerField(default=0)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -879,7 +879,7 @@ class Testimonial(models.Model):
     position = models.CharField(max_length=200, blank=True)
     company = models.CharField(max_length=200, blank=True)
     content = models.TextField()
-    image = models.ImageField(upload_to="testimonials/", blank=True, null=True)
+    image = models.FileField(upload_to="testimonials/", blank=True, null=True)
     rating = models.IntegerField(choices=[(i, i) for i in range(1, 6)], default=5)
     is_featured = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)

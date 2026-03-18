@@ -275,14 +275,14 @@
                         {% for item in cart_items %}
                         <div class="order-item">
                             {% if item.product.product_images.first %}
-                            <img src="{{ item.product.product_images.first.image.url }}" alt="{{ item.product.name }}" class="order-item-image">
+                            <img src="{{ item.product.product_images.first.image.url }}" alt="{{ item.product.mushroom_name }}" class="order-item-image">
                             {% else %}
                             <div class="order-item-image bg-light d-flex align-items-center justify-content-center">
                                 <i class="fas fa-image text-muted"></i>
                             </div>
                             {% endif %}
                             <div class="flex-grow-1">
-                                <h6 class="mb-1">{{ item.product.name }}</h6>
+                                <h6 class="mb-1">{{ item.product.mushroom_name }}</h6>
                                 <small>{% blocktrans with qty=item.quantity price=item.product.price|floatformat:0 %}Qty: {{ qty }} × {{ price }} RWF{% endblocktrans %}</small>
                             </div>
                             <div class="text-end">
