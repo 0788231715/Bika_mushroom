@@ -58,9 +58,17 @@
                                                     </a>
                                                 </h6>
                                                 <small class="text-muted">
-                                                    <i class="fas fa-store me-1"></i>
-                                                    {{ item.product.vendor.business_name|default:item.product.vendor.username }}
-                                                </small>
+    <i class="fas fa-store me-1"></i>
+    {% if item.product.vendor %}
+        {% if item.product.vendor.business_name %}
+            {{ item.product.vendor.business_name }}
+        {% else %}
+            {{ item.product.vendor.username }}
+        {% endif %}
+    {% else %}
+        {% trans "No vendor" %}
+    {% endif %}
+                                                 </small>
                                                 {% if item.product.is_low_stock %}
                                                 <div class="text-warning small">
                                                     <i class="fas fa-exclamation-triangle me-1"></i>

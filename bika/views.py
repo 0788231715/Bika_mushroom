@@ -1151,65 +1151,6 @@ def product_list_view(request):
     }
     return render(request, 'bika/pages/products.html', context)
 
-def product_detail_view(request, slug):
-    """Display single product details"""
-    product = get_object_or_404(Product.objects.select_related(
-        'category', 'vendor'
-    ).prefetch_related('product_images'), slug=slug, status='Published')
-    
-    # Increment view count
-    product.views_count += 1
-    product.save()
-    
-    # Get related products
-    related_products = Product.objects.filter(
-        category=product.category,
-        status='active'
-    ).exclude(id=product.id).select_related(
-        'category', 'vendor'
-    ).prefetch_related('product_images')[:4]
-    
-    # Get product reviews
-    reviews = ProductReview.objects.filter(
-        product=product, 
-        is_approved=True
-    ).select_related('user').order_by('-created_at')
-    
-    # Calculate average rating
-    avg_rating = reviews.aggregate(Avg('rating'))['rating__avg'] or 0
-    
-    # Check if product is in user's wishlist
-    in_wishlist = False
-    if request.user.is_authenticated:
-        in_wishlist = Wishlist.objects.filter(
-            user=request.user, 
-            product=product
-        ).exists()
-    
-    # Check if product is in user's cart
-    in_cart = False
-    cart_quantity = 0
-    if request.user.is_authenticated:
-        cart_item = Cart.objects.filter(
-            user=request.user, 
-            product=product
-        ).first()
-        if cart_item:
-            in_cart = True
-            cart_quantity = cart_item.quantity
-    
-    context = {
-        'product': product,
-        'related_products': related_products,
-        'reviews': reviews,
-        'avg_rating': round(avg_rating, 1) if avg_rating else 0,
-        'review_count': reviews.count(),
-        'in_wishlist': in_wishlist,
-        'in_cart': in_cart,
-        'cart_quantity': cart_quantity,
-        'site_info': SiteInfo.objects.first(),
-    }
-    return render(request, 'bika/pages/product_detail.html', context)
 
 def products_by_category_view(request, category_slug):
     """Display products by category"""
@@ -1573,20 +1514,39 @@ def vendor_edit_product(request, product_id):
     return render(request, 'bika/pages/vendor/edit_product.html', context)
 
 @login_required
+@require_POST
 def vendor_delete_product(request, product_id):
-    """Delete product"""
-    if request.method == 'POST':
-        if request.user.is_staff:
-            product = get_object_or_404(Product, id=product_id)
-        else:
-            product = get_object_or_404(Product, id=product_id, vendor=request.user)
-        
-        product_name = product.name
+    """Delete product safely"""
+    if not request.user.is_vendor() and not request.user.is_staff:
+        messages.error(request, "Access denied. Vendor account required.")
+        return redirect('bika:home')
+
+    if request.user.is_staff:
+        product = get_object_or_404(Product, id=product_id)
+    else:
+        product = get_object_or_404(Product, id=product_id, vendor=request.user)
+
+    product_name = getattr(product, 'mushroom_name', None) or getattr(product, 'name', 'Product')
+
+    try:
         product.delete()
-        
+
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({
+                'success': True,
+                'message': f'Product "{product_name}" deleted successfully!'
+            })
+
         messages.success(request, f'Product "{product_name}" deleted successfully!')
-        return redirect('bika:vendor_product_list')
-    
+    except Exception as e:
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({
+                'success': False,
+                'message': f'Error deleting product: {str(e)}'
+            }, status=500)
+
+        messages.error(request, f'Error deleting product: {str(e)}')
+
     return redirect('bika:vendor_product_list')
 
 # ==================== USER PROFILE VIEWS ====================
@@ -1706,6 +1666,76 @@ def add_to_wishlist(request, product_id):
     messages.success(request, 'Product added to wishlist!')
     return redirect('bika:product_detail', slug=product.slug)
 
+def product_detail_view(request, slug):
+    """Display single product details"""
+    product = get_object_or_404(
+        Product.objects.select_related('category', 'vendor').prefetch_related('product_images'),
+        slug=slug
+    )
+
+    # Only allow public viewing for published/active products unless vendor or admin
+    allowed_statuses = ['Published', 'active']
+
+    if product.status not in allowed_statuses:
+        if not request.user.is_authenticated:
+            raise Http404("Product not found")
+
+        if not request.user.is_staff and product.vendor != request.user:
+            raise Http404("Product not found")
+
+    # Increment view count safely
+    product.views_count = (product.views_count or 0) + 1
+    product.save(update_fields=['views_count'])
+
+    # Related products
+    related_products = Product.objects.filter(
+        category=product.category
+    ).exclude(id=product.id).filter(
+        status__in=['Published', 'active']
+    ).select_related(
+        'category', 'vendor'
+    ).prefetch_related('product_images')[:4]
+
+    # Product reviews
+    reviews = ProductReview.objects.filter(
+        product=product,
+        is_approved=True
+    ).select_related('user').order_by('-created_at')
+
+    avg_rating = reviews.aggregate(Avg('rating'))['rating__avg'] or 0
+
+    in_wishlist = False
+    in_cart = False
+    cart_quantity = 0
+
+    if request.user.is_authenticated:
+        in_wishlist = Wishlist.objects.filter(
+            user=request.user,
+            product=product
+        ).exists()
+
+        cart_item = Cart.objects.filter(
+            user=request.user,
+            product=product
+        ).first()
+
+        if cart_item:
+            in_cart = True
+            cart_quantity = cart_item.quantity
+
+    context = {
+        'product': product,
+        'related_products': related_products,
+        'reviews': reviews,
+        'avg_rating': round(avg_rating, 1) if avg_rating else 0,
+        'review_count': reviews.count(),
+        'in_wishlist': in_wishlist,
+        'in_cart': in_cart,
+        'cart_quantity': cart_quantity,
+        'site_info': SiteInfo.objects.first(),
+    }
+    return render(request, 'bika/pages/product_detail.html', context)
+
 @login_required
 @require_POST
 def remove_from_wishlist(request, product_id):
@@ -1740,40 +1770,36 @@ def remove_from_wishlist(request, product_id):
 def cart(request):
     """Shopping cart page"""
     from decimal import Decimal
-    
+
     cart_items = Cart.objects.filter(
         user=request.user
-    ).select_related('product').order_by('-added_at')
-    
-    # Calculate totals - Use Decimal for calculations
+    ).select_related('product', 'product__vendor').prefetch_related(
+        'product__product_images'
+    ).order_by('-added_at')
+
     subtotal = Decimal('0.00')
-    
-    # Prepare cart items with total_price for template
-    cart_items_with_total = []
+
     for item in cart_items:
-        # Calculate total for each item
-        item_price = Decimal(str(item.product.price))
-        item_quantity = Decimal(str(item.quantity))
-        item_subtotal = item_price * item_quantity
-        
-        # Add calculated total to item (as a simple attribute, not property)
-        item.total_price_calculated = item_subtotal
-        cart_items_with_total.append(item)
-        
-        subtotal += item_subtotal
-    
-    tax_rate = Decimal('0.18')  # 18% VAT
+        product_price = item.product.price if item.product and item.product.price else Decimal('0.00')
+        quantity = item.quantity if item.quantity else 0
+
+        item.total_price_calculated = product_price * quantity
+        subtotal += item.total_price_calculated
+
+    tax_rate = Decimal('0.18')   # 18%
     tax_amount = subtotal * tax_rate
-    shipping_cost = Decimal('5000')  # Fixed shipping cost
+    shipping_cost = Decimal('5000.00') if cart_items.exists() else Decimal('0.00')
     total_amount = subtotal + tax_amount + shipping_cost
-    
+    tax_rate_percentage = tax_rate * Decimal('100')
+
     context = {
-        'cart_items': cart_items_with_total,  # Use the list with calculated totals
+        'cart_items': cart_items,
         'subtotal': subtotal,
         'tax_amount': tax_amount,
         'shipping_cost': shipping_cost,
         'total_amount': total_amount,
         'tax_rate': tax_rate,
+        'tax_rate_percentage': tax_rate_percentage,
         'site_info': SiteInfo.objects.first(),
     }
     return render(request, 'bika/pages/user/cart.html', context)
@@ -1821,99 +1847,124 @@ def add_to_cart(request, product_id):
 @login_required
 @require_POST
 def update_cart(request, product_id):
-    """Update cart item quantity"""
-    from decimal import Decimal
-    
+    """Update cart item quantity safely using Decimal"""
+    from decimal import Decimal, InvalidOperation
+
     product = get_object_or_404(Product, id=product_id)
-    quantity = int(request.POST.get('quantity', 1))
-    
-    if quantity > 0:
-        # Check stock
-        if product.track_inventory and product.stock_quantity < quantity:
-            return JsonResponse({
-                'success': False,
-                'message': f'Only {product.stock_quantity} items available!'
-            })
-        
-        cart_item = get_object_or_404(Cart, user=request.user, product=product)
-        cart_item.quantity = quantity
-        cart_item.save()
-        
-        # Recalculate totals
-        cart_items = Cart.objects.filter(user=request.user)
-        subtotal = sum(Decimal(str(item.product.price)) * Decimal(str(item.quantity)) for item in cart_items)
+    cart_item = get_object_or_404(Cart, user=request.user, product=product)
+
+    try:
+        quantity = int(request.POST.get('quantity', 1))
+    except (TypeError, ValueError):
+        return JsonResponse({
+            'success': False,
+            'message': 'Invalid quantity.'
+        })
+
+    if quantity < 1:
+        cart_item.delete()
+
+        remaining_items = Cart.objects.filter(user=request.user).select_related('product')
+
+        subtotal = Decimal('0.00')
+        cart_count = 0
+
+        for item in remaining_items:
+            price = item.product.price if item.product and item.product.price else Decimal('0.00')
+            subtotal += price * item.quantity
+            cart_count += item.quantity
+
         tax_rate = Decimal('0.18')
         tax_amount = subtotal * tax_rate
-        shipping_cost = Decimal('5000')
+        shipping_cost = Decimal('5000.00') if remaining_items.exists() else Decimal('0.00')
         total_amount = subtotal + tax_amount + shipping_cost
-        
+
         return JsonResponse({
             'success': True,
-            'item_total': str(cart_item.total_price),
+            'item_removed': True,
             'subtotal': str(subtotal),
+            'shipping_cost': str(shipping_cost),
             'tax_amount': str(tax_amount),
             'total_amount': str(total_amount),
-            'cart_count': cart_items.count(),
-            'max_quantity': product.stock_quantity if product.track_inventory else 99
+            'cart_count': cart_count,
         })
-    else:
-        Cart.objects.filter(user=request.user, product=product).delete()
-        cart_items = Cart.objects.filter(user=request.user)
-        
-        if cart_items.exists():
-            subtotal = sum(Decimal(str(item.product.price)) * Decimal(str(item.quantity)) for item in cart_items)
-            tax_rate = Decimal('0.18')
-            tax_amount = subtotal * tax_rate
-            shipping_cost = Decimal('5000')
-            total_amount = subtotal + tax_amount + shipping_cost
-            
-            return JsonResponse({
-                'success': True,
-                'subtotal': str(subtotal),
-                'tax_amount': str(tax_amount),
-                'total_amount': str(total_amount),
-                'cart_count': cart_items.count()
-            })
-        else:
-            return JsonResponse({
-                'success': True,
-                'subtotal': '0.00',
-                'tax_amount': '0.00',
-                'total_amount': '0.00',
-                'cart_count': 0
-            })
+
+    if product.track_inventory and quantity > product.stock_quantity:
+        return JsonResponse({
+            'success': False,
+            'message': f'Only {product.stock_quantity} items available!'
+        })
+
+    cart_item.quantity = quantity
+    cart_item.save()
+
+    cart_items = Cart.objects.filter(user=request.user).select_related('product')
+
+    subtotal = Decimal('0.00')
+    cart_count = 0
+
+    for item in cart_items:
+        price = item.product.price if item.product and item.product.price else Decimal('0.00')
+        subtotal += price * item.quantity
+        cart_count += item.quantity
+
+    item_total = (product.price if product.price else Decimal('0.00')) * cart_item.quantity
+    tax_rate = Decimal('0.18')
+    tax_amount = subtotal * tax_rate
+    shipping_cost = Decimal('5000.00') if cart_items.exists() else Decimal('0.00')
+    total_amount = subtotal + tax_amount + shipping_cost
+
+    return JsonResponse({
+        'success': True,
+        'item_total': str(item_total),
+        'subtotal': str(subtotal),
+        'shipping_cost': str(shipping_cost),
+        'tax_amount': str(tax_amount),
+        'total_amount': str(total_amount),
+        'cart_count': cart_count,
+        'max_quantity': product.stock_quantity if product.track_inventory else 99
+    })
         
 
 @login_required
 @require_POST
 def remove_from_cart(request, product_id):
-    """Remove product from cart"""
-    from decimal import Decimal  # ADD THIS IMPORT
-    
+    """Remove product from cart safely using Decimal"""
+    from decimal import Decimal
+
     product = get_object_or_404(Product, id=product_id)
-    
+
     deleted_count, _ = Cart.objects.filter(
-        user=request.user, 
+        user=request.user,
         product=product
     ).delete()
-    
+
+    cart_items = Cart.objects.filter(user=request.user).select_related('product')
+
+    subtotal = Decimal('0.00')
+    cart_count = 0
+
+    for item in cart_items:
+        price = item.product.price if item.product and item.product.price else Decimal('0.00')
+        subtotal += price * item.quantity
+        cart_count += item.quantity
+
+    tax_rate = Decimal('0.18')
+    tax_amount = subtotal * tax_rate
+    shipping_cost = Decimal('5000.00') if cart_items.exists() else Decimal('0.00')
+    total_amount = subtotal + tax_amount + shipping_cost
+
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        cart_items = Cart.objects.filter(user=request.user)
-        subtotal = sum(item.total_price for item in cart_items)
-        tax_rate = Decimal('0.18')  # CHANGE TO DECIMAL
-        tax_amount = subtotal * tax_rate
-        shipping_cost = Decimal('5000')  # CHANGE TO DECIMAL
-        total_amount = subtotal + tax_amount + shipping_cost
-        
         return JsonResponse({
             'success': True,
-            'subtotal': float(subtotal),  # CONVERT TO FLOAT
-            'tax_amount': float(tax_amount),  # CONVERT TO FLOAT
-            'total_amount': float(total_amount),  # CONVERT TO FLOAT
-            'cart_count': cart_items.count(),
-            'deleted': deleted_count > 0
+            'deleted': deleted_count > 0,
+            'subtotal': str(subtotal),
+            'shipping_cost': str(shipping_cost),
+            'tax_amount': str(tax_amount),
+            'total_amount': str(total_amount),
+            'cart_count': cart_count,
         })
-    
+
     messages.success(request, 'Product removed from cart!')
     return redirect('bika:cart')
 

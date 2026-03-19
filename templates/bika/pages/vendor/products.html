@@ -180,7 +180,7 @@
 }
 
 .actions-cell {
-    width: 120px;
+    width: 140px;
 }
 
 .action-btn {
@@ -314,25 +314,24 @@
     .vendor-products-hero h1 {
         font-size: 2rem;
     }
-    
+
     .table-responsive {
         border-radius: 10px;
     }
-    
+
     .actions-cell {
         width: auto;
     }
-    
+
     .action-btn {
         margin: 2px;
     }
-    
+
     .stat-number {
         font-size: 2rem;
     }
 }
 
-/* Hover effects */
 .table tbody tr {
     transition: all 0.3s ease;
 }
@@ -342,7 +341,6 @@
     transform: scale(1.01);
 }
 
-/* Loading states */
 .loading-skeleton {
     animation: pulse 1.5s ease-in-out infinite;
 }
@@ -356,7 +354,6 @@
 {% endblock %}
 
 {% block content %}
-<!-- Hero Section -->
 <section class="vendor-products-hero">
     <div class="container">
         <div class="row align-items-center">
@@ -373,7 +370,6 @@
     </div>
 </section>
 
-<!-- Statistics Cards -->
 <section class="products-stats">
     <div class="container">
         <div class="row g-4">
@@ -417,10 +413,8 @@
     </div>
 </section>
 
-<!-- Main Content -->
 <section class="py-5">
     <div class="container">
-        <!-- Quick Actions -->
         <div class="quick-actions">
             <div class="row align-items-center">
                 <div class="col-md-8">
@@ -440,7 +434,6 @@
             </div>
         </div>
 
-        <!-- Filters and Search -->
         <div class="filter-section">
             <div class="row g-3">
                 <div class="col-md-6">
@@ -452,9 +445,8 @@
                 <div class="col-md-3">
                     <select class="form-select" id="statusFilter">
                         <option value="">{% trans "All Status" %}</option>
-                        <option value="active" {% if status_filter == 'active' %}selected{% endif %}>{% trans "Active" %}</option>
-                        <option value="draft" {% if status_filter == 'draft' %}selected{% endif %}>{% trans "Draft" %}</option>
-                        <option value="out_of_stock" {% if status_filter == 'out_of_stock' %}selected{% endif %}>{% trans "Out of Stock" %}</option>
+                        <option value="Published" {% if status_filter == 'Published' %}selected{% endif %}>{% trans "Published" %}</option>
+                        <option value="Draft" {% if status_filter == 'Draft' %}selected{% endif %}>{% trans "Draft" %}</option>
                     </select>
                 </div>
                 <div class="col-md-3">
@@ -469,7 +461,6 @@
         </div>
 
         {% if products %}
-        <!-- Bulk Actions -->
         <div class="bulk-actions d-none" id="bulkActions">
             <div class="row align-items-center">
                 <div class="col-md-6">
@@ -491,7 +482,6 @@
             </div>
         </div>
 
-        <!-- Products Table -->
         <div class="product-table-card">
             <div class="table-responsive">
                 <table class="table table-hover mb-0">
@@ -518,56 +508,58 @@
                             </td>
                             <td class="product-image-cell">
                                 {% if product.product_images.first %}
-                                <img src="{{ product.product_images.first.image.url }}" alt="{{ product.name }}" class="product-image">
+                                    <img src="{{ product.product_images.first.image.url }}"
+                                         alt="{{ product.mushroom_name|default:product.name }}"
+                                         class="product-image">
                                 {% else %}
-                                <div class="product-image d-flex align-items-center justify-content-center bg-light">
-                                    <i class="fas fa-image text-muted"></i>
-                                </div>
+                                    <div class="product-image d-flex align-items-center justify-content-center bg-light">
+                                        <i class="fas fa-image text-muted"></i>
+                                    </div>
                                 {% endif %}
                             </td>
                             <td>
                                 <div class="product-info">
-                                    <div class="product-name">{{ product.name }}</div>
+                                    <div class="product-name">{{ product.mushroom_name|default:product.name }}</div>
                                     <div class="product-category">{{ product.category.name }}</div>
                                     <small class="text-muted">SKU: {{ product.sku }}</small>
                                 </div>
                             </td>
                             <td>
-                                {% if product.status == 'active' %}
-                                <span class="status-badge badge-active">
-                                    <i class="fas fa-check-circle me-1"></i>{% trans "Active" %}
-                                </span>
-                                {% elif product.status == 'draft' %}
-                                <span class="status-badge badge-draft">
-                                    <i class="fas fa-edit me-1"></i>{% trans "Draft" %}
-                                </span>
+                                {% if product.status == 'Published' %}
+                                    <span class="status-badge badge-active">
+                                        <i class="fas fa-check-circle me-1"></i>{% trans "Published" %}
+                                    </span>
+                                {% elif product.status == 'Draft' %}
+                                    <span class="status-badge badge-draft">
+                                        <i class="fas fa-edit me-1"></i>{% trans "Draft" %}
+                                    </span>
                                 {% else %}
-                                <span class="status-badge badge-out-of-stock">
-                                    <i class="fas fa-times-circle me-1"></i>{{ product.get_status_display }}
-                                </span>
+                                    <span class="status-badge badge-out-of-stock">
+                                        <i class="fas fa-times-circle me-1"></i>{{ product.get_status_display }}
+                                    </span>
                                 {% endif %}
                             </td>
                             <td>
                                 {% if product.is_in_stock %}
                                     {% if product.is_low_stock %}
-                                    <span class="stock-badge stock-low">
-                                        <i class="fas fa-exclamation-triangle me-1"></i>{% trans "Low" %} ({{ product.stock_quantity }})
-                                    </span>
+                                        <span class="stock-badge stock-low">
+                                            <i class="fas fa-exclamation-triangle me-1"></i>{% trans "Low" %} ({{ product.stock_quantity }})
+                                        </span>
                                     {% else %}
-                                    <span class="stock-badge stock-in">
-                                        <i class="fas fa-check me-1"></i>{{ product.stock_quantity }}
-                                    </span>
+                                        <span class="stock-badge stock-in">
+                                            <i class="fas fa-check me-1"></i>{{ product.stock_quantity }}
+                                        </span>
                                     {% endif %}
                                 {% else %}
-                                <span class="stock-badge stock-out">
-                                    <i class="fas fa-times me-1"></i>{% trans "Out of Stock" %}
-                                </span>
+                                    <span class="stock-badge stock-out">
+                                        <i class="fas fa-times me-1"></i>{% trans "Out of Stock" %}
+                                    </span>
                                 {% endif %}
                             </td>
                             <td class="price-cell">
                                 {{ product.price|floatformat:0 }} RWF
                                 {% if product.compare_price %}
-                                <br><small class="text-muted text-decoration-line-through">{{ product.compare_price|floatformat:0 }} RWF</small>
+                                    <br><small class="text-muted text-decoration-line-through">{{ product.compare_price|floatformat:0 }} RWF</small>
                                 {% endif %}
                             </td>
                             <td>
@@ -582,13 +574,23 @@
                             </td>
                             <td class="actions-cell">
                                 <div class="d-flex">
-                                    <a href="{% url 'bika:vendor_edit_product' product.id %}" class="btn action-btn btn-edit" title="{% trans 'Edit Product' %}">
+                                    <a href="{% url 'bika:vendor_edit_product' product.id %}"
+                                       class="btn action-btn btn-edit"
+                                       title="{% trans 'Edit Product' %}">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <a href="{% url 'bika:product_detail' product.slug %}" class="btn action-btn btn-view" title="{% trans 'View Product' %}" target="_blank">
+
+                                    <a href="{% url 'bika:product_detail' product.slug %}"
+                                       class="btn action-btn btn-view"
+                                       title="{% trans 'View Product' %}"
+                                       target="_blank">
                                         <i class="fas fa-external-link-alt"></i>
                                     </a>
-                                    <button class="btn action-btn btn-delete" title="{% trans 'Delete Product' %}" onclick="confirmDelete({{ product.id }}, '{{ product.name }}')">
+
+                                    <button type="button"
+                                            class="btn action-btn btn-delete"
+                                            title="{% trans 'Delete Product' %}"
+                                            onclick="confirmDelete({{ product.id }}, '{{ product.mushroom_name|default:product.name|escapejs }}')">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </div>
@@ -600,7 +602,6 @@
             </div>
         </div>
 
-        <!-- Pagination -->
         {% if products.has_other_pages %}
         <div class="pagination-wrapper mt-4">
             <nav aria-label="{% trans 'Products pagination' %}">
@@ -648,47 +649,47 @@
         {% endif %}
 
         {% else %}
-        <!-- Empty State -->
         <div class="empty-state">
             <div class="empty-state-icon">
                 <i class="fas fa-box-open"></i>
             </div>
             <h3>{% trans "No Products Found" %}</h3>
-            
+
             {% if query or status_filter or stock_filter %}
-            <p>{% trans "We couldn't find any products matching your current filters. Try adjusting your search criteria or clear all filters to see all products." %}</p>
-            <div class="mt-4">
-                <a href="{% url 'bika:vendor_product_list' %}" class="btn btn-outline-primary me-3">
-                    <i class="fas fa-times me-2"></i>{% trans "Clear Filters" %}
-                </a>
-                <a href="{% url 'bika:vendor_add_product' %}" class="btn btn-primary">
-                    <i class="fas fa-plus me-2"></i>{% trans "Add Your First Product" %}
-                </a>
-            </div>
+                <p>{% trans "We couldn't find any products matching your current filters. Try adjusting your search criteria or clear all filters to see all products." %}</p>
+                <div class="mt-4">
+                    <a href="{% url 'bika:vendor_product_list' %}" class="btn btn-outline-primary me-3">
+                        <i class="fas fa-times me-2"></i>{% trans "Clear Filters" %}
+                    </a>
+                    <a href="{% url 'bika:vendor_add_product' %}" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>{% trans "Add Your First Product" %}
+                    </a>
+                </div>
             {% else %}
-            <p>{% trans "You haven't added any products yet. Start by adding your first product to showcase in the marketplace." %}</p>
-            <div class="mt-4">
-                <a href="{% url 'bika:vendor_add_product' %}" class="btn btn-primary btn-lg">
-                    <i class="fas fa-plus me-2"></i>{% trans "Add Your First Product" %}
-                </a>
-            </div>
+                <p>{% trans "You haven't added any products yet. Start by adding your first product to showcase in the marketplace." %}</p>
+                <div class="mt-4">
+                    <a href="{% url 'bika:vendor_add_product' %}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-plus me-2"></i>{% trans "Add Your First Product" %}
+                    </a>
+                </div>
             {% endif %}
         </div>
         {% endif %}
     </div>
 </section>
 
-<!-- Delete Confirmation Modal -->
-<div class="modal fade" id="deleteModal" tabindex="-1">
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">{% trans "Confirm Delete" %}</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{% trans 'Close' %}"></button>
             </div>
             <div class="modal-body">
                 <p>{% trans "Are you sure you want to delete" %} "<strong id="deleteProductName"></strong>"?</p>
-                <p class="text-danger"><small>{% trans "This action cannot be undone. All product data, images, and reviews will be permanently deleted." %}</small></p>
+                <p class="text-danger">
+                    <small>{% trans "This action cannot be undone. All product data, images, and reviews will be permanently deleted." %}</small>
+                </p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Cancel" %}</button>
@@ -705,61 +706,62 @@
 {% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Search functionality
     const searchInput = document.getElementById('searchInput');
     let searchTimeout;
-    
-    searchInput.addEventListener('input', function() {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(() => {
-            const query = this.value.trim();
-            const statusFilter = document.getElementById('statusFilter').value;
-            const stockFilter = document.getElementById('stockFilter').value;
-            
-            let url = '{% url "bika:vendor_product_list" %}?';
-            if (query) url += `q=${encodeURIComponent(query)}&`;
-            if (statusFilter) url += `status=${statusFilter}&`;
-            if (stockFilter) url += `stock=${stockFilter}&`;
-            
-            window.location.href = url.replace(/&$/, '');
-        }, 500);
-    });
 
-    // Filter functionality
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                const query = this.value.trim();
+                const statusFilter = document.getElementById('statusFilter').value;
+                const stockFilter = document.getElementById('stockFilter').value;
+
+                let url = '{% url "bika:vendor_product_list" %}?';
+                if (query) url += `q=${encodeURIComponent(query)}&`;
+                if (statusFilter) url += `status=${encodeURIComponent(statusFilter)}&`;
+                if (stockFilter) url += `stock=${encodeURIComponent(stockFilter)}&`;
+
+                window.location.href = url.replace(/&$/, '');
+            }, 500);
+        });
+    }
+
     const statusFilter = document.getElementById('statusFilter');
     const stockFilter = document.getElementById('stockFilter');
-    
+
     [statusFilter, stockFilter].forEach(filter => {
-        filter.addEventListener('change', function() {
-            const query = searchInput.value.trim();
-            const status = statusFilter.value;
-            const stock = stockFilter.value;
-            
-            let url = '{% url "bika:vendor_product_list" %}?';
-            if (query) url += `q=${encodeURIComponent(query)}&`;
-            if (status) url += `status=${status}&`;
-            if (stock) url += `stock=${stock}&`;
-            
-            window.location.href = url.replace(/&$/, '');
-        });
+        if (filter) {
+            filter.addEventListener('change', function() {
+                const query = searchInput ? searchInput.value.trim() : '';
+                const status = statusFilter.value;
+                const stock = stockFilter.value;
+
+                let url = '{% url "bika:vendor_product_list" %}?';
+                if (query) url += `q=${encodeURIComponent(query)}&`;
+                if (status) url += `status=${encodeURIComponent(status)}&`;
+                if (stock) url += `stock=${encodeURIComponent(stock)}&`;
+
+                window.location.href = url.replace(/&$/, '');
+            });
+        }
     });
 
-    // Bulk actions functionality
     const selectAll = document.getElementById('selectAll');
     const productCheckboxes = document.querySelectorAll('.product-checkbox');
     const bulkActions = document.getElementById('bulkActions');
     const selectedCount = document.getElementById('selectedCount');
 
-    // Select all functionality
-    selectAll.addEventListener('change', function() {
-        const isChecked = this.checked;
-        productCheckboxes.forEach(checkbox => {
-            checkbox.checked = isChecked;
+    if (selectAll) {
+        selectAll.addEventListener('change', function() {
+            const isChecked = this.checked;
+            productCheckboxes.forEach(checkbox => {
+                checkbox.checked = isChecked;
+            });
+            updateBulkActions();
         });
-        updateBulkActions();
-    });
+    }
 
-    // Individual checkbox functionality
     productCheckboxes.forEach(checkbox => {
         checkbox.addEventListener('change', updateBulkActions);
     });
@@ -767,40 +769,55 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateBulkActions() {
         const selectedProducts = document.querySelectorAll('.product-checkbox:checked');
         const count = selectedProducts.length;
-        
-        if (count > 0) {
-            bulkActions.classList.remove('d-none');
-            selectedCount.textContent = `${count} product${count > 1 ? 's' : ''} selected`;
-            selectAll.checked = count === productCheckboxes.length;
-        } else {
-            bulkActions.classList.add('d-none');
-            selectAll.checked = false;
+
+        if (bulkActions && selectedCount) {
+            if (count > 0) {
+                bulkActions.classList.remove('d-none');
+                selectedCount.textContent = `${count} product${count > 1 ? 's' : ''} selected`;
+                if (selectAll) {
+                    selectAll.checked = count === productCheckboxes.length;
+                }
+            } else {
+                bulkActions.classList.add('d-none');
+                if (selectAll) {
+                    selectAll.checked = false;
+                }
+            }
         }
     }
 
-    // Bulk action handlers
-    document.getElementById('bulkActivate').addEventListener('click', function() {
-        const selectedIds = getSelectedProductIds();
-        if (selectedIds.length > 0) {
-            performBulkAction('activate', selectedIds);
-        }
-    });
+    const bulkActivate = document.getElementById('bulkActivate');
+    const bulkDraft = document.getElementById('bulkDraft');
+    const bulkDelete = document.getElementById('bulkDelete');
 
-    document.getElementById('bulkDraft').addEventListener('click', function() {
-        const selectedIds = getSelectedProductIds();
-        if (selectedIds.length > 0) {
-            performBulkAction('draft', selectedIds);
-        }
-    });
-
-    document.getElementById('bulkDelete').addEventListener('click', function() {
-        const selectedIds = getSelectedProductIds();
-        if (selectedIds.length > 0) {
-            if (confirm(`Are you sure you want to delete ${selectedIds.length} product(s)? This action cannot be undone.`)) {
-                performBulkAction('delete', selectedIds);
+    if (bulkActivate) {
+        bulkActivate.addEventListener('click', function() {
+            const selectedIds = getSelectedProductIds();
+            if (selectedIds.length > 0) {
+                performBulkAction('activate', selectedIds);
             }
-        }
-    });
+        });
+    }
+
+    if (bulkDraft) {
+        bulkDraft.addEventListener('click', function() {
+            const selectedIds = getSelectedProductIds();
+            if (selectedIds.length > 0) {
+                performBulkAction('draft', selectedIds);
+            }
+        });
+    }
+
+    if (bulkDelete) {
+        bulkDelete.addEventListener('click', function() {
+            const selectedIds = getSelectedProductIds();
+            if (selectedIds.length > 0) {
+                if (confirm(`Are you sure you want to delete ${selectedIds.length} product(s)? This action cannot be undone.`)) {
+                    performBulkAction('delete', selectedIds);
+                }
+            }
+        });
+    }
 
     function getSelectedProductIds() {
         const selected = [];
@@ -810,17 +827,33 @@ document.addEventListener('DOMContentLoaded', function() {
         return selected;
     }
 
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
     function performBulkAction(action, productIds) {
+        const csrftoken = getCookie('csrftoken');
         const formData = new FormData();
         formData.append('action', action);
-        formData.append('product_ids', JSON.stringify(productIds));
-        formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+        formData.append('product_ids', productIds.join(','));
 
-        fetch('{% url "bika:vendor_product_list" %}', {
+        fetch('{% url "bika:handle_bulk_actions" %}', {
             method: 'POST',
             body: formData,
             headers: {
-                'X-Requested-With': 'XMLHttpRequest'
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': csrftoken
             }
         })
         .then(response => response.json())
@@ -829,7 +862,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 showToast(data.message, 'success');
                 setTimeout(() => window.location.reload(), 1000);
             } else {
-                showToast(data.message || 'Action failed', 'error');
+                showToast(data.message || data.error || 'Action failed', 'error');
             }
         })
         .catch(error => {
@@ -838,9 +871,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Toast notification function
     function showToast(message, type = 'info') {
-        // Create toast element
         const toast = document.createElement('div');
         toast.className = `toast align-items-center text-white bg-${type === 'error' ? 'danger' : type} border-0`;
         toast.innerHTML = `
@@ -849,44 +880,30 @@ document.addEventListener('DOMContentLoaded', function() {
                 <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
             </div>
         `;
-        
-        // Add to toast container
+
         let toastContainer = document.querySelector('.toast-container');
         if (!toastContainer) {
             toastContainer = document.createElement('div');
             toastContainer.className = 'toast-container position-fixed top-0 end-0 p-3';
             document.body.appendChild(toastContainer);
         }
-        
+
         toastContainer.appendChild(toast);
-        
-        // Show toast
+
         const bsToast = new bootstrap.Toast(toast);
         bsToast.show();
-        
-        // Remove from DOM after hide
+
         toast.addEventListener('hidden.bs.toast', () => {
             toast.remove();
         });
     }
 });
 
-// Delete confirmation
 function confirmDelete(productId, productName) {
     document.getElementById('deleteProductName').textContent = productName;
     const deleteForm = document.getElementById('deleteForm');
-    deleteForm.action = `{% url 'bika:vendor_product_list' %}`;
-    
-    // Add product ID to form
-    let productIdInput = deleteForm.querySelector('input[name="product_id"]');
-    if (!productIdInput) {
-        productIdInput = document.createElement('input');
-        productIdInput.type = 'hidden';
-        productIdInput.name = 'product_id';
-        deleteForm.appendChild(productIdInput);
-    }
-    productIdInput.value = productId;
-    
+    deleteForm.action = "{% url 'bika:vendor_delete_product' 0 %}".replace('0', productId);
+
     const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
     deleteModal.show();
 }
